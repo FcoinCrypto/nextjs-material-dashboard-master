@@ -28,7 +28,6 @@ const dashboardRoutes = [
   {
     path: "/tableau",
     name: "Tableau de Bord",
-    // rtlName: "ملف تعريفي للمستخدم",
     icon: Tableau,
 
     layout: "/admin",
@@ -36,7 +35,6 @@ const dashboardRoutes = [
   {
     path: "/acheter",
     name: "Acheter",
-    // rtlName: "ملف تعريفي للمستخدم",
     icon: Shop,
 
     layout: "/admin",
