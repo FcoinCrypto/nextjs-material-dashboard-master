@@ -39,19 +39,18 @@ const dashboardRoutes = [
 
     layout: "/admin",
   },
-  
   {
-    path: "/icons",
+    path: "/envoyer",
     name: "Envoyer",
-    rtlName: "الرموز",
+    // rtlName: "الرموز",
     icon: Send,
 
     layout: "/admin",
   },
   {
-    path: "/typography",
+    path: "/reception",
     name: "Recevoir",
-    rtlName: "قائمة الجدول",
+    // rtlName: "قائمة الجدول",
     icon: Receipt,
 
     layout: "/admin",
@@ -59,7 +58,7 @@ const dashboardRoutes = [
   {
     path: "/table-list",
     name: "Voir mes transactions",
-    rtlName: "طباعة",
+    // rtlName: "طباعة",
     icon: LibraryBooks,
 
     layout: "/admin",
