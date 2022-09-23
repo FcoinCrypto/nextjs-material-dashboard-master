@@ -20,8 +20,9 @@ import ReactDOM from "react-dom";
 import App from "next/app";
 import Head from "next/head";
 import Router from "next/router";
-import '../styles/globals.css'
-import 'bootstrap/dist/css/bootstrap.css'
+import '../styles/globals.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import { RecoilRoot } from "recoil";
 
 import PageChange from "components/PageChange/PageChange.js";
 
@@ -75,6 +76,7 @@ export default class MyApp extends App {
 
     return { pageProps };
   }
+  
   render() {
     const { Component, pageProps } = this.props;
 
@@ -90,9 +92,11 @@ export default class MyApp extends App {
           <title>dashboard</title>
           <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
         </Head>
+        <RecoilRoot>
         <Layout>
           <Component {...pageProps} />
         </Layout>
+        </RecoilRoot>
       </React.Fragment>
     );
   }

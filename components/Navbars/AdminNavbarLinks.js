@@ -12,20 +12,19 @@ import Poppers from "@material-ui/core/Popper";
 import Divider from "@material-ui/core/Divider";
 // @material-ui/icons
 import Person from "@material-ui/icons/Person";
-import Notifications from "@material-ui/icons/Notifications";
-import Dashboard from "@material-ui/icons/Dashboard";
-import Search from "@material-ui/icons/Search";
 // core components
-import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 import useWindowSize from "components/Hooks/useWindowSize.js";
-
+import {useSetRecoilState , useRecoilValue} from 'recoil';
 import styles from "assets/jss/nextjs-material-dashboard/components/headerLinksStyle.js";
+import { authAtom } from "../../recoil/atom/auth";
+import Router from "next/router";
 
 export default function AdminNavbarLinks() {
   const size = useWindowSize();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
+  const setAuth = useSetRecoilState(authAtom);
   const [openNotification, setOpenNotification] = React.useState(null);
   const [openProfile, setOpenProfile] = React.useState(null);
   const handleClickNotification = (event) => {
@@ -47,6 +46,10 @@ export default function AdminNavbarLinks() {
   };
   const handleCloseProfile = () => {
     setOpenProfile(null);
+  };
+  const handleLogout = () => {
+    setAuth({ token: null, user: null });
+    Router.push('/login/login');
   };
   return (
     <div>
@@ -163,7 +166,7 @@ export default function AdminNavbarLinks() {
                     </MenuItem>
                     <Divider light />
                     <MenuItem
-                      onClick={handleCloseProfile}
+                      onClick={handleLogout}
                       className={classes.dropdownItem}
                     >
                       Logout

@@ -36,6 +36,8 @@
     "react-firebaseui": "^6.0.0",
     "react-google-login": "^5.2.2",
     "react-swipeable-views": "0.13.9",
+    "recoil": "^0.7.5",
+    "recoil-persist": "^4.2.0",
     "styled-components": "^5.3.5",
     "yup": "^0.32.11"
   },

@@ -1,5 +1,5 @@
-import React from "react";
-import { useRouter } from "next/router";
+import React, { useEffect } from "react";
+import { Router, useRouter } from "next/router";
 // creates a beautiful scrollbar
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
@@ -16,6 +16,9 @@ import styles from "assets/jss/nextjs-material-dashboard/layouts/adminStyle.js";
 
 import bgImage from "assets/img/sidebar-2.jpg";
 import logo from "assets/img/reactlogo.png";
+import { authAtom } from "../recoil/atom/auth";
+import Login from "../pages/login/login";
+import { useRecoilValue } from 'recoil';
 
 let ps;
 
@@ -27,6 +30,7 @@ export default function Admin({ children, ...rest }) {
   const classes = useStyles();
   // ref to help us initialize PerfectScrollbar on windows devices
   const mainPanel = React.createRef();
+  const { user, token } = useRecoilValue(authAtom)
   // states and functions
   const [image, setImage] = React.useState(bgImage);
   const [color, setColor] = React.useState("white");
@@ -74,6 +78,15 @@ export default function Admin({ children, ...rest }) {
       window.removeEventListener("resize", resizeFunction);
     };
   }, [mainPanel]);
+
+  console.log(token)
+
+  useEffect(() => {
+    if (!token) {
+      router.push('/login/login')
+    }
+  }, [user, token])
+
   return (
     <div className={classes.wrapper}>
       <Sidebar
