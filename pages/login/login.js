@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Router from "next/router";
 
 import GoogleLogin from 'react-google-login';
-import FacebookLogin from 'react-facebook-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 
 import {
   MDBContainer,
@@ -19,7 +19,78 @@ import { confirmeUser } from '../../services/auth';
 import { authAtom } from '../../recoil/atom/auth';
 import {useSetRecoilState , useRecoilValue} from 'recoil';
 import ENV from '../../utils/env';
+const  handleResponseLogin = async (response, type) => {
+    let input = null;
+    let fullname = '';
+    
+    switch (type) {
+    case 'facebook':
+        console.log(response)
+    //   fullname = (response.name).split(' ');
+    //   input = {
+    //     email: response.email,
+    //     firstname: fullname.length > 0?fullname[1].toLowerCase():fullname[0].toLowerCase(),
+    //     lastname: fullname.length > 0?fullname[0].toUpperCase():'',
+    //     password: response.userID,
+    //     confirmPassword: response.userID,
+    //     provider_name: 'facebook',
+    //     oauth_uid: response.userID,
+    //     oauth_access_token: response.accessToken,
+    //     create_methode: 'account_connectwith'
+    //   };
+      break;
+    case 'google':
+        console.log(response)
+    //   input = {
+    //     email: response.profileObj.email,
+    //     firstname: response.profileObj.givenName.toLowerCase(),
+    //     lastname: response.profileObj.familyName.toUpperCase(),
+    //     password: response.profileObj.googleId,
+    //     confirmPassword: response.profileObj.googleId,
+    //     provider_name: 'google',
+    //     oauth_uid: response.profileObj.googleId,
+    //     oauth_access_token: response.accessToken,
+    //     create_methode: 'account_connectwith'
+    //   };
+      break;
+    case 'register':
+      input = {
+        email: response.email,
+        firstname: response.firstname.toLowerCase(),
+        lastname: response.lastname.toUpperCase(),
+        password: response.password,
+        confirmPassword: response.confirmPassword,
+        provider_name: null,
+        oauth_uid: null,
+        oauth_access_token: null,
+        base_url_website: ENV.host,
+        create_methode: 'account_register'
+      };
+      break;
+    default:
+      break;
+    }
 
+
+    const res = await newUser({ ...input, tz: locationUser?.time_zone ? locationUser?.time_zone.id : timezone['Europe/Paris'] });
+
+        if (res?.partner_id) {
+        setLoading(false);
+        swal({ 
+            title: 'Super!', 
+            text: 'Il reste une dernière étape pour valider votre compte. Un email vous a été envoyé. Merci de valider le lien dans celui-ci', 
+            icon: 'success', 
+            className: 'swal' 
+        }).then((value) => {
+            if (value) {
+            router.push('/');
+            }
+        });
+        } else {
+        swal({ title: 'Attention!', text: res?.error?res.error:'Cette email possède déjà un compte', icon: 'warning', className: 'swal' });
+        setLoading(false);
+        }
+    };
 function Login() {
 
     const setAuth = useSetRecoilState(authAtom);
@@ -29,10 +100,7 @@ function Login() {
         <>
             <MDBContainer fluid className="p-3 my-5 d-flex justify-content-center">
 
-                <MDBRow className='w-50'>
-                    <MDBCol col='2' sm='6'>
-                        <img src="https://elements-video-cover-images-0.imgix.net/files/c8a5bb5a-ce5f-42a9-b0e3-60dbb242dbd6/inline_image_preview.jpg?auto=compress%2Cformat&fit=min&h=225&w=400&s=d01c608792d79d4d41237ff1eab46155" class="img-fluid" style={{height:700}} alt="Phone image" />
-                    </MDBCol>
+                <MDBRow className='w-50 d-flex justify-content-center'>
                     <MDBCol col='3' sm='6'>
 
                         <div className='d-flex flex-row mt-2'>
@@ -40,7 +108,7 @@ function Login() {
                             <span className="h1 fw-bold mb-0">Fcoin</span>
                         </div>
 
-                        <h5 className="fw-normal my-4 pb-3" style={{letterSpacing: '1px'}}>Connectez-vous à votre compte ou inscrivez-vous</h5>
+                        <h5 className="fw-normal my-4 pb-3" style={{letterSpacing: '1px', minWidth : '50vh'}}>Connectez-vous à votre compte ou inscrivez-vous</h5>
 
                         <GoogleLogin
                             clientId={'186741013778-bh3ph6mmpj4si62e0ejktopeqdqq0tfl.apps.googleusercontent.com' || ''}
@@ -52,9 +120,10 @@ function Login() {
                                     style={{
                                         width: '100%',
                                         borderRadius: 35,
-                                        backgroundColor:"#1f80b3",
+                                        backgroundColor:"#00853d",
                                         color:'white',
                                         marginBottom: 4,
+                                        minWidth: '50vh'
                                     }}
                                 >
                                     <img className="mx-2" src="https://cdn-icons-png.flaticon.com/512/2504/2504739.png" style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
@@ -77,16 +146,34 @@ function Login() {
                                 callback={(response) =>
                                         handleResponseLogin(response, 'facebook')
                                 }
+                                fields="name,email,picture"
+                                render={(renderProps) => (
+                                    <Button
+                                        onClick={renderProps.onClick}
+                                        variant="contained"
+                                        size="big"
+                                        style={{
+                                            width: '100%',
+                                            borderRadius: 35,
+                                            backgroundColor:"#1f80b3",
+                                            color:'white',
+                                            marginBottom: 4,
+                                            minWidth: '50vh'
+ 
+                                        }}
+                                    >
+                                        <img className="mx-2" src="https://cdn-icons-png.flaticon.com/512/124/124010.png" style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
+                                            Se connecter avec facebook
+    
+                                    </Button>
+                                )}
                             >
             
                         </FacebookLogin>
 
 
                         <br/><br/>
-                        <Link href="api/hello">
-                            <a>Auth</a>
-                        </Link>
-                        <br/><br/>
+                        
                         <Formik 
                                 enableReinitialize 
                                 initialValues={{ 
@@ -142,6 +229,7 @@ function Login() {
                                     name="email" 
                                     required 
                                     variant="outlined"
+                                    style={{minWidth : '50vh'}}
                                 />
                                 <div></div>
                                 <TextField 
@@ -152,7 +240,7 @@ function Login() {
                                     onChange={handleChange} 
                                     value={values.password} 
                                     fullWidth
-                                    style={{marginTop : 23, marginBottom : 23}}
+                                    style={{marginTop : 23, marginBottom : 23, minWidth : '50vh'}}
                                     label="Password" 
                                     name="password" 
                                     required 
@@ -170,6 +258,7 @@ function Login() {
                                         style={{
                                             borderRadius: 35,
                                             backgroundColor: "#1f80b3",
+                                            minWidth: '50vh'
                                         }} 
                                         fullWidth 
                                         variant="contained" 
