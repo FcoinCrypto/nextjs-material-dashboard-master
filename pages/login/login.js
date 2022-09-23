@@ -91,7 +91,7 @@ function Login() {
                     </Link>
 
                     <GoogleLogin
-                        clientId={'186741013778-bh3ph6mmpj4si62e0ejktopeqdqq0tfl.apps.googleusercontent.com' || ''}
+                        clientId={'186741013778-bh3ph6mmpj4si62e0ejktopeqdqq0tfl.apps.googleusercontent.com'}
                         render={(renderProps) => (
                             <Button
                                 onClick={renderProps.onClick}
