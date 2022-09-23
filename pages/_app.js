@@ -31,7 +31,7 @@ import "assets/css/nextjs-material-dashboard.css?v=1.1.0";
 
 Router.events.on("routeChangeStart", (url) => {
   // console.log(`Loading: ${url}`);
-  // document.body.classList.add("body-page-transition");
+  document.body.classList.add("body-page-transition");
   ReactDOM.render(
     <PageChange path={url} />,
     document.getElementById("page-transition")
