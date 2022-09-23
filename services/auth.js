@@ -1,7 +1,8 @@
-import axios from 'axios'
+import axios from 'axios';
+import api from './API'
 
 export const confirmeUser = (email, password) =>
-    axios.post('http://localhost:1337/api/auth/local', {
+    api.post('/auth/local', {
         identifier: email,
         password: password,
     })

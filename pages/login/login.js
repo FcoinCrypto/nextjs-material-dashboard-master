@@ -18,11 +18,13 @@ import { TextField , Button } from '@material-ui/core';
 import { confirmeUser } from '../../services/auth';
 import { authAtom } from '../../recoil/atom/auth';
 import {useSetRecoilState , useRecoilValue} from 'recoil';
+import ENV from '../../utils/env';
 
 function Login() {
 
     const setAuth = useSetRecoilState(authAtom);
     const { user, token } = useRecoilValue(authAtom);
+
     return (
         <>
             <MDBContainer fluid className="p-3 my-5 d-flex justify-content-center">
