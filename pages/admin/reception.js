@@ -42,11 +42,9 @@ function Reception(fcoin) {
                     // NOTE: Make API request 
                     const recevoir = await recevoirs(values.message, values.etiquette, values.montant);
                     console.log("envoie", recevoir);
-
                     resetForm(); 
                     setStatus({ success: true }); 
                     setSubmitting(false);
-                    window.location.reload(false); 
                     
                 } catch (err) { 
                     console.error(err); 
