@@ -1,20 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Admin from "layouts/Admin.js";
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+
 import { Button, Grid, Input, TextField } from "@material-ui/core";
 import {Formik, Form} from 'formik';
 import * as Yup from 'yup';
 import axios from "axios";
 import { updateWallet } from "../../services/achat";
 import { conversionUsdt } from "../../utils/utilAchat";
+import { authAtom } from "../../recoil/atom/authAtom";
+import { getUser } from "../../services/user";
 
-function Acheter(fcoin) {
-    function handleChangeCustom(event){
-
+function Acheter() {
+  const [wallet, setWallet] = useState();
+  const [idWallet, setIdWallet] = useState();
+  const { user } = useRecoilValue(authAtom);
+  
+  useEffect(async () => {
+    if (!wallet) {
+      const data = await getUser(user.id);
+      setWallet(data.data.wallet.fcoin);
+      setIdWallet(data.data.wallet.id)
     }
+  }, [wallet, idWallet])
+
+
   return (
     <>
         <div><b>ACHETER DES FCOINS</b></div>
-        <center><p> Vous détenez actuellement : <strong> {fcoin.data} Fcoin </strong><br/>  Entrez le montant de Fcoin que vous souhaitez acheter ou le montant en EUR que vous souhaitez dépenser</p></center>
+        <center><p> Vous détenez actuellement : <strong> {wallet} Fcoin </strong><br/>  Entrez le montant de Fcoin que vous souhaitez acheter ou le montant en EUR que vous souhaitez dépenser</p></center>
         <Formik 
             enableReinitialize 
             initialValues={{ 
@@ -42,13 +56,13 @@ function Acheter(fcoin) {
                 try { 
                     // NOTE: Make API request 
                     // await wait(200);
-                    const newFcoin = values.fcoin + fcoin.data;
-                    console.log("test",newFcoin, fcoin.data)
-                    await updateWallet(newFcoin)
+                    const newFcoin = values.fcoin + wallet;
+                    await updateWallet(newFcoin, idWallet)
+                    setWallet(newFcoin);
                     resetForm(); 
                     setStatus({ success: true }); 
                     setSubmitting(false);
-                    window.location.reload(false); 
+                    // window.location.reload(false);
                     
                 } catch (err) { 
                     console.error(err); 
@@ -136,14 +150,5 @@ function Acheter(fcoin) {
 }
 
 Acheter.layout = Admin;
-
-export const getServerSideProps = async () => {
-
-    const res = await axios.get('http://localhost:1337/api/wallets/1');
-    const data  = res.data.data.attributes.fcoin;
-    // console.log("fcoin", data);
-    // Pass data to the page via props
-    return { props: { data } };
-  };
 
 export default Acheter;

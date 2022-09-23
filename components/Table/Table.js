@@ -14,7 +14,6 @@ export default function CustomTable(props) {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   const { tableHead, tableData, tableHeaderColor } = props;
-  console.log("csffs",tableData)
   return (
     <div className={classes.tableResponsive}>
       <Table className={classes.table}>
@@ -36,13 +35,11 @@ export default function CustomTable(props) {
         ) : null}
           <TableBody>
             {Array.from(tableData.data).map((row) => (
-              <TableRow key={row.attributes.date}>
-                <TableCell align="left">{row.attributes.date}</TableCell>
-                <TableCell align="left">{row.attributes.destinataire}</TableCell>
-                <TableCell align="left">{row.attributes.description}</TableCell>
-                <TableCell align="left">{row.attributes.expediteur}</TableCell>
-                <TableCell align="left">{row.attributes.montant}</TableCell>
+              <TableRow key={row.attributes.createdAt}>
+                <TableCell align="left">{row.attributes.createdAt}</TableCell>
                 <TableCell align="left">{row.attributes.type}</TableCell>
+                <TableCell align="left">{row.attributes.etiquette}</TableCell>
+                <TableCell align="left">{row.attributes.montant}</TableCell>
               </TableRow>
             ))}
           </TableBody>

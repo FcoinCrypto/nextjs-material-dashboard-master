@@ -15,9 +15,9 @@ import Person from "@material-ui/icons/Person";
 // core components
 import Button from "components/CustomButtons/Button.js";
 import useWindowSize from "components/Hooks/useWindowSize.js";
-import {useSetRecoilState , useRecoilValue} from 'recoil';
+import {useSetRecoilState } from 'recoil';
 import styles from "assets/jss/nextjs-material-dashboard/components/headerLinksStyle.js";
-import { authAtom } from "../../recoil/atom/auth";
+import { authAtom } from "../../recoil/atom/authAtom";
 import Router from "next/router";
 
 export default function AdminNavbarLinks() {

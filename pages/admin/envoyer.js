@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import axios from "axios";
 import { updateWallet } from "../../services/achat";
 import { conversionUsdt } from "../../utils/utilAchat";
+import { envoyer } from "../../services/envoyer.js";
 
 function Envoyer(fcoin) {
     function handleChangeCustom(event){
@@ -28,7 +29,7 @@ function Envoyer(fcoin) {
                     .min(1)
                     .required('require'),
                 destinataire: Yup.string().required('Merci de renseigner le destinataire'),
-                etiquette: Yup.string().required('Merci de renseigner l etiquette'),
+                etiquette: Yup.string().required('Merci de renseigner l etiquette')
             })} 
             onSubmit={async (values, { 
                 resetForm, 
@@ -42,10 +43,11 @@ function Envoyer(fcoin) {
                     // const newFcoin = values.fcoin + fcoin.data;
                     // console.log("test",newFcoin, fcoin.data)
                     // await updateWallet(newFcoin)
+                    const envoie = await envoyer(values.destinataire, values.etiquette, values.montant);
+                    console.log("envoie", envoie);
                     resetForm(); 
                     setStatus({ success: true }); 
                     setSubmitting(false);
-                    window.location.reload(false); 
                     
                 } catch (err) { 
                     console.error(err); 
@@ -93,7 +95,7 @@ function Envoyer(fcoin) {
                         fullWidth
                         style={{marginTop : 23, marginBottom : 23}}
                         label="Etiquette" 
-                        name="Etiquette" 
+                        name="etiquette" 
                         required 
                         variant="outlined"             
                     />

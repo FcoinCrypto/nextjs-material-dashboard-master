@@ -1,14 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Admin from "layouts/Admin.js";
-import { Button, Grid, TextField } from "@material-ui/core";
-import {Formik, Form} from 'formik';
-import * as Yup from 'yup';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { getUser } from "../../services/user";
+import { walletAtom } from "../../recoil/atom/walletAtom";
+import { authAtom } from "../../recoil/atom/authAtom";
 
 function Tableau() {
+  const [wallet, setWallet] = useState();
+  const { user } = useRecoilValue(authAtom);
+
+  useEffect(async () => {
+    if (!wallet) {
+      const data = await getUser(user.id);
+      setWallet(data.data.wallet.fcoin);
+    }
+  }, [wallet])
+
   return (
     <>
         <div><b>ACHETER DES FCOINS</b></div>
-        <center><p> Vous détenez actuellement : <strong> 0 Fcoin </strong><br/>  Entrez le montant de Fcoin que vous souhaitez acheter ou le montant en EUR que vous souhaitez dépenser</p></center>
+        <center><p> Vous détenez actuellement : <strong> { wallet } Fcoin </strong><br/>  Entrez le montant de Fcoin que vous souhaitez acheter ou le montant en EUR que vous souhaitez dépenser</p></center>
  
     </>
   )

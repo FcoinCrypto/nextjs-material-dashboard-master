@@ -1,8 +1,8 @@
 import api from './API'
 
-export const updateWallet = (fcoin) =>
+export const updateWallet = (fcoin, walletId) =>
 api
-  .put('/wallets/1', 
+  .put(`/wallets/${walletId}`,
   {
     data: {
         fcoin : fcoin

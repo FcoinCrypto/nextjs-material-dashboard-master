@@ -16,23 +16,20 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import { TextField , Button } from '@material-ui/core';
 import { confirmeUser } from '../../services/auth';
-import { authAtom } from '../../recoil/atom/auth';
-import {useSetRecoilState , useRecoilValue} from 'recoil';
-import ENV from '../../utils/env';
+import { authAtom } from '../../recoil/atom/authAtom';
+import { useSetRecoilState } from 'recoil';
+import { getUser } from '../../services/user';
 
 function Login() {
 
     const setAuth = useSetRecoilState(authAtom);
-    const { user, token } = useRecoilValue(authAtom);
 
     return (
         <>
             <MDBContainer fluid className="p-3 my-5 d-flex justify-content-center">
 
-                <MDBRow className='w-50'>
-                    <MDBCol col='2' sm='6'>
-                        <img src="https://elements-video-cover-images-0.imgix.net/files/c8a5bb5a-ce5f-42a9-b0e3-60dbb242dbd6/inline_image_preview.jpg?auto=compress%2Cformat&fit=min&h=225&w=400&s=d01c608792d79d4d41237ff1eab46155" class="img-fluid" style={{height:700}} alt="Phone image" />
-                    </MDBCol>
+                <MDBRow className='w-50 d-flex justify-content-center'>
+
                     <MDBCol col='3' sm='6'>
 
                         <div className='d-flex flex-row mt-2'>
@@ -40,7 +37,9 @@ function Login() {
                             <span className="h1 fw-bold mb-0">Fcoin</span>
                         </div>
 
-                        <h5 className="fw-normal my-4 pb-3" style={{letterSpacing: '1px'}}>Connectez-vous à votre compte ou inscrivez-vous</h5>
+                        <Link href="./registration">
+                            <h5 className="fw-normal my-4 pb-3" style={{letterSpacing: '1px'}}>Inscrivez-vous</h5>
+                        </Link>
 
                         <GoogleLogin
                             clientId={'186741013778-bh3ph6mmpj4si62e0ejktopeqdqq0tfl.apps.googleusercontent.com' || ''}
@@ -107,8 +106,7 @@ function Login() {
                                         // NOTE: Make API request 
                                         // await wait(200);
                                         const userRecoil = await confirmeUser(values.email, values.password);
-                                        setAuth({ token: userRecoil.data.jwt, user: userRecoil.data.user });
-                                        localStorage.setItem('user', JSON.stringify(userRecoil.data.user));
+                                        setAuth({ token: userRecoil.data.jwt, user: userRecoil.data.user  });
                                         resetForm();
                                         setStatus({ success: true }); 
                                         setSubmitting(false);
