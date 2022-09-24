@@ -9,5 +9,5 @@ api
     },
   })
   .then(response => {
-    console.log("respopnse",response);
+    console.log("response",response);
   });
