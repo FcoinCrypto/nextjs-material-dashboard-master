@@ -59,7 +59,7 @@ function TableList(data) {
           <CardBody>
             <Table
               tableHeaderColor="primary"
-              tableHead={["date", "destinataire", "description", "expediteur", "montant", "type"]}
+              tableHead={["date", "type", "etiquette", "montant"]}
               tableData={data}
             />
           </CardBody>
@@ -79,8 +79,8 @@ export const getServerSideProps = async () => {
   // Fetch data from external API
   // const res = await fetch('http://localhost:1337/api/achats');
   // const data  = await res.json();
-  const res = await axios.get('http://127.0.0.1:1337/api/achats');
-  console.log(res.data.data);
+  const res = await axios.get('http://127.0.0.1:1337/api/transactions');
+  // console.log(res.data.data);
   // Pass data to the page via props
   return { props: { data : res.data.data } };
 };

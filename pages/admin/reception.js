@@ -4,6 +4,8 @@ import { Button, Grid, Input, TextField } from "@material-ui/core";
 import {Formik, Form} from 'formik';
 import * as Yup from 'yup';
 import axios from "axios";
+import { recevoirs } from "../../services/reception.js";
+
 import { updateWallet } from "../../services/achat";
 import { conversionUsdt } from "../../utils/utilAchat";
 
@@ -38,14 +40,11 @@ function Reception(fcoin) {
             }) => {
                 try { 
                     // NOTE: Make API request 
-                    // await wait(200);
-                    // const newFcoin = values.fcoin + fcoin.data;
-                    // console.log("test",newFcoin, fcoin.data)
-                    // await updateWallet(newFcoin)
+                    const recevoir = await recevoirs(values.message, values.etiquette, values.montant);
+                    console.log("envoie", recevoir);
                     resetForm(); 
                     setStatus({ success: true }); 
                     setSubmitting(false);
-                    window.location.reload(false); 
                     
                 } catch (err) { 
                     console.error(err); 
@@ -77,7 +76,7 @@ function Reception(fcoin) {
                         fullWidth
                         style={{marginTop : 23, marginBottom : 23}}
                         label="Etiquette" 
-                        name="Etiquette" 
+                        name="etiquette" 
                         required 
                         variant="outlined"             
                     />

@@ -16,8 +16,9 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import { TextField , Button } from '@material-ui/core';
 import { confirmeUser } from '../../services/auth';
-import { authAtom } from '../../recoil/atom/auth';
-import {useSetRecoilState , useRecoilValue} from 'recoil';
+import { authAtom } from '../../recoil/atom/authAtom';
+import { getUser } from '../../services/user';
+import {useSetRecoilState } from 'recoil';
 import ENV from '../../utils/env';
 const  handleResponseLogin = async (response, type) => {
     let input = null;
@@ -41,17 +42,17 @@ const  handleResponseLogin = async (response, type) => {
       break;
     case 'google':
         console.log(response)
-    //   input = {
-    //     email: response.profileObj.email,
-    //     firstname: response.profileObj.givenName.toLowerCase(),
-    //     lastname: response.profileObj.familyName.toUpperCase(),
-    //     password: response.profileObj.googleId,
-    //     confirmPassword: response.profileObj.googleId,
-    //     provider_name: 'google',
-    //     oauth_uid: response.profileObj.googleId,
-    //     oauth_access_token: response.accessToken,
-    //     create_methode: 'account_connectwith'
-    //   };
+      input = {
+        email: response.profileObj.email,
+        firstname: response.profileObj.givenName.toLowerCase(),
+        lastname: response.profileObj.familyName.toUpperCase(),
+        password: response.profileObj.googleId,
+        confirmPassword: response.profileObj.googleId,
+        provider_name: 'google',
+        oauth_uid: response.profileObj.googleId,
+        oauth_access_token: response.accessToken,
+        create_methode: 'account_connectwith'
+      };
       break;
     case 'register':
       input = {
@@ -94,7 +95,6 @@ const  handleResponseLogin = async (response, type) => {
 function Login() {
 
     const setAuth = useSetRecoilState(authAtom);
-    const { user, token } = useRecoilValue(authAtom);
 
     return (
         <>
@@ -107,11 +107,12 @@ function Login() {
                             <img className="mx-2 " src="https://raw.githubusercontent.com/FcoinCrypto/Fcoin/main/logo/1024x1024fcoin.png" style={{width:60,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
                             <span className="h1 fw-bold mb-0">Fcoin</span>
                         </div>
-
-                        <h5 className="fw-normal my-4 pb-3" style={{letterSpacing: '1px', minWidth : '50vh'}}>Connectez-vous à votre compte ou inscrivez-vous</h5>
+                        <Link href="./registration">
+                            <h5 className="fw-normal my-4 pb-3" style={{letterSpacing: '1px'}}>Inscrivez-vous</h5>
+                        </Link>
 
                         <GoogleLogin
-                            clientId={'186741013778-bh3ph6mmpj4si62e0ejktopeqdqq0tfl.apps.googleusercontent.com' || ''}
+                            clientId={'186741013778-bh3ph6mmpj4si62e0ejktopeqdqq0tfl.apps.googleusercontent.com'}
                             render={(renderProps) => (
                                 <Button
                                     onClick={renderProps.onClick}
@@ -194,8 +195,7 @@ function Login() {
                                         // NOTE: Make API request 
                                         // await wait(200);
                                         const userRecoil = await confirmeUser(values.email, values.password);
-                                        setAuth({ token: userRecoil.data.jwt, user: userRecoil.data.user });
-                                        localStorage.setItem('user', JSON.stringify(userRecoil.data.user));
+                                        setAuth({ token: userRecoil.data.jwt, user: userRecoil.data.user  });
                                         resetForm();
                                         setStatus({ success: true }); 
                                         setSubmitting(false);
