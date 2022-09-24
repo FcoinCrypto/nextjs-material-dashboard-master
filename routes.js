@@ -38,6 +38,14 @@ const dashboardRoutes = [
     layout: "/admin",
   },
   {
+    path: "/tableEnvoyer",
+    name: "showSend",
+    // rtlName: "قائمة الجدول",
+    icon: Receipt,
+
+    layout: "/admin",
+  },
+  {
     path: "/table-list",
     name: "Voir mes transactions",
     // rtlName: "طباعة",
