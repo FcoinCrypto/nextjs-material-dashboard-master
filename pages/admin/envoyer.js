@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Admin from "layouts/Admin.js";
 import { Button, Grid, Input, TextField } from "@material-ui/core";
 import {Formik, Form} from 'formik';
@@ -6,12 +6,26 @@ import * as Yup from 'yup';
 import axios from "axios";
 import { updateWallet } from "../../services/achat";
 import { conversionUsdt } from "../../utils/utilAchat";
-import { envoyer } from "../../services/envoyer.js";
+import { envoyer, updateWalletOnSend } from "../../services/envoyer.js";
+import { getUser } from "../../services/user";
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { authAtom } from "../../recoil/atom/authAtom";
+
+
 
 function Envoyer(fcoin) {
-    function handleChangeCustom(event){
-
-    }
+    const [wallet, setWallet] = useState();
+    const [idWallet, setIdWallet] = useState();
+    const { user } = useRecoilValue(authAtom);
+  
+    useEffect(async () => {
+        if (!wallet) {
+        const data = await getUser(user.id);
+        setWallet(data.data.wallet.fcoin);
+        setIdWallet(data.data.wallet.id)
+        }
+    }, [wallet, idWallet])
+   
   return (
     <>
         <div><b>ENVOYER DES FCOINS</b></div>
@@ -44,7 +58,10 @@ function Envoyer(fcoin) {
                     // console.log("test",newFcoin, fcoin.data)
                     // await updateWallet(newFcoin)
                     const envoie = await envoyer(values.destinataire, values.etiquette, values.montant);
+                    const newFcoin  = wallet - values.montant;
+                    const uWOS = await updateWalletOnSend(newFcoin,idWallet);
                     console.log("envoie", envoie);
+                    console.log("updateWallet", uWOS);
                     resetForm(); 
                     setStatus({ success: true }); 
                     setSubmitting(false);

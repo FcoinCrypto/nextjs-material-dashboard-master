@@ -87,7 +87,7 @@ function Login() {
                         <span className="h1 fw-bold mb-0">Fcoin</span>
                     </div>
                     <Link href="./registration">
-                        <h5 className="fw-normal my-4 pb-3" style={{letterSpacing: '1px'}}>Inscrivez-vous</h5>
+                        <h5 className="fw-normal my-4 pb-3" style={{letterSpacing: '1px', cursor:'pointer'}}>Inscrivez-vous</h5>
                     </Link>
 
                     <GoogleLogin

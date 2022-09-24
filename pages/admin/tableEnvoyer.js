@@ -6,11 +6,9 @@ import Admin from "layouts/Admin.js";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-import axios from "axios"
 import Footer from "../../components/Footer/Footer";
 import { achats, transactions, envoyers } from "../../services/table";
 
@@ -44,7 +42,7 @@ const styles = {
   },
 };
 
-function TableList(data) {
+function TableEnvoyer(data) {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   return (
@@ -59,11 +57,8 @@ function TableList(data) {
             </p>
           </CardHeader>
           <CardBody>
-            <Table
-              tableHeaderColor="primary"
-              tableHead={["date", "type", "etiquette", "montant"]}
-              tableData={data}
-            />
+           
+           
             
           </CardBody>
         </Card>
@@ -73,16 +68,15 @@ function TableList(data) {
   );
 }
 
-TableList.layout = Admin;
-
-export default TableList;
+TableEnvoyer.layout = Admin;
+export default TableEnvoyer;
 
 
 export const getServerSideProps = async () => {
   // Fetch data from external API
   // const res = await fetch('http://localhost:1337/api/achats');
   // const data  = await res.json();
-  const res = await transactions();
+  const res = await envoyers();
   console.log(res)
   // console.log(res.data.data);
   // Pass data to the page via props
