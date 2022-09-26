@@ -15,7 +15,7 @@ import Person from "@material-ui/icons/Person";
 // core components
 import Button from "components/CustomButtons/Button.js";
 import useWindowSize from "components/Hooks/useWindowSize.js";
-import {useSetRecoilState } from 'recoil';
+import {useSetRecoilState, useRecoilValue } from 'recoil';
 import styles from "assets/jss/nextjs-material-dashboard/components/headerLinksStyle.js";
 import { authAtom } from "../../recoil/atom/authAtom";
 import Router from "next/router";
@@ -25,6 +25,7 @@ export default function AdminNavbarLinks() {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   const setAuth = useSetRecoilState(authAtom);
+  const { user } = useRecoilValue(authAtom);
   const [openNotification, setOpenNotification] = React.useState(null);
   const [openProfile, setOpenProfile] = React.useState(null);
   const handleClickNotification = (event) => {
@@ -47,72 +48,14 @@ export default function AdminNavbarLinks() {
   const handleCloseProfile = () => {
     setOpenProfile(null);
   };
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setAuth({ token: null, user: null });
     Router.push('/login/login');
   };
   return (
     <div>
       <div className={classes.manager}>
-        <Poppers
-          open={Boolean(openNotification)}
-          anchorEl={openNotification}
-          transition
-          disablePortal
-          className={
-            classNames({ [classes.popperClose]: !openNotification }) +
-            " " +
-            classes.popperNav
-          }
-        >
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              id="notification-menu-list-grow"
-              style={{
-                transformOrigin:
-                  placement === "bottom" ? "center top" : "center bottom",
-              }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={handleCloseNotification}>
-                  <MenuList role="menu">
-                    <MenuItem
-                      onClick={handleCloseNotification}
-                      className={classes.dropdownItem}
-                    >
-                      Mike John responded to your email
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleCloseNotification}
-                      className={classes.dropdownItem}
-                    >
-                      You have 5 new tasks
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleCloseNotification}
-                      className={classes.dropdownItem}
-                    >
-                      You{"'"}re now friend with Andrew
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleCloseNotification}
-                      className={classes.dropdownItem}
-                    >
-                      Another Notification
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleCloseNotification}
-                      className={classes.dropdownItem}
-                    >
-                      Another One
-                    </MenuItem>
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Poppers>
+        { user ? user.username : "" }
       </div>
       <div className={classes.manager}>
         <Button
