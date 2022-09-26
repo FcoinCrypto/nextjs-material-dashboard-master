@@ -16,9 +16,81 @@ import * as Yup from 'yup';
 import { TextField , Button } from '@material-ui/core';
 import { confirmeUser } from '../../services/auth';
 import { authAtom } from '../../recoil/atom/authAtom';
-import { useSetRecoilState } from 'recoil';
 import { getUser } from '../../services/user';
+import {useSetRecoilState } from 'recoil';
+import ENV from '../../utils/env';
+const  handleResponseLogin = async (response, type) => {
+    let input = null;
+    let fullname = '';
+    
+    switch (type) {
+    case 'facebook':
+        console.log(response)
+    //   fullname = (response.name).split(' ');
+    //   input = {
+    //     email: response.email,
+    //     firstname: fullname.length > 0?fullname[1].toLowerCase():fullname[0].toLowerCase(),
+    //     lastname: fullname.length > 0?fullname[0].toUpperCase():'',
+    //     password: response.userID,
+    //     confirmPassword: response.userID,
+    //     provider_name: 'facebook',
+    //     oauth_uid: response.userID,
+    //     oauth_access_token: response.accessToken,
+    //     create_methode: 'account_connectwith'
+    //   };
+      break;
+    case 'google':
+        console.log(response)
+      input = {
+        email: response.profileObj.email,
+        firstname: response.profileObj.givenName.toLowerCase(),
+        lastname: response.profileObj.familyName.toUpperCase(),
+        password: response.profileObj.googleId,
+        confirmPassword: response.profileObj.googleId,
+        provider_name: 'google',
+        oauth_uid: response.profileObj.googleId,
+        oauth_access_token: response.accessToken,
+        create_methode: 'account_connectwith'
+      };
+      break;
+    case 'register':
+      input = {
+        email: response.email,
+        firstname: response.firstname.toLowerCase(),
+        lastname: response.lastname.toUpperCase(),
+        password: response.password,
+        confirmPassword: response.confirmPassword,
+        provider_name: null,
+        oauth_uid: null,
+        oauth_access_token: null,
+        base_url_website: ENV.host,
+        create_methode: 'account_register'
+      };
+      break;
+    default:
+      break;
+    }
 
+
+    const res = await newUser({ ...input, tz: locationUser?.time_zone ? locationUser?.time_zone.id : timezone['Europe/Paris'] });
+
+        if (res?.partner_id) {
+        setLoading(false);
+        swal({ 
+            title: 'Super!', 
+            text: 'Il reste une dernière étape pour valider votre compte. Un email vous a été envoyé. Merci de valider le lien dans celui-ci', 
+            icon: 'success', 
+            className: 'swal' 
+        }).then((value) => {
+            if (value) {
+            router.push('/');
+            }
+        });
+        } else {
+        swal({ title: 'Attention!', text: res?.error?res.error:'Cette email possède déjà un compte', icon: 'warning', className: 'swal' });
+        setLoading(false);
+        }
+    };
 function Login() {
 
     const setAuth = useSetRecoilState(authAtom);
@@ -135,11 +207,10 @@ function Login() {
                                     style={{
                                         width: '100%',
                                         borderRadius: 35,
-                                        backgroundColor:"#1f80b3",
+                                        backgroundColor:"#00853d",
                                         color:'white',
                                         marginBottom: 4,
                                         minWidth: '50vh'
-
                                     }}
                                 >
                                     <img className="mx-2" src="https://cdn-icons-png.flaticon.com/512/124/124010.png" style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
