@@ -8,7 +8,7 @@ export const achats = async () => {
     const response = await api.get('/achats')
     return response;
 };
-export const receptions = async () => {
+export const recevoirs = async () => {
     const response = await api.get('/recevoirs')
     return response;
 };
