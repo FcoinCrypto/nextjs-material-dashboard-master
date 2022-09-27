@@ -13,7 +13,7 @@ import { authAtom } from "../../recoil/atom/authAtom";
 import { getUser } from "../../services/user";
 import { addTransaction } from "../../services/transaction";
 
-function Acheter() {
+function Exchange() {
   const [wallet, setWallet] = useState();
   const [idWallet, setIdWallet] = useState();
   const { user } = useRecoilValue(authAtom);
@@ -60,8 +60,9 @@ function Acheter() {
                     // await wait(200);
                     const newFcoin = values.fcoin + wallet;
                     await updateWallet(newFcoin, idWallet);
-                    const cachat = await achat(values.fcoin,conversionUsdt(values.fcoin), user.id);
-                    await addTransaction('Achat', conversionUsdt(values.fcoin).toString(), values.fcoin, user.id);
+                    const cachat = await achat(values.fcoin,conversionUsdt(values.fcoin));
+                    await addTransaction('Achat', conversionUsdt(values.fcoin).toString(), values.fcoin);
+                    console.log(updateWallet);
                     setWallet(newFcoin);
                     resetForm(); 
                     setStatus({ success: true }); 
@@ -120,6 +121,40 @@ function Acheter() {
                     />
                 </Grid>
             </Grid>
+            <Grid container spacing={2} columns={16}>
+                <Grid item xs={6}>
+                    <TextField
+                        error={Boolean(touched.fcoin && errors.fcoin)} 
+                        helperText={touched.fcoin && errors.fcoin} 
+                        type="number" 
+                        onBlur={handleBlur} 
+                        onChange={handleChange} 
+                        value={values.fcoin} 
+                        fullWidth
+                        style={{marginTop : 23, marginBottom : 23}}
+                        label="Usdt" 
+                        name="fcoin" 
+                        required 
+                        variant="outlined"             
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        // error={Boolean(touched.usdt && errors.usdt)} 
+                        // helperText={touched.usdt && errors.usdt} 
+                        // type="number" 
+                        // onBlur={handleBlur} 
+                        // onChange={handleChange} 
+                        value={conversionUsdt(values.fcoin)} 
+                        fullWidth
+                        style={{marginTop : 23, marginBottom : 23}}
+                        label="USDT" 
+                        name="usdt"
+                        variant="outlined"
+                        // disabled='true'             
+                    />
+                </Grid>
+            </Grid>
             <center><p> Frais de traitement 
                 <strong> (0%)	:	0 Fcoin </strong>
                 <br/>  Montant total à payer	
@@ -153,6 +188,6 @@ function Acheter() {
   )
 }
 
-Acheter.layout = Admin;
+Exchange.layout = Admin;
 
-export default Acheter;
+export default Exchange;

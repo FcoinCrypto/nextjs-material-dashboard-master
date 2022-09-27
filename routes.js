@@ -39,7 +39,7 @@ const dashboardRoutes = [
     layout: "/admin",
   },
   {
-    path: "/tableEnvoyer",
+    path: "/exchange",
     name: "Exchange",
     // rtlName: "قائمة الجدول",
     icon: Money,

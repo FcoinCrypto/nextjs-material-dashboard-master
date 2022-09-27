@@ -64,7 +64,7 @@ function Envoyer(fcoin) {
                     const newFcoin  = wallet - values.montant;
                     if(newFcoin > 0){
                         setInsuffisant('');
-                        const envoie = await envoyer(values.destinataire, values.etiquette, values.montant);
+                        const envoie = await envoyer(values.destinataire, values.etiquette, values.montant, user.id);
                         const uWOS = await updateWalletOnSend(newFcoin,idWallet);
                         const at = await addTransaction('Envoie', values.etiquette, values.montant);
                         console.log("envoie", envoie);

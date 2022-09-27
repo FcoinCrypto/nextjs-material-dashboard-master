@@ -34,14 +34,14 @@ export default function TableRecevoir(props) {
           </TableHead>
         ) : null}
           <TableBody>
-            {Array.from(tableData.data_recevoir).reverse().map((row) => (
+            {tableData.map((row) => (
               <TableRow key={row.attributes.createdAt}>
                 <TableCell align="left">{row.attributes.createdAt}</TableCell>
                 <TableCell align="left">{row.attributes.message}</TableCell>
                 <TableCell align="left">{row.attributes.etiquette}</TableCell>
                 <TableCell align="left">{row.attributes.montant}</TableCell>
               </TableRow>
-            ))}
+            )).reverse()}
           </TableBody>
       </Table>
     </div>

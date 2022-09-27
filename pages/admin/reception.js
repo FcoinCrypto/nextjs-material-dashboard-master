@@ -8,8 +8,14 @@ import { recevoirs } from "../../services/reception.js";
 import { addTransaction } from "../../services/transaction.js";
 import { updateWallet } from "../../services/achat";
 import { conversionUsdt } from "../../utils/utilAchat";
+import { getUser } from "../../services/user";
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { authAtom } from "../../recoil/atom/authAtom";
+
 
 function Reception(fcoin) {
+    const { user } = useRecoilValue(authAtom);
+
     function handleChangeCustom(event){
 
     }
@@ -40,8 +46,8 @@ function Reception(fcoin) {
             }) => {
                 try { 
                     // NOTE: Make API request 
-                    const recevoir = await recevoirs(values.message, values.etiquette, values.montant);
-                    const at = await addTransaction('Reçu', values.etiquette, values.montant);
+                    const recevoir = await recevoirs(values.message, values.etiquette, values.montant, user.id);
+                    const at = await addTransaction('Reçu', values.etiquette, values.montant, user.id);
                     console.log("recu", recevoir);
                     resetForm(); 
                     setStatus({ success: true }); 
