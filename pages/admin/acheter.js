@@ -39,8 +39,8 @@ function Acheter() {
             }} 
             validationSchema={Yup.object().shape({ 
                 fcoin: Yup.number()
-                    .typeError("That doesn't look like a phone number")
-                    .positive("A phone number can't start with a minus")
+                    .typeError("type error")
+                    .positive("A number can't start with a minus")
                     .min(1)
                     .required('require'),
                 // usdt: Yup.number()
