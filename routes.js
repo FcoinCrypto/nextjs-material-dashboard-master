@@ -41,7 +41,6 @@ const dashboardRoutes = [
   {
     path: "/exchange",
     name: "Exchange",
-    // rtlName: "قائمة الجدول",
     icon: Money,
 
     layout: "/admin",

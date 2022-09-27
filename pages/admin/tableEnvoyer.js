@@ -77,7 +77,7 @@ export const getServerSideProps = async () => {
   // const res = await fetch('http://localhost:1337/api/achats');
   // const data  = await res.json();
   const res = await envoyers();
-  console.log(res)
+  // console.log(res)
   // console.log(res.data.data);
   // Pass data to the page via props
   return { props: { data : res.data.data } };
