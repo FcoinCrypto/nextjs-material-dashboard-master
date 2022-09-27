@@ -3,7 +3,7 @@ import Router from "next/router";
 
 export default function _error() {
   React.useEffect(() => {
-    Router.push("/login/login");
+    Router.push("/admin/table-list");
   });
 
   return <div />;

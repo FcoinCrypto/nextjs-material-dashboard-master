@@ -34,7 +34,7 @@ export default function TableRecevoir(props) {
           </TableHead>
         ) : null}
           <TableBody>
-            {Array.from(tableData.data_recevoir).map((row) => (
+            {Array.from(tableData.data_recevoir).reverse().map((row) => (
               <TableRow key={row.attributes.createdAt}>
                 <TableCell align="left">{row.attributes.createdAt}</TableCell>
                 <TableCell align="left">{row.attributes.message}</TableCell>

@@ -7,6 +7,7 @@ import axios from "axios";
 import { updateWallet } from "../../services/achat";
 import { conversionUsdt } from "../../utils/utilAchat";
 import { envoyer, updateWalletOnSend } from "../../services/envoyer.js";
+import { addTransaction } from "../../services/transaction";
 import { getUser } from "../../services/user";
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { authAtom } from "../../recoil/atom/authAtom";
@@ -17,6 +18,8 @@ function Envoyer(fcoin) {
     const [wallet, setWallet] = useState();
     const [idWallet, setIdWallet] = useState();
     const { user } = useRecoilValue(authAtom);
+    const [insuffisant, setInsuffisant] = useState();
+    const [dNone, setdNone] = useState('none');
   
     useEffect(async () => {
         if (!wallet) {
@@ -57,11 +60,20 @@ function Envoyer(fcoin) {
                     // const newFcoin = values.fcoin + fcoin.data;
                     // console.log("test",newFcoin, fcoin.data)
                     // await updateWallet(newFcoin)
-                    const envoie = await envoyer(values.destinataire, values.etiquette, values.montant);
+
                     const newFcoin  = wallet - values.montant;
-                    const uWOS = await updateWalletOnSend(newFcoin,idWallet);
-                    console.log("envoie", envoie);
-                    console.log("updateWallet", uWOS);
+                    if(newFcoin > 0){
+                        setInsuffisant('');
+                        const envoie = await envoyer(values.destinataire, values.etiquette, values.montant);
+                        const uWOS = await updateWalletOnSend(newFcoin,idWallet);
+                        const at = await addTransaction('Envoie', values.etiquette, values.montant);
+                        console.log("envoie", envoie);
+                        console.log("updateWallet", uWOS);
+                        console.log("at", at);
+                    }else{
+                        setInsuffisant('Votre fcoin est insuffisant');
+                        setdNone('');
+                    }
                     resetForm(); 
                     setStatus({ success: true }); 
                     setSubmitting(false);
@@ -139,7 +151,9 @@ function Envoyer(fcoin) {
                     // disabled='true'             
                 />
             </Grid>
-            <center><p> Frais de traitement 
+            <center>
+                <p style={{ color : "red", display: dNone}}>{insuffisant}</p>
+                <p> Frais de traitement 
                 <strong> (0%)	:	0 Fcoin </strong>
                 <br/>  Montant total à envoyer	
                 <strong> 0 Fcoin </strong> 

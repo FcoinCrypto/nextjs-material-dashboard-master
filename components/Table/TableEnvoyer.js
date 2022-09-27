@@ -34,7 +34,7 @@ export default function TableEnvoyer(props) {
           </TableHead>
         ) : null}
           <TableBody>
-            {Array.from(tableData?.data_transaction).map((row) => (
+            {Array.from(tableData?.data_transaction).reverse().map((row) => (
               <TableRow key={row.attributes.createdAt}>
                 <TableCell align="left">{row.attributes.createdAt}</TableCell>
                 <TableCell align="left">{row.attributes.destinataire}</TableCell>
