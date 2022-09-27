@@ -3,6 +3,7 @@ import Send from "@material-ui/icons/Send";
 import Receipt from "@material-ui/icons/Receipt";
 import Shop from "@material-ui/icons/Shop";
 import Tableau from "@material-ui/icons/Dashboard";
+import Money from "@material-ui/icons/AddShoppingCart";
 
 
 const dashboardRoutes = [
@@ -39,9 +40,9 @@ const dashboardRoutes = [
   },
   {
     path: "/tableEnvoyer",
-    name: "showSend",
+    name: "Exchange",
     // rtlName: "قائمة الجدول",
-    icon: Receipt,
+    icon: Money,
 
     layout: "/admin",
   },

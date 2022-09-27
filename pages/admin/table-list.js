@@ -58,7 +58,7 @@ const cardstyles = {
   },
 };
 
-function TableList(data, data_transaction, data_recevoir) {
+function TableList(data, data_transaction, data_recevoir, data_achat) {
   const useStyles = makeStyles(styles);
   const[dNone, setdNone] = useState('');
   const[dNoneAchat, setdNoneAchat] = useState('none');
@@ -150,7 +150,7 @@ function TableList(data, data_transaction, data_recevoir) {
             <CardBody>
               <TableAchat
                 tableHeaderColor="primary"
-                tableHead={["date", "type", "etiquette", "montant"]}
+                tableHead={["date", "fcoin", "usdt"]}
                 tableData={data}
               />
               
@@ -221,11 +221,13 @@ export async function getServerSideProps () {
   const res = await getTransactions();
   const res_rec = await recevoirs();
   const res_env = await envoyers();
+  const res_ach = await achats();
   // console.log(res.data.data);
   // Pass data to the page via props
   return { props: { 
     data : res.data.data,
     data_transaction : res_env.data.data ,
-    data_recevoir: res_rec.data.data
+    data_recevoir : res_rec.data.data,
+    data_achat : res_ach.data.data
   } };
 };

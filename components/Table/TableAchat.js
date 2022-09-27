@@ -10,7 +10,7 @@ import TableCell from "@material-ui/core/TableCell";
 // core components
 import styles from "assets/jss/nextjs-material-dashboard/components/tableStyle.js";
 
-export default function AchatTable(props) {
+export default function TableAchat(props) {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   const { tableHead, tableData, tableHeaderColor } = props;
@@ -34,25 +34,25 @@ export default function AchatTable(props) {
           </TableHead>
         ) : null}
           <TableBody>
-            {Array.from(tableData.data).map((row) => (
+            {Array.from(tableData?.data_achat).reverse().map((row) => (
               <TableRow key={row.attributes.createdAt}>
                 <TableCell align="left">{row.attributes.createdAt}</TableCell>
-                <TableCell align="left">{row.attributes.type}</TableCell>
-                <TableCell align="left">{row.attributes.etiquette}</TableCell>
-                <TableCell align="left">{row.attributes.montant}</TableCell>
+                <TableCell align="left">{row.attributes.fcoin}</TableCell>
+                <TableCell align="left">{row.attributes.usdt}</TableCell>
               </TableRow>
             ))}
           </TableBody>
       </Table>
     </div>
   );
+  
 }
 
-AchatTable.defaultProps = {
+TableAchat.defaultProps = {
   tableHeaderColor: "gray",
 };
 
-AchatTable.propTypes = {
+TableAchat.propTypes = {
   tableHeaderColor: PropTypes.oneOf([
     "warning",
     "primary",

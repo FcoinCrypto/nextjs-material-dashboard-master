@@ -5,7 +5,7 @@ import {Formik, Form} from 'formik';
 import * as Yup from 'yup';
 import axios from "axios";
 import { recevoirs } from "../../services/reception.js";
-
+import { addTransaction } from "../../services/transaction.js";
 import { updateWallet } from "../../services/achat";
 import { conversionUsdt } from "../../utils/utilAchat";
 
@@ -41,7 +41,8 @@ function Reception(fcoin) {
                 try { 
                     // NOTE: Make API request 
                     const recevoir = await recevoirs(values.message, values.etiquette, values.montant);
-                    console.log("envoie", recevoir);
+                    const at = await addTransaction('Reçu', values.etiquette, values.montant);
+                    console.log("recu", recevoir);
                     resetForm(); 
                     setStatus({ success: true }); 
                     setSubmitting(false);

@@ -7,9 +7,11 @@ import {Formik, Form} from 'formik';
 import * as Yup from 'yup';
 import axios from "axios";
 import { updateWallet } from "../../services/achat";
+import { achat } from "../../services/achat";
 import { conversionUsdt } from "../../utils/utilAchat";
 import { authAtom } from "../../recoil/atom/authAtom";
 import { getUser } from "../../services/user";
+import { addTransaction } from "../../services/transaction";
 
 function Acheter() {
   const [wallet, setWallet] = useState();
@@ -33,7 +35,7 @@ function Acheter() {
             enableReinitialize 
             initialValues={{ 
                 fcoin: '', 
-                // usdt: '',
+                 usdt: ''
             }} 
             validationSchema={Yup.object().shape({ 
                 fcoin: Yup.number()
@@ -57,7 +59,10 @@ function Acheter() {
                     // NOTE: Make API request 
                     // await wait(200);
                     const newFcoin = values.fcoin + wallet;
-                    await updateWallet(newFcoin, idWallet)
+                    await updateWallet(newFcoin, idWallet);
+                    const cachat = await achat(values.fcoin,conversionUsdt(values.fcoin));
+                    await addTransaction('Achat', conversionUsdt(values.fcoin).toString(), values.fcoin);
+                    console.log(updateWallet);
                     setWallet(newFcoin);
                     resetForm(); 
                     setStatus({ success: true }); 
