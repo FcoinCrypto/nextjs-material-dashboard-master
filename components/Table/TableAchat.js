@@ -34,13 +34,13 @@ export default function TableAchat(props) {
           </TableHead>
         ) : null}
           <TableBody>
-            {Array.from(tableData?.data_achat).reverse().map((row) => (
+            {tableData.map((row) => (
               <TableRow key={row.attributes.createdAt}>
                 <TableCell align="left">{row.attributes.createdAt}</TableCell>
                 <TableCell align="left">{row.attributes.fcoin}</TableCell>
                 <TableCell align="left">{row.attributes.usdt}</TableCell>
               </TableRow>
-            ))}
+            )).reverse()}
           </TableBody>
       </Table>
     </div>

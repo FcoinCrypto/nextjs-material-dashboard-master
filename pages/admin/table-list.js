@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useState, useEffect} from "react";
 // @material-ui/core components
 import PropTypes from "prop-types";
 // @material-ui/core components
@@ -23,6 +23,11 @@ import CardBody from "components/Card/CardBody.js";
 import axios from "axios"
 import Footer from "../../components/Footer/Footer";
 import { achats, transactions, envoyers, recevoirs } from "../../services/table";
+
+import { getUser } from "../../services/user";
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { authAtom } from "../../recoil/atom/authAtom";
+
 
 const cardstyles = {
   cardCategoryWhite: {
@@ -58,12 +63,18 @@ const cardstyles = {
   },
 };
 
-function TableList(data, data_transaction, data_recevoir, data_achat) {
+function TableList() {
   const useStyles = makeStyles(styles);
   const[dNone, setdNone] = useState('');
   const[dNoneAchat, setdNoneAchat] = useState('none');
   const[dNoneEnvoyer, setdNoneEnvoyer] = useState('none');
   const[dNoneRecevoir, setdNoneRecevoir] = useState('none');
+  const[dataEnvoie, setDataEnvoie] = useState();
+  const[dataTransaction, setDataTransaction] = useState();
+  const[dataRecevoir, setDataRecevoir] = useState();
+  const[dataAchat, setDataAchat] = useState();
+  const { user } = useRecoilValue(authAtom);
+
   const aff_transaction = () => {
     setdNone('');
     setdNoneAchat('none');
@@ -93,112 +104,133 @@ function TableList(data, data_transaction, data_recevoir, data_achat) {
     
   };
   const classes = useStyles();
+
+  useEffect(async () => {
+    if(!dataEnvoie && !dataTransaction && !dataRecevoir && !dataAchat ){
+
+      const res = await transactions(user.id);
+      const res_rec = await recevoirs(user.id);
+      const res_env = await envoyers(user.id);
+      const res_ach = await achats(user.id);
+
+      setDataTransaction(res.data.data);
+      setDataRecevoir(res_rec.data.data);
+      setDataEnvoie(res_env.data.data);
+      setDataAchat(res_ach.data.data);
+
+    } 
+  }, [dataEnvoie, dataAchat, dataRecevoir, dataTransaction])
+
   return (
-    <GridContainer>
-      <footer>
-        <div className={classes.container}>
-          <div className={classes.left}>
-            <List className={classes.list}>
-              <ListItem className={classes.inlineBlock}>
-                <a href="#" className={classes.block} onClick={aff_achat}>
-                Achats
-                </a>
-              </ListItem>
-              <ListItem className={classes.inlineBlock}>
-                <a href="#" className={classes.block} onClick={aff_envoyer}>
-                  Envoie
-                </a>
-              </ListItem>
-              <ListItem className={classes.inlineBlock}>
-                <a href="#reçu" className={classes.block} onClick={aff_recevoir}>
-                  reçu
-                </a>
-              </ListItem>
-            </List>
+    <>
+      { dataEnvoie && dataAchat && dataRecevoir && dataTransaction &&
+        <GridContainer>
+          <footer>
+            <div className={classes.container}>
+              <div className={classes.left}>
+                <List className={classes.list}>
+                  <ListItem className={classes.inlineBlock}>
+                    <a href="#" className={classes.block} onClick={aff_achat}>
+                    Achats
+                    </a>
+                  </ListItem>
+                  <ListItem className={classes.inlineBlock}>
+                    <a href="#" className={classes.block} onClick={aff_envoyer}>
+                      Envoie
+                    </a>
+                  </ListItem>
+                  <ListItem className={classes.inlineBlock}>
+                    <a href="#reçu" className={classes.block} onClick={aff_recevoir}>
+                      reçu
+                    </a>
+                  </ListItem>
+                </List>
+              </div>
+            </div>
+          </footer>
+          <div style={{display: dNone, minWidth:'100%'}} className={cardstyles.width100} id="transaction_id">
+            <GridItem xs={12} sm={12} md={12}>
+              <Card>
+                <CardHeader color="info">
+                  <h4 className={classes.cardTitleWhite}>Title</h4>
+                  <p className={classes.cardCategoryWhite}>
+                    Transactions
+                  </p>
+                </CardHeader>
+                <CardBody>
+                  <Table
+                    tableHeaderColor="primary"
+                    tableHead={["date", "type", "etiquette", "montant"]}
+                    tableData={dataTransaction}
+                  />
+                  
+                </CardBody>
+              </Card>
+            </GridItem>
           </div>
-        </div>
-      </footer>
-      <div style={{display: dNone, minWidth:'100%'}} className={cardstyles.width100} id="transaction_id">
-        <GridItem xs={12} sm={12} md={12}>
-          <Card>
-            <CardHeader color="info">
-              <h4 className={classes.cardTitleWhite}>Title</h4>
-              <p className={classes.cardCategoryWhite}>
-                Transactions
-              </p>
-            </CardHeader>
-            <CardBody>
-              <Table
-                tableHeaderColor="primary"
-                tableHead={["date", "type", "etiquette", "montant"]}
-                tableData={data}
-              />
-              
-            </CardBody>
-          </Card>
-        </GridItem>
-      </div>
-      <div style={{display: dNoneAchat, minWidth:'100%'}} className={cardstyles.width100} id="achat_id">
-        <GridItem xs={12} sm={12} md={12}>
-          <Card>
-            <CardHeader color="info">
-              <h4 className={classes.cardTitleWhite}>Title</h4>
-              <p className={classes.cardCategoryWhite}>
-                Achat
-              </p>
-            </CardHeader>
-            <CardBody>
-              <TableAchat
-                tableHeaderColor="primary"
-                tableHead={["date", "fcoin", "usdt"]}
-                tableData={data}
-              />
-              
-            </CardBody>
-          </Card>
-        </GridItem>
-      </div>
-      <div style={{display: dNoneEnvoyer, minWidth:'100%'}} className={cardstyles.width100} id="envoyer_id">
-        <GridItem xs={12} sm={12} md={12}>
-          <Card>
-            <CardHeader color="info">
-              <h4 className={classes.cardTitleWhite}>Title</h4>
-              <p className={classes.cardCategoryWhite}>
-                Envoie
-              </p>
-            </CardHeader>
-            <CardBody>
-              <TableEnvoyer
-                tableHeaderColor="primary"
-                tableHead={["date", "destinataire", "etiquette", "montant"]}
-                tableData={data}
-              />
-              
-            </CardBody>
-          </Card>
-        </GridItem>
-      </div>
-      <div style={{display: dNoneRecevoir, minWidth:'100%'}} className={cardstyles.width100} id="recevoir_id">
-        <GridItem xs={12} sm={12} md={12}>
-          <Card>
-            <CardHeader color="info">
-              <h4 className={classes.cardTitleWhite}>Title</h4>
-              <p className={classes.cardCategoryWhite}>
-                Reçu
-              </p>
-            </CardHeader>
-            <CardBody>
-              <TableRecevoir
-                tableHeaderColor="primary"
-                tableHead={["date", "message", "etiquette", "montant"]}
-                tableData={data}
-              />
-              
-            </CardBody>
-          </Card>
-        </GridItem>
-      </div>
-    </GridContainer>
+          <div style={{display: dNoneAchat, minWidth:'100%'}} className={cardstyles.width100} id="achat_id">
+            <GridItem xs={12} sm={12} md={12}>
+              <Card>
+                <CardHeader color="info">
+                  <h4 className={classes.cardTitleWhite}>Title</h4>
+                  <p className={classes.cardCategoryWhite}>
+                    Achat
+                  </p>
+                </CardHeader>
+                <CardBody>
+                  <TableAchat
+                    tableHeaderColor="primary"
+                    tableHead={["date", "fcoin", "usdt"]}
+                    tableData={dataAchat}
+                  />
+                  
+                </CardBody>
+              </Card>
+            </GridItem>
+          </div>
+          <div style={{display: dNoneEnvoyer, minWidth:'100%'}} className={cardstyles.width100} id="envoyer_id">
+            <GridItem xs={12} sm={12} md={12}>
+              <Card>
+                <CardHeader color="info">
+                  <h4 className={classes.cardTitleWhite}>Title</h4>
+                  <p className={classes.cardCategoryWhite}>
+                    Envoie
+                  </p>
+                </CardHeader>
+                <CardBody>
+                  <TableEnvoyer
+                    tableHeaderColor="primary"
+                    tableHead={["date", "destinataire", "etiquette", "montant"]}
+                    tableData={dataEnvoie}
+                  />
+                  
+                </CardBody>
+              </Card>
+            </GridItem>
+          </div>
+          <div style={{display: dNoneRecevoir, minWidth:'100%'}} className={cardstyles.width100} id="recevoir_id">
+            <GridItem xs={12} sm={12} md={12}>
+              <Card>
+                <CardHeader color="info">
+                  <h4 className={classes.cardTitleWhite}>Title</h4>
+                  <p className={classes.cardCategoryWhite}>
+                    Reçu
+                  </p>
+                </CardHeader>
+                <CardBody>
+                  <TableRecevoir
+                    tableHeaderColor="primary"
+                    tableHead={["date", "message", "etiquette", "montant"]}
+                    tableData={dataRecevoir}
+                  />
+                  
+                </CardBody>
+              </Card>
+            </GridItem>
+          </div>
+        </GridContainer>
+      }
+    </>
   );
 }
 
@@ -214,20 +246,20 @@ async function getRecevoirs () {
   return res
 }
 
-export async function getServerSideProps () {
-  // Fetch data from external API
-  // const res = await fetch('http://localhost:1337/api/achats');
-  // const data  = await res.json();
-  const res = await getTransactions();
-  const res_rec = await recevoirs();
-  const res_env = await envoyers();
-  const res_ach = await achats();
-  // console.log(res.data.data);
-  // Pass data to the page via props
-  return { props: { 
-    data : res.data.data,
-    data_transaction : res_env.data.data ,
-    data_recevoir : res_rec.data.data,
-    data_achat : res_ach.data.data
-  } };
-};
+// export async function getServerSideProps () {
+
+//   // Fetch data from external API
+//   // const res = await fetch('http://localhost:1337/api/achats');
+//   const res = await getTransactions();
+//   const res_rec = await recevoirs();
+//   const res_env = await envoyers(user.id);
+//   const res_ach = await achats();
+//   // console.log(res.data.data);
+//   // Pass data to the page via props
+//   return { props: { 
+//     data : res.data.data,
+//     dataTransaction : res_env.data.data ,
+//     dataRecevoir : res_rec.data.data,
+//     dataAchat : res_ach.data.data
+//   } };
+// };

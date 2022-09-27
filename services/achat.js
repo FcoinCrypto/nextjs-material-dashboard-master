@@ -13,11 +13,12 @@ api
   });
     
 
-  export const achat = async (fcoin, usdt) =>{
+  export const achat = async (fcoin, usdt, user_id) =>{
     const response = await api.post('/achats', {
         data:{
           fcoin: fcoin,
-          usdt: usdt
+          usdt: usdt,
+          user: user_id
         }
       })
     // console.log(response.data)

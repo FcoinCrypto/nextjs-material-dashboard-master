@@ -34,14 +34,14 @@ export default function TableEnvoyer(props) {
           </TableHead>
         ) : null}
           <TableBody>
-            {Array.from(tableData?.data_transaction).reverse().map((row) => (
+            {tableData.map((row) => (
               <TableRow key={row.attributes.createdAt}>
                 <TableCell align="left">{row.attributes.createdAt}</TableCell>
                 <TableCell align="left">{row.attributes.destinataire}</TableCell>
                 <TableCell align="left">{row.attributes.etiquette}</TableCell>
                 <TableCell align="left">{row.attributes.montant}</TableCell>
               </TableRow>
-            ))}
+            )).reverse()}
           </TableBody>
       </Table>
     </div>

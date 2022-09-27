@@ -13,7 +13,7 @@ import styles from "assets/jss/nextjs-material-dashboard/components/tableStyle.j
 export default function CustomTable(props) {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
-  const { tableHead, tableData, tableHeaderColor } = props;
+  const  { tableHead, tableData, tableHeaderColor } = props;
   return (
     <div className={classes.tableResponsive}>
       <Table className={classes.table}>
@@ -34,14 +34,14 @@ export default function CustomTable(props) {
           </TableHead>
         ) : null}
           <TableBody>
-            {Array.from(tableData.data).map((row) => (
+            {tableData.map((row) => (
               <TableRow key={row.attributes.createdAt}>
                 <TableCell align="left">{row.attributes.createdAt}</TableCell>
                 <TableCell align="left">{row.attributes.type}</TableCell>
                 <TableCell align="left">{row.attributes.etiquette}</TableCell>
                 <TableCell align="left">{row.attributes.montant}</TableCell>
               </TableRow>
-            ))}
+            )).reverse()}
           </TableBody>
       </Table>
     </div>

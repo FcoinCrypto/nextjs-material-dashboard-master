@@ -60,9 +60,8 @@ function Acheter() {
                     // await wait(200);
                     const newFcoin = values.fcoin + wallet;
                     await updateWallet(newFcoin, idWallet);
-                    const cachat = await achat(values.fcoin,conversionUsdt(values.fcoin));
-                    await addTransaction('Achat', conversionUsdt(values.fcoin).toString(), values.fcoin);
-                    console.log(updateWallet);
+                    const cachat = await achat(values.fcoin,conversionUsdt(values.fcoin), user.id);
+                    await addTransaction('Achat', conversionUsdt(values.fcoin).toString(), values.fcoin, user.id);
                     setWallet(newFcoin);
                     resetForm(); 
                     setStatus({ success: true }); 
