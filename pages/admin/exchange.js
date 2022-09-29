@@ -53,21 +53,6 @@ function Exchange() {
                 setSubmitting 
             }) => {
                 try { 
-                    // NOTE: Make API request 
-                    // await wait(200);
-                    // const newFcoin = values.fcoin + fcoin.data;
-                    // console.log("test",newFcoin, fcoin.data)
-                    // await updateWallet(newFcoin)
-
-                    // const newFcoin  = wallet - values.montant;
-                    // if(newFcoin > 0){
-                    //     setInsuffisant('');
-                    //     const envoie = await envoyer(values.destinataire, values.etiquette, values.montant);
-                    //     const uWOS = await updateWalletOnSend(newFcoin,idWallet);
-                    // }else{
-                    //     setInsuffisant('Votre fcoin est insuffisant');
-                    //     setdNone('');
-                    // }
                     resetForm(); 
                     setStatus({ success: true }); 
                     setSubmitting(false);
@@ -170,6 +155,85 @@ function Exchange() {
                         />
                 </Grid>
 
+
+                <Grid item xs={3} style={{ display: dNone }}>
+                    <InputLabel htmlFor="input-with-icon-adornment">
+                        Swap to
+                    </InputLabel>
+                    <br/>
+                    <Button
+                        disableElevation
+                        variant="contained"
+                        size="big"
+                        style={{
+                            width: '100%',
+                            height:'60%',
+                            borderRadius: 5,
+                            backgroundColor:"#eeeeee",
+                            color:'grey',
+                            marginBottom: 4,
+                        }}
+                    >
+                        <img className="mx-2" src="https://cdn-icons-png.flaticon.com/512/2150/2150062.png" style={{width:40,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
+                            USDT
+
+                    </Button>
+                </Grid>
+                <Grid item xs={9} style={{ display: dNone }}>
+                    <TextField
+                            error={Boolean(touched.fcoin && errors.fcoin)} 
+                            helperText={touched.fcoin && errors.fcoin} 
+                            type="number" 
+                            onBlur={handleBlur} 
+                            onChange={handleChange} 
+                            value={values.fcoin} 
+                            fullWidth
+                            style={{marginTop : 45}}
+                            label="USDT" 
+                            name="usdt" 
+                            required 
+                            variant="outlined"             
+                        />
+                </Grid>
+                <Grid item xs={3} style={{ display: dNone }}>
+                    <InputLabel htmlFor="input-with-icon-adornment">
+                        Swap from
+                    </InputLabel>
+                    <br/>
+                    <Button
+                        disableElevation
+                        variant="contained"
+                        size="big"
+                        style={{
+                            width: '100%',
+                            height:'60%',
+                            borderRadius: 5,
+                            backgroundColor:"#eeeeee",
+                            color:'grey',
+                            marginBottom: 4,
+                        }}
+                    >
+                        <img className="mx-2" src="https://raw.githubusercontent.com/FcoinCrypto/Fcoin/main/logo/1024x1024fcoin.png" style={{width:40,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
+                            Fcoin
+
+                    </Button>
+                </Grid>
+                <Grid item xs={9} style={{ display: dNone }}>
+                    <TextField
+                            error={Boolean(touched.fcoin && errors.fcoin)} 
+                            helperText={touched.fcoin && errors.fcoin} 
+                            type="number" 
+                            onBlur={handleBlur} 
+                            onChange={handleChange} 
+                            value={values.fcoin} 
+                            fullWidth
+                            style={{marginTop : 45}}
+                            label="FCOIN" 
+                            name="fcoin" 
+                            required 
+                            variant="outlined"             
+                        />
+                </Grid>
 
             </Grid>
             <Grid 

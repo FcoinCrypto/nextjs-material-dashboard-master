@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Router from "next/router";
 
-import GoogleLogin from 'react-google-login';
+// import GoogleLogin from 'react-google-login/dist/google-login';
+import { CodeClientConfig, GoogleLogin } from '@react-oauth/google';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import {
     MDBContainer,
@@ -14,133 +16,62 @@ from 'mdb-react-ui-kit';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import { TextField , Button } from '@material-ui/core';
-import { confirmeUser } from '../../services/auth';
+import { confirmeUser, registration } from '../../services/auth';
 import { authAtom } from '../../recoil/atom/authAtom';
 import { getUser } from '../../services/user';
 import {useSetRecoilState } from 'recoil';
 import ENV from '../../utils/env';
-const  handleResponseLogin = async (response, type) => {
-    let input = null;
-    let fullname = '';
-    
-    switch (type) {
-    case 'facebook':
-        console.log(response)
-    //   fullname = (response.name).split(' ');
-    //   input = {
-    //     email: response.email,
-    //     firstname: fullname.length > 0?fullname[1].toLowerCase():fullname[0].toLowerCase(),
-    //     lastname: fullname.length > 0?fullname[0].toUpperCase():'',
-    //     password: response.userID,
-    //     confirmPassword: response.userID,
-    //     provider_name: 'facebook',
-    //     oauth_uid: response.userID,
-    //     oauth_access_token: response.accessToken,
-    //     create_methode: 'account_connectwith'
-    //   };
-      break;
-    case 'google':
-        console.log(response)
-      input = {
-        email: response.profileObj.email,
-        firstname: response.profileObj.givenName.toLowerCase(),
-        lastname: response.profileObj.familyName.toUpperCase(),
-        password: response.profileObj.googleId,
-        confirmPassword: response.profileObj.googleId,
-        provider_name: 'google',
-        oauth_uid: response.profileObj.googleId,
-        oauth_access_token: response.accessToken,
-        create_methode: 'account_connectwith'
-      };
-      break;
-    case 'register':
-      input = {
-        email: response.email,
-        firstname: response.firstname.toLowerCase(),
-        lastname: response.lastname.toUpperCase(),
-        password: response.password,
-        confirmPassword: response.confirmPassword,
-        provider_name: null,
-        oauth_uid: null,
-        oauth_access_token: null,
-        base_url_website: ENV.host,
-        create_methode: 'account_register'
-      };
-      break;
-    default:
-      break;
-    }
+import jwt_decode from "jwt-decode";
+import { createWallet } from '../../services/wallet';
 
-
-    const res = await newUser({ ...input, tz: locationUser?.time_zone ? locationUser?.time_zone.id : timezone['Europe/Paris'] });
-
-        if (res?.partner_id) {
-        setLoading(false);
-        swal({ 
-            title: 'Super!', 
-            text: 'Il reste une dernière étape pour valider votre compte. Un email vous a été envoyé. Merci de valider le lien dans celui-ci', 
-            icon: 'success', 
-            className: 'swal' 
-        }).then((value) => {
-            if (value) {
-            router.push('/');
-            }
-        });
-        } else {
-        swal({ title: 'Attention!', text: res?.error?res.error:'Cette email possède déjà un compte', icon: 'warning', className: 'swal' });
-        setLoading(false);
-        }
-    };
 function Login() {
 
     const setAuth = useSetRecoilState(authAtom);
+
     const  handleResponseLogin = async (response, type) => {
         let input = null;
-        let fullname = '';
-        
+        let registre = '';
+
         switch (type) {
             case 'facebook':
-                console.log(response)
-            //   fullname = (response.name).split(' ');
-            //   input = {
-            //     email: response.email,
-            //     firstname: fullname.length > 0?fullname[1].toLowerCase():fullname[0].toLowerCase(),
-            //     lastname: fullname.length > 0?fullname[0].toUpperCase():'',
-            //     password: response.userID,
-            //     confirmPassword: response.userID,
-            //     provider_name: 'facebook',
-            //     oauth_uid: response.userID,
-            //     oauth_access_token: response.accessToken,
-            //     create_methode: 'account_connectwith'
-            //   };
+                registre = await registration(response.name, response.email, response.id)
+                // const registre = await registration(response.name, response.email, response.sub)  email
+                // console.log("registration",registre.response.data.error.message)
+                // console.log("registration mandeha",registre)
+
+                if(registre.jwt) {
+                    await createWallet(registre.user.id)
+                    setAuth({ token: registre.jwt, user: registre.user  });
+                    Router.push("/admin/tableau");
+                }
+                else if (registre.response.data.error.message == "Email or Username are already taken"){
+                    const userConfirm = await confirmeUser(response.email, response.id)
+                    setAuth({ token: userConfirm.data.jwt, user: userConfirm.data.user  });
+                    Router.push("/admin/tableau");
+                }
+                else {
+                    console.log(registre.response.data.error.message);
+                }
             break;
             case 'google':
-                console.log(response)
-            //   input = {
-            //     email: response.profileObj.email,
-            //     firstname: response.profileObj.givenName.toLowerCase(),
-            //     lastname: response.profileObj.familyName.toUpperCase(),
-            //     password: response.profileObj.googleId,
-            //     confirmPassword: response.profileObj.googleId,
-            //     provider_name: 'google',
-            //     oauth_uid: response.profileObj.googleId,
-            //     oauth_access_token: response.accessToken,
-            //     create_methode: 'account_connectwith'
-            //   };
-            break;
-            case 'register':
-            input = {
-                email: response.email,
-                firstname: response.firstname.toLowerCase(),
-                lastname: response.lastname.toUpperCase(),
-                password: response.password,
-                confirmPassword: response.confirmPassword,
-                provider_name: null,
-                oauth_uid: null,
-                oauth_access_token: null,
-                base_url_website: ENV.host,
-                create_methode: 'account_register'
-            };
+                registre = await registration(response.name, response.email, response.sub)
+                // console.log("registration",registre.response.data.error.message)
+                console.log("registration mandeha",registre)
+
+                if(registre.jwt) {
+                    await createWallet(registre.user.id)
+                    setAuth({ token: registre.jwt, user: registre.user  });
+                    Router.push("/admin/tableau");
+                }
+                else if (registre.response.data.error.message == "Email or Username are already taken"){
+                    const userConfirm = await confirmeUser(response.email, response.sub)
+                    console.log(userConfirm)
+                    setAuth({ token: userConfirm.data.jwt, user: userConfirm.data.user  });
+                    Router.push("/admin/tableau");
+                }
+                else {
+                    console.log(registre.response.data.error.message);
+                }
             break;
             default:
             break;
@@ -161,34 +92,55 @@ function Login() {
                     <Link href="./registration">
                         <h5 className="fw-normal my-4 pb-3" style={{letterSpacing: '1px', cursor:'pointer'}}>Inscrivez-vous</h5>
                     </Link>
-
+                    
+                    <GoogleOAuthProvider clientId={'66220988134-n1m5v05ri12up8gvv6ugnc4790ktatvt.apps.googleusercontent.com'}>
                     <GoogleLogin
-                        clientId={'186741013778-bh3ph6mmpj4si62e0ejktopeqdqq0tfl.apps.googleusercontent.com'}
-                        render={(renderProps) => (
-                            <Button
-                                onClick={renderProps.onClick}
-                                variant="contained"
-                                size="big"
-                                style={{
-                                    width: '100%',
-                                    borderRadius: 35,
-                                    backgroundColor:"#00853d",
-                                    color:'white',
-                                    marginBottom: 4,
-                                    minWidth: '50vh'
-                                }}
-                            >
-                                <img className="mx-2" src="https://cdn-icons-png.flaticon.com/512/2504/2504739.png" style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
-                                    Se connecter avec google
+                        // style={{
+                        //     width: '100%',
+                        //     borderRadius: 35,
+                        //     backgroundColor:"#00853d",
+                        //     color:'white',
+                        //     marginBottom: 4,
+                        //     minWidth: '50vh'
+                        // }}
+                        borderRadius={'35'}
+                        theme={'outline'}
+                        // width={'359'}
+                        type={'icon'}
+                        size={'10'}
+                        logo_alignment={'center'}
+                        // render={(renderProps) => (
+                        //     <Button
+                        //         onClick={renderProps.onClick}
+                        //         variant="contained"
+                        //         size="big"
+                        //         style={{
+                        //             width: '100%',
+                        //             borderRadius: 35,
+                        //             backgroundColor:"#00853d",
+                        //             color:'white',
+                        //             marginBottom: 4,
+                        //             minWidth: '50vh'
+                        //         }}
+                        //     >
+                        //         <img className="mx-2" src="https://cdn-icons-png.flaticon.com/512/2504/2504739.png" style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
+                        //             Se connecter avec google
 
-                            </Button>
-                        )}
+                        //     </Button>
+                        // )}
                         onSuccess={(response) =>
-                                handleResponseLogin(response, 'google')
+                            handleResponseLogin(jwt_decode(response.credential), 'google')
                         }
-                        onFailure={undefined}
+                        onFailure={(response) =>
+                            console.log(response)
+                        }
+                        scope={
+                            "https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/dialogflow"
+                          }
                         cookiePolicy={'single_host_origin'}
-                        />
+                        isSignedIn={true}
+                    > </GoogleLogin>
+                    </GoogleOAuthProvider>
 
 
                     <br/><br/>
@@ -196,7 +148,7 @@ function Login() {
                     <FacebookLogin
                             appId={'827782618658221'}
                             callback={(response) =>
-                                    handleResponseLogin(response, 'facebook')
+                                handleResponseLogin(response, 'facebook')
                             }
                             fields="name,email,picture"
                             render={(renderProps) => (

@@ -17,6 +17,7 @@ import { registration } from '../../services/auth';
 import { authAtom } from '../../recoil/atom/authAtom';
 import {useSetRecoilState } from 'recoil';
 import Router from 'next/router';
+import { createWallet } from '../../services/wallet';
 
 
 function Registration() {
@@ -65,6 +66,7 @@ function Registration() {
                                 // NOTE: Make API request 
                                 // await wait(200);
                                 const userRecoil = await registration(values.username, values.email, values.password);
+                                await createWallet(userRecoil.user.id)
                                 setAuth({ token: userRecoil.jwt, user: userRecoil.user });
                                 resetForm(); 
                                 setStatus({ success: true }); 

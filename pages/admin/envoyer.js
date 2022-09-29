@@ -4,8 +4,6 @@ import { Button, Grid, Input, TextField } from "@material-ui/core";
 import {Formik, Form} from 'formik';
 import * as Yup from 'yup';
 import axios from "axios";
-import { updateWallet } from "../../services/achat";
-import { conversionUsdt } from "../../utils/utilAchat";
 import { envoyer, updateWalletOnSend } from "../../services/envoyer.js";
 import { addTransaction } from "../../services/transaction";
 import { getUser } from "../../services/user";
@@ -32,6 +30,7 @@ function Envoyer(fcoin) {
   return (
     <>
         <div><b>ENVOYER DES FCOINS</b></div>
+        <center><p> Vous détenez actuellement : <strong> {wallet} Fcoin </strong><br/>  Entrez le montant de Fcoin que vous souhaitez envoyer</p></center>
         <Formik 
             enableReinitialize 
             initialValues={{ 
@@ -43,7 +42,7 @@ function Envoyer(fcoin) {
                 montant: Yup.number()
                     .typeError("That doesn't look like a phone number")
                     .positive("A phone number can't start with a minus")
-                    .min(1)
+                    .min(0.00000000000001)
                     .required('require'),
                 destinataire: Yup.string().required('Merci de renseigner le destinataire'),
                 etiquette: Yup.string().required('Merci de renseigner l etiquette')
@@ -64,12 +63,10 @@ function Envoyer(fcoin) {
                     const newFcoin  = wallet - values.montant;
                     if(newFcoin > 0){
                         setInsuffisant('');
-                        const envoie = await envoyer(values.destinataire, values.etiquette, values.montant, user.id);
-                        const uWOS = await updateWalletOnSend(newFcoin,idWallet);
-                        const at = await addTransaction('Envoie', values.etiquette, values.montant);
-                        console.log("envoie", envoie);
-                        console.log("updateWallet", uWOS);
-                        console.log("at", at);
+                        setWallet(newFcoin);
+                        await envoyer(values.destinataire, values.etiquette, values.montant, user.id);
+                        await updateWalletOnSend(newFcoin,idWallet);
+                        await addTransaction('Envoie', values.etiquette, values.montant, user.id);
                     }else{
                         setInsuffisant('Votre fcoin est insuffisant');
                         setdNone('');

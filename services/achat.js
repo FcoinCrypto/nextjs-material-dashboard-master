@@ -9,7 +9,6 @@ api
     },
   })
   .then(response => {
-    console.log("response",response);
   });
     
 

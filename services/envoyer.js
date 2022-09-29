@@ -24,6 +24,5 @@ export const updateWalletOnSend = async (fcoin, walletId) =>{
       },
     })
     .then(response => {
-      console.log("response",response);
     });
 }
