@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Router from "next/router";
 
 // import GoogleLogin from 'react-google-login/dist/google-login';
+import { useGoogleLogin } from '@react-oauth/google';
 import { CodeClientConfig, GoogleLogin } from '@react-oauth/google';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
@@ -15,7 +16,7 @@ import {
 from 'mdb-react-ui-kit';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import { TextField , Button } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { confirmeUser, registration } from '../../services/auth';
 import { authAtom } from '../../recoil/atom/authAtom';
 import { getUser } from '../../services/user';
@@ -23,10 +24,13 @@ import {useSetRecoilState } from 'recoil';
 import ENV from '../../utils/env';
 import jwt_decode from "jwt-decode";
 import { createWallet } from '../../services/wallet';
+import { MicNone } from '@material-ui/icons';
+import TextField from '@mui/material/TextField';
 
 function Login() {
 
     const setAuth = useSetRecoilState(authAtom);
+    
 
     const  handleResponseLogin = async (response, type) => {
         let input = null;
@@ -93,21 +97,25 @@ function Login() {
                         <h5 className="fw-normal my-4 pb-3" style={{letterSpacing: '1px', cursor:'pointer'}}>Inscrivez-vous</h5>
                     </Link>
                     
-                    <GoogleOAuthProvider clientId={'66220988134-n1m5v05ri12up8gvv6ugnc4790ktatvt.apps.googleusercontent.com'}>
+                    <GoogleOAuthProvider 
+                    
+                        clientId={'66220988134-n1m5v05ri12up8gvv6ugnc4790ktatvt.apps.googleusercontent.com'}
+                        style={{
+                            width: '100%',
+                            borderRadius: 35,
+                            backgroundColor:"#00853d",
+                            color:'white',
+                            marginBottom: 4,
+                            minWidth: '50vh'
+                        }}
+                    >
                     <GoogleLogin
-                        // style={{
-                        //     width: '100%',
-                        //     borderRadius: 35,
-                        //     backgroundColor:"#00853d",
-                        //     color:'white',
-                        //     marginBottom: 4,
-                        //     minWidth: '50vh'
-                        // }}
-                        borderRadius={'35'}
+                        style={{minWidth : '50vh'}}
+                        borderRadius={'100vh'}
                         theme={'outline'}
-                        // width={'359'}
-                        type={'icon'}
-                        size={'10'}
+                        width={'359'}
+                        type={'standard'}
+                        size={'50'}
                         logo_alignment={'center'}
                         // render={(renderProps) => (
                         //     <Button
@@ -139,6 +147,25 @@ function Login() {
                           }
                         cookiePolicy={'single_host_origin'}
                         isSignedIn={true}
+                        render={(renderProps) => (
+                            <Button
+                                onClick={renderProps.onClick}
+                                variant="contained"
+                                size="big"
+                                style={{
+                                    width: '100%',
+                                    borderRadius: 35,
+                                    backgroundColor:"#00853d",
+                                    color:'white',
+                                    marginBottom: 4,
+                                    minWidth: '50vh'
+                                }}
+                            >
+                                <img className="mx-2" src="https://cdn-icons-png.flaticon.com/512/124/124010.png" style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
+                                    Se connecter avec facebook
+
+                            </Button>
+                        )}
                     > </GoogleLogin>
                     </GoogleOAuthProvider>
 
@@ -220,17 +247,17 @@ function Login() {
                                 values 
                             }) => (
                             <form onSubmit={handleSubmit}> 
-                            <TextField 
+                            <TextField
+                                variant='outlined'
                                 error={Boolean(touched.email && errors.email)} 
                                 helperText={touched.email && errors.email} 
                                 onBlur={handleBlur} 
                                 onChange={handleChange} 
                                 value={values.email} 
                                 fullWidth 
-                                label="Email" 
+                                label="Email"
                                 name="email" 
                                 required 
-                                variant="outlined"
                                 style={{minWidth : '50vh'}}
                             />
                             <div></div>

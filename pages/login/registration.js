@@ -12,7 +12,7 @@ import * as Yup from 'yup';
 import { 
     Button 
 } from '@material-ui/core';
-import { TextField } from '@material-ui/core';
+import TextField from '@mui/material/TextField';
 import { registration } from '../../services/auth';
 import { authAtom } from '../../recoil/atom/authAtom';
 import {useSetRecoilState } from 'recoil';
