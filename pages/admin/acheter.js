@@ -3,7 +3,6 @@ import Admin from "layouts/Admin.js";
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { Button, Grid } from "@material-ui/core";
 import TextField from '@mui/material/TextField';
-import { Button, Grid, Input, TextField } from "@material-ui/core";
 import {Formik, Form} from 'formik';
 import * as Yup from 'yup';
 import { updateWallet } from "../../services/achat";
@@ -173,7 +172,7 @@ function Acheter() {
                         value={values.fcoin} 
                         fullWidth
                         style={{marginTop : 23, marginBottom : 23}}
-                        placeholder="FCOIN" 
+                        label="FCOIN" 
                         name="fcoin" 
                         required 
                         variant="outlined"             
