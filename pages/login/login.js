@@ -7,6 +7,7 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { CodeClientConfig, GoogleLogin } from '@react-oauth/google';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
+import Image from 'next/image'
 import {
     MDBContainer,
     MDBCol,
@@ -97,6 +98,36 @@ function Login() {
                         <h5 className="fw-normal my-4 pb-3" style={{letterSpacing: '1px', cursor:'pointer'}}>Inscrivez-vous</h5>
                     </Link>
                     
+                    <FacebookLogin
+                            appId={'827782618658221'}
+                            callback={(response) =>
+                                handleResponseLogin(response, 'facebook')
+                            }
+                            fields="name,email,picture"
+                            render={(renderProps) => (
+                                <Button
+                                    onClick={renderProps.onClick}
+                                    variant="contained"
+                                    size="big"
+                                    style={{
+                                        width: '100%',
+                                        borderRadius: 5,
+                                        backgroundColor:"#1f80b3",
+                                        color:'white',
+                                        marginBottom: 4,
+                                        minWidth: '50vh'
+                                    }}
+                                >
+                                    <img className="mx-2" src="http://www.agriculture-biodiversite-oi.org/var/ez_site/storage/images/media/images/contribution/logo-fb/132144-1-fre-FR/logo-fb_full.png" style={{width:30,backgroundColor:'white',borderRadius:50}} alt="Facebook image" layout='fixed' />
+                                        Se connecter avec facebook
+
+                                </Button>
+                            )}
+                        >
+
+                    </FacebookLogin>
+
+
                     <GoogleOAuthProvider 
                     
                         clientId={'66220988134-n1m5v05ri12up8gvv6ugnc4790ktatvt.apps.googleusercontent.com'}
@@ -109,6 +140,7 @@ function Login() {
                             minWidth: '50vh'
                         }}
                     >
+                        <br/><br/>
                     <GoogleLogin
                         style={{minWidth : '50vh'}}
                         borderRadius={'100vh'}
@@ -117,6 +149,7 @@ function Login() {
                         type={'standard'}
                         size={'50'}
                         logo_alignment={'center'}
+                        useOneTap
                         // render={(renderProps) => (
                         //     <Button
                         //         onClick={renderProps.onClick}
@@ -133,7 +166,6 @@ function Login() {
                         //     >
                         //         <img className="mx-2" src="https://cdn-icons-png.flaticon.com/512/2504/2504739.png" style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
                         //             Se connecter avec google
-
                         //     </Button>
                         // )}
                         onSuccess={(response) =>
@@ -144,7 +176,7 @@ function Login() {
                         }
                         scope={
                             "https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/dialogflow"
-                          }
+                        }
                         cookiePolicy={'single_host_origin'}
                         isSignedIn={true}
                         render={(renderProps) => (
@@ -161,46 +193,13 @@ function Login() {
                                     minWidth: '50vh'
                                 }}
                             >
-                                <img className="mx-2" src="https://cdn-icons-png.flaticon.com/512/124/124010.png" style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
+                                <Image className="mx-2" src="https://cdn-icons-png.flaticon.com/512/124/124010.png" style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" layout="fixed" />
                                     Se connecter avec facebook
 
                             </Button>
                         )}
                     > </GoogleLogin>
                     </GoogleOAuthProvider>
-
-
-                    <br/><br/>
-
-                    <FacebookLogin
-                            appId={'827782618658221'}
-                            callback={(response) =>
-                                handleResponseLogin(response, 'facebook')
-                            }
-                            fields="name,email,picture"
-                            render={(renderProps) => (
-                                <Button
-                                    onClick={renderProps.onClick}
-                                    variant="contained"
-                                    size="big"
-                                    style={{
-                                        width: '100%',
-                                        borderRadius: 35,
-                                        backgroundColor:"#00853d",
-                                        color:'white',
-                                        marginBottom: 4,
-                                        minWidth: '50vh'
-                                    }}
-                                >
-                                    <img className="mx-2" src="https://cdn-icons-png.flaticon.com/512/124/124010.png" style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
-                                        Se connecter avec facebook
-
-                                </Button>
-                            )}
-                        >
-
-                    </FacebookLogin>
-
 
                     <br/><br/>
 
