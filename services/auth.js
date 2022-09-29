@@ -8,6 +8,13 @@ export const confirmeUser = (email, password) => {
     })
     return response;
 };
+export const confirmeUserFacebook = (email, password) => {
+    const response = api.post('/auth/local', {
+        identifier: email,
+        password: password
+    })
+    return response;
+};
 
 export const registration = async (username, email, password) =>{
     const response = await api.post('/auth/local/register', {

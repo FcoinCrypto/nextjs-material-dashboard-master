@@ -2,6 +2,15 @@ export function conversionUsdt(fcoin){
     return fcoin * 10;
 }
 
-function addFcoin(){
-
+export function conversion(fcoin, unite){
+    switch (unite.toUpperCase()) {
+        case 'USDT':
+            return fcoin * 10;
+        break;
+        case 'ARIARY':
+            return fcoin * 40500;
+        break;
+        default:
+        break;
+    }
 }
