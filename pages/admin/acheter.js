@@ -41,7 +41,7 @@ function Acheter() {
                 fcoin: Yup.number()
                     .typeError("type error")
                     .positive("A number can't start with a minus")
-                    .min(1)
+                    .min(0.00000000000001)
                     .required('require'),
                 // usdt: Yup.number()
                 //     .typeError("That doesn't look like a number")
@@ -60,7 +60,7 @@ function Acheter() {
                     // await wait(200);
                     const newFcoin = values.fcoin + wallet;
                     await updateWallet(newFcoin, idWallet);
-                    const cachat = await achat(values.fcoin,conversionUsdt(values.fcoin), user.id);
+                    await achat(values.fcoin,conversionUsdt(values.fcoin), user.id);
                     await addTransaction('Achat', conversionUsdt(values.fcoin).toString(), values.fcoin, user.id);
                     setWallet(newFcoin);
                     resetForm(); 

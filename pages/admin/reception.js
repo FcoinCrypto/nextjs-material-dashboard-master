@@ -33,7 +33,7 @@ function Reception(fcoin) {
                 montant: Yup.number()
                     .typeError("That doesn't look like a phone number")
                     .positive("A phone number can't start with a minus")
-                    .min(1)
+                    .min(0.00000000000001)
                     .required('require'),
                 message: Yup.string().required('Merci de renseigner le destinataire'),
                 etiquette: Yup.string().required('Merci de renseigner l etiquette'),
@@ -46,9 +46,8 @@ function Reception(fcoin) {
             }) => {
                 try { 
                     // NOTE: Make API request 
-                    const recevoir = await recevoirs(values.message, values.etiquette, values.montant, user.id);
-                    const at = await addTransaction('Reçu', values.etiquette, values.montant, user.id);
-                    console.log("recu", recevoir);
+                    await recevoirs(values.message, values.etiquette, values.montant, user.id);
+                    await addTransaction('Reçu', values.etiquette, values.montant, user.id);
                     resetForm(); 
                     setStatus({ success: true }); 
                     setSubmitting(false);
