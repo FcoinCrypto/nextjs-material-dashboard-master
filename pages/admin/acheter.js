@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Radio } from "@nextui-org/react";
 import Admin from "layouts/Admin.js";
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { Button, Grid } from "@material-ui/core";
@@ -12,7 +13,12 @@ import { conversion } from "../../utils/utilAchat";
 import { authAtom } from "../../recoil/atom/authAtom";
 import { getUser } from "../../services/user";
 import { addTransaction } from "../../services/transaction";
-import MobileMoney from "../../components/Popup/MobileMoney";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import Modal from "@material-ui/core/Modal";
+import MuiPhoneNumber from "material-ui-phone-number";
+
+  
 function Acheter() {
   const [wallet, setWallet] = useState();
   const [idWallet, setIdWallet] = useState();
@@ -20,6 +26,238 @@ function Acheter() {
   const [hideMobileMoney, setHideMobileMoney] = useState('none');
   const [hideBank, setHideBank] = useState('');
   const { user } = useRecoilValue(authAtom);
+ 
+
+  const [open, setOpen] = useState(false);
+    // getModalStyle is not a pure function, we roll the style only on the first render
+    const [modalStyle] = useState(getModalStyle);
+    const [modalData, setData] = useState();
+  
+    const data = [
+      {
+        title: "Payment Terms",
+        Info: "Mobile Money"
+      }
+    ];
+    const CustomModal = () => {
+      return modalData ? (
+        <Modal
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+          open={open}
+          onClose={handleClose}
+        >
+          <div style={modalStyle} className={classes.paper}>
+            <Typography variant="h6" id="modal-title">
+              {modalData.Info}
+            </Typography>
+            <Typography variant="string" id="simple-modal-description">
+              <Radio.Group orientation="horizontal" label="Quel est votre opérateur ?" defaultValue="primary" >
+                    <Radio value="orange" color="warning" labelColor="warning">
+                      <Button
+                        variant="string"
+                        size="big"
+                        style={{
+                            width: '10%',
+                            borderRadius: 5,
+                            backgroundColor:"#f27f2c",
+                            color:'white',
+                            margin: 10,
+
+                            height: '7vh'
+                        }}
+                      >
+                        <img className="mx-2" 
+                            src="https://pbs.twimg.com/media/FF2qQcLWQAM3Va_.jpg" 
+                            style={{width: '5vh',backgroundColor:'white',borderRadius:5}} 
+                            alt="Mobile Money" 
+                        />
+
+                      </Button>
+                      Orange Money
+                    </Radio>
+                    <Radio value="telma" color="success" labelColor="success">
+                      <Button
+                        variant="string"
+                        size="big"
+                        style={{
+                            width: '10%',
+                            borderRadius: 5,
+                            backgroundColor:"#00703d",
+                            color:'white',
+                            margin: 10,
+
+                            height: '7vh'
+                        }}
+                      >
+                        <img className="mx-2" 
+                            src="https://pbs.twimg.com/media/CEdwx6OVEAAfGzN.png:large" 
+                            style={{width: '6vh',height: '5vh',backgroundColor:'white',borderRadius:5}} 
+                            alt="Mobile Money" 
+                        />
+
+                      </Button>
+                      Mvola
+                    </Radio>
+                    <Radio value="airtel" color="error" labelColor="error">
+                      <Button
+                        variant="string"
+                        size="big"
+                        style={{
+                            width: '10%',
+                            borderRadius: 5,
+                            backgroundColor:"#eef1f5",
+                            color:'white',
+                            margin: 10,
+
+                            height: '7vh'
+                        }}
+                      >
+                        <img className="mx-2" 
+                            src="https://ugandanweekly.com/wp-content/uploads/2021/03/amc.jpeg" 
+                            style={{width: '6vh',backgroundColor:'white',borderRadius:5}} 
+                            alt="Mobile Money" 
+                        />
+
+                      </Button> 
+                      Airtel Money
+                    </Radio>
+              </Radio.Group>
+              <Formik
+                enableReinitialize 
+                initialValues={{ 
+                    montant: '', 
+                    tel:'',
+                    description:''
+                }} 
+                validationSchema={Yup.object().shape({ 
+                    montant: Yup.number()
+                        .typeError("type error")
+                        .positive("A number can't start with a minus")
+                        .min(500)
+                        .required('require'),
+                    tel: Yup.string()
+                        .required("This field is Required")
+                        .matches(
+                            /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
+                            "Phone number is not valid"
+                        )
+                        .min(10, 'Must be exactly 10 digits')
+                        .max(12, 'Must be exactly 12 digits')
+                        ,
+                    description: Yup.string()
+                        .required("This field is Required")
+                })} 
+                onSubmit={async (values, { 
+                    resetForm, 
+                    setErrors, 
+                    setStatus, 
+                    setSubmitting 
+                    }) => {
+                    try { 
+                        
+                        resetForm(); 
+                        setStatus({ success: true }); 
+                        setSubmitting(false);
+                        // window.location.reload(false);
+                        
+                      } catch (err) { 
+                        console.error(err); 
+                        setStatus({ success: false }); 
+                        setErrors({ submit: err.message }); 
+                        setSubmitting(false); 
+                      } 
+                }} 
+              >
+                 {({ 
+                errors, 
+                handleBlur, 
+                handleChange, 
+                handleSubmit, 
+                isSubmitting, 
+                touched, 
+                values 
+              }) => (
+                <form onSubmit={handleSubmit}>
+                  <Grid container >
+                      <Grid item xs={4}>
+                        <TextField
+                          error={Boolean(touched.montant && errors.montant)} 
+                          helperText={touched.montant && errors.montant} 
+                          type="number" 
+                          onBlur={handleBlur} 
+                          onChange={handleChange} 
+                          value={values.montant} 
+                          fullWidth
+                          style={{marginTop : 23, marginBottom : 23}}
+                          label="Montant"
+                          placeholder="Montant" 
+                          name="montant" 
+                          required 
+                          variant="standard"             
+                        />
+                      </Grid>
+                  </Grid>
+                  <Grid container >
+                      <Grid item xs={4}>
+                      <MuiPhoneNumber
+                    name="tel"
+                    label="N° Tel"
+                    data-cy="user-phone"
+                    defaultCountry={"mg"}
+                    onChange={handleChange}
+                  />
+                      </Grid>
+                  </Grid>
+                  <Grid container >
+                      <Grid item xs={4}>
+                        <TextField
+                          error={Boolean(touched.description && errors.description)} 
+                          helperText={touched.description && errors.description} 
+                          onBlur={handleBlur} 
+                          onChange={handleChange} 
+                          value={values.description} 
+                          fullWidth
+                          style={{marginTop : 23, marginBottom : 23}}
+                          label="Description" 
+                          placeholder="Description" 
+                          name="description" 
+                          required 
+                          variant="standard"             
+                        />
+                      </Grid>
+                  </Grid>
+                </form>
+              )}
+              </Formik>
+            </Typography>      
+          </div>
+        </Modal>
+      ) : null;
+    };
+  
+    const handleOpen = index => {
+      setOpen(true);
+      setData(data[index]);
+    };
+  
+    const handleClose = () => {
+      setOpen(false);
+    };
+
+
+    const useStyles = makeStyles(theme => ({
+      paper: {
+        position: "absolute",
+        width: '100%',
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(4),
+        outline: "none"
+      }
+    }));
+    const classes = useStyles();
+
   
   useEffect(async () => {
     if (!wallet) {
@@ -28,7 +266,11 @@ function Acheter() {
       setIdWallet(data.data.wallet.id)
     }
   }, [wallet, idWallet])
-
+    const showAriary = () =>{
+        setUnite('Ariary')
+        setHideMobileMoney('')
+        setHideBank('none') 
+    }
 
   return (
     <>
@@ -74,7 +316,7 @@ function Acheter() {
                 setErrors, 
                 setStatus, 
                 setSubmitting 
-            }) => {
+                }) => {
                 try { 
                     // NOTE: Make API request 
                     // await wait(200);
@@ -88,12 +330,12 @@ function Acheter() {
                     setSubmitting(false);
                     // window.location.reload(false);
                     
-                } catch (err) { 
+                  } catch (err) { 
                     console.error(err); 
                     setStatus({ success: false }); 
                     setErrors({ submit: err.message }); 
                     setSubmitting(false); 
-                } 
+                  } 
             }} 
         > 
             {({ 
@@ -104,16 +346,43 @@ function Acheter() {
                 isSubmitting, 
                 touched, 
                 values 
-            }) => (
-            <form onSubmit={handleSubmit}>
-            <Grid container >
-                <Grid item xs={4}>
-                   <MobileMoney/>
+              }) => (
+              <form onSubmit={handleSubmit}>
+              <Grid container >
+                  <Grid item xs={4}>
+                  {data.map((d, index) => (
+                    <div>
+                      <Button
+                       onClick={() => {
+                          handleOpen(index);
+                        setUnite('ariary')
+
+                      }}
+                      variant="contained"
+                      size="big"
+                      style={{
+                          width: '90%',
+                          borderRadius: 5,
+                          backgroundColor:"#6aaa70",
+                          color:'white',
+                          marginBottom: 4,
+                          height: '20vh'
+                      }}
+                    >
+                      <img className="mx-2" 
+                          src="https://previews.123rf.com/images/redeer/redeer1703/redeer170300025/74346681-mobile-payment-vector-isolated-icon-mobile-money-transfer-and-contactless-payment-concept-.jpg" 
+                          style={{width: '15vh',backgroundColor:'white',borderRadius:5}} 
+                          alt="Mobile Money" 
+                      />
+                          Mobile Money
+                    </Button>
+                  </div>
+                ))}
                 </Grid>
                 <Grid item xs={4}>
                     <Button
                         onClick={() => { 
-                            setUnite('usdt');
+                            setUnite('usdt')
                             setHideMobileMoney('none')
                             setHideBank('') 
  
@@ -137,6 +406,7 @@ function Acheter() {
                             Acheter en ligne
 
                     </Button>
+                    
                 </Grid>
                 <Grid item xs={4}>
                     <Button
@@ -160,8 +430,8 @@ function Acheter() {
 
                     </Button>
                 </Grid>
-            </Grid>
-            <Grid container spacing={2} columns={16}>
+              </Grid>
+              <Grid container spacing={2} columns={16}>
                 <Grid item xs={6}>
                     <TextField
                         error={Boolean(touched.fcoin && errors.fcoin)} 
@@ -188,16 +458,16 @@ function Acheter() {
                         variant="outlined"
                     />
                 </Grid>
-            </Grid>
-            <Grid container
+              </Grid>
+              <Grid container
                 spacing={0}
                 direction="column"
                 alignItems="center"
                 justifyContent="center"
                 style={{
                     display: hideMobileMoney
-                }}
-            >
+                  }}
+            > 
                 <Grid item xs={6}>
                 <TextField
                         fullWidth
@@ -260,11 +530,12 @@ function Acheter() {
                 </Button>
                 <p style={{ fontSize : 15}}>Avertissement : Tout achat de cryptomonnaie est un investissement risqué. Le cours du Fcoin dépend de l’offre et de la demande sur les marchés de cryptomonnaies et celui-ci peut significativement monter ou baisser, voire même devenir nul.</p>
             </Grid> 
-
+            <CustomModal />
             </form>
                 
         )}
         </Formik> 
+        
     </>
   )
 }
@@ -272,3 +543,20 @@ function Acheter() {
 Acheter.layout = Admin;
 
 export default Acheter;
+
+function rand() {
+    return Math.round(Math.random() * 2) - 1;
+  }
+  
+  function getModalStyle() {
+    const top = 10 + rand();
+    const left = 10 + rand();
+  
+    return {
+      top: `${top}%`,
+      left: `${left}%`,
+      transform: `translate(-${top}%, -${left}%)`
+    };
+  }
+  
+  
