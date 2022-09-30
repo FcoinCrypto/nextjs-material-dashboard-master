@@ -14,7 +14,7 @@ import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { authAtom } from "../../recoil/atom/authAtom";
 
 
-function Reception(fcoin) {
+function Reception() {
     const { user } = useRecoilValue(authAtom);
 
     function handleChangeCustom(event){
@@ -160,14 +160,5 @@ function Reception(fcoin) {
 }
 
 Reception.layout = Admin;
-
-export const getServerSideProps = async () => {
-
-    const res = await axios.get('http://localhost:1337/api/wallets/1');
-    const data  = res.data.data.attributes.fcoin;
-    // console.log("fcoin", data);
-    // Pass data to the page via props
-    return { props: { data } };
-  };
 
 export default Reception;
