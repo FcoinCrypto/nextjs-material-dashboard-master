@@ -3,9 +3,10 @@ import Link from 'next/link';
 import Router from "next/router";
 
 // import GoogleLogin from 'react-google-login/dist/google-login';
-import { CodeClientConfig, GoogleLogin } from '@react-oauth/google';
+import {  GoogleLogin } from '@react-oauth/google';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
+import Image from 'next/image'
 import {
     MDBContainer,
     MDBCol,
@@ -15,7 +16,7 @@ import {
 from 'mdb-react-ui-kit';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import { TextField , Button } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { confirmeUser, registration } from '../../services/auth';
 import { authAtom } from '../../recoil/atom/authAtom';
 import { getUser } from '../../services/user';
@@ -23,10 +24,14 @@ import {useSetRecoilState } from 'recoil';
 import ENV from '../../utils/env';
 import jwt_decode from "jwt-decode";
 import { createWallet } from '../../services/wallet';
+import TextField from '@mui/material/TextField';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Login() {
 
     const setAuth = useSetRecoilState(authAtom);
+    
 
     const  handleResponseLogin = async (response, type) => {
         let input = null;
@@ -46,12 +51,19 @@ function Login() {
                 }
                 else if (registre.response.data.error.message == "Email or Username are already taken"){
                     const userConfirm = await confirmeUser(response.email, response.id)
-                    setAuth({ token: userConfirm.data.jwt, user: userConfirm.data.user  });
-                    Router.push("/admin/tableau");
+                    console.log(userConfirm)
+                    if(userConfirm.data){
+                        setAuth({ token: userConfirm.data.jwt, user: userConfirm.data.user  });
+                        Router.push("/admin/tableau");
+                    }
+                    else{
+                        toast.error(userConfirm.response.data.error.message);
+                    }
                 }
                 else {
-                    console.log(registre.response.data.error.message);
+                    toast.error(registre.response.data.error.message);
                 }
+                
             break;
             case 'google':
                 registre = await registration(response.name, response.email, response.sub)
@@ -66,11 +78,16 @@ function Login() {
                 else if (registre.response.data.error.message == "Email or Username are already taken"){
                     const userConfirm = await confirmeUser(response.email, response.sub)
                     console.log(userConfirm)
-                    setAuth({ token: userConfirm.data.jwt, user: userConfirm.data.user  });
-                    Router.push("/admin/tableau");
+                    if(userConfirm.data){
+                        setAuth({ token: userConfirm.data.jwt, user: userConfirm.data.user  });
+                        Router.push("/admin/tableau");
+                    }
+                    else{
+                        toast.error(userConfirm.response.data.error.message);
+                    }
                 }
                 else {
-                    console.log(registre.response.data.error.message);
+                    toast.error(registre.response.data.error.message);
                 }
             break;
             default:
@@ -93,22 +110,58 @@ function Login() {
                         <h5 className="fw-normal my-4 pb-3" style={{letterSpacing: '1px', cursor:'pointer'}}>Inscrivez-vous</h5>
                     </Link>
                     
-                    <GoogleOAuthProvider clientId={'66220988134-n1m5v05ri12up8gvv6ugnc4790ktatvt.apps.googleusercontent.com'}>
+                    <FacebookLogin
+                            appId={'827782618658221'}
+                            callback={(response) =>
+                                handleResponseLogin(response, 'facebook')
+                            }
+                            fields="name,email,picture"
+                            render={(renderProps) => (
+                                <Button
+                                    onClick={renderProps.onClick}
+                                    variant="contained"
+                                    size="big"
+                                    style={{
+                                        width: '100%',
+                                        borderRadius: 5,
+                                        backgroundColor:"#1f80b3",
+                                        color:'white',
+                                        marginBottom: 4,
+                                        minWidth: '50vh'
+                                    }}
+                                >
+                                    <img className="mx-2" src="http://www.agriculture-biodiversite-oi.org/var/ez_site/storage/images/media/images/contribution/logo-fb/132144-1-fre-FR/logo-fb_full.png" style={{width:30,backgroundColor:'white',borderRadius:50}} alt="Facebook image" layout='fixed' />
+                                        Se connecter avec facebook
+
+                                </Button>
+                            )}
+                        >
+
+                    </FacebookLogin>
+
+
+                    <GoogleOAuthProvider 
+                    
+                        clientId={'66220988134-n1m5v05ri12up8gvv6ugnc4790ktatvt.apps.googleusercontent.com'}
+                        style={{
+                            width: '100%',
+                            borderRadius: 35,
+                            backgroundColor:"#00853d",
+                            color:'white',
+                            marginBottom: 4,
+                            minWidth: '50vh'
+                        }}
+                    >
+                        <br/><br/>
                     <GoogleLogin
-                        // style={{
-                        //     width: '100%',
-                        //     borderRadius: 35,
-                        //     backgroundColor:"#00853d",
-                        //     color:'white',
-                        //     marginBottom: 4,
-                        //     minWidth: '50vh'
-                        // }}
-                        borderRadius={'35'}
+                        style={{minWidth : '50vh'}}
+                        borderRadius={'100vh'}
                         theme={'outline'}
-                        // width={'359'}
-                        type={'icon'}
-                        size={'10'}
+                        width={'359'}
+                        type={'standard'}
+                        size={'50'}
                         logo_alignment={'center'}
+                        useOneTap
                         // render={(renderProps) => (
                         //     <Button
                         //         onClick={renderProps.onClick}
@@ -125,7 +178,6 @@ function Login() {
                         //     >
                         //         <img className="mx-2" src="https://cdn-icons-png.flaticon.com/512/2504/2504739.png" style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
                         //             Se connecter avec google
-
                         //     </Button>
                         // )}
                         onSuccess={(response) =>
@@ -136,9 +188,28 @@ function Login() {
                         }
                         scope={
                             "https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/dialogflow"
-                          }
+                        }
                         cookiePolicy={'single_host_origin'}
                         isSignedIn={true}
+                        render={(renderProps) => (
+                            <Button
+                                onClick={renderProps.onClick}
+                                variant="contained"
+                                size="big"
+                                style={{
+                                    width: '100%',
+                                    borderRadius: 35,
+                                    backgroundColor:"#00853d",
+                                    color:'white',
+                                    marginBottom: 4,
+                                    minWidth: '50vh'
+                                }}
+                            >
+                                <Image className="mx-2" src="https://cdn-icons-png.flaticon.com/512/124/124010.png" style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" layout="fixed" />
+                                    Se connecter avec facebook
+
+                            </Button>
+                        )}
                     > </GoogleLogin>
                     </GoogleOAuthProvider>
 
@@ -193,21 +264,30 @@ function Login() {
                                 setStatus, 
                                 setSubmitting 
                             }) => { 
-                                try { 
-                                    // NOTE: Make API request 
-                                    // await wait(200);
+                                // try { 
+                                //     // NOTE: Make API request 
+                                //     // await wait(200);
                                     const userRecoil = await confirmeUser(values.email, values.password);
-                                    setAuth({ token: userRecoil.data.jwt, user: userRecoil.data.user  });
-                                    resetForm();
-                                    setStatus({ success: true }); 
-                                    setSubmitting(false);
-                                    Router.push("/admin/tableau");
-                                } catch (err) { 
-                                    console.error(err); 
-                                    setStatus({ success: false }); 
-                                    setErrors({ submit: err.message }); 
-                                    setSubmitting(false); 
-                                } 
+                                    console.log(userRecoil)
+                                    if(userRecoil.data){
+                                        setAuth({ token: userRecoil.data.jwt, user: userRecoil.data.user  });
+                                        resetForm();
+                                        setStatus({ success: true }); 
+                                        setSubmitting(false);
+                                        Router.push("/admin/tableau");
+                                    }
+                                    else{
+                                        toast.error(userRecoil.response.data.error.message);
+                                        setStatus({ success: false }); 
+                                        setErrors({ submit: err.message }); 
+                                        setSubmitting(false); 
+                                    }
+                                // } catch (err) { 
+                                //     console.error(err); 
+                                    // setStatus({ success: false }); 
+                                    // setErrors({ submit: err.message }); 
+                                    // setSubmitting(false); 
+                                // } 
                             }} 
                         > 
                             {({ 
@@ -220,17 +300,17 @@ function Login() {
                                 values 
                             }) => (
                             <form onSubmit={handleSubmit}> 
-                            <TextField 
+                            <TextField
+                                variant='outlined'
                                 error={Boolean(touched.email && errors.email)} 
                                 helperText={touched.email && errors.email} 
                                 onBlur={handleBlur} 
                                 onChange={handleChange} 
                                 value={values.email} 
                                 fullWidth 
-                                label="Email" 
+                                label="Email"
                                 name="email" 
                                 required 
-                                variant="outlined"
                                 style={{minWidth : '50vh'}}
                             />
                             <div></div>
@@ -250,7 +330,7 @@ function Login() {
                             />
 
 
-                            <div className="d-flex justify-content-between mx-4 mb-4">
+                            <div className="d-flex justify-content-between mx-4 mb-4" style={{minWidth:'45vh'}}>
                                 <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me' />
                                 <a href="!#">Forgot password?</a>
                             </div>
@@ -278,7 +358,7 @@ function Login() {
 
                     </MDBCol>
                 </MDBRow>
-
+                <ToastContainer />
             </MDBContainer>
         </>
     );

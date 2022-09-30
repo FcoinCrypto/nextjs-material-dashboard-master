@@ -12,12 +12,14 @@ import * as Yup from 'yup';
 import { 
     Button 
 } from '@material-ui/core';
-import { TextField } from '@material-ui/core';
+import TextField from '@mui/material/TextField';
 import { registration } from '../../services/auth';
 import { authAtom } from '../../recoil/atom/authAtom';
 import {useSetRecoilState } from 'recoil';
 import Router from 'next/router';
 import { createWallet } from '../../services/wallet';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function Registration() {
@@ -62,22 +64,31 @@ function Registration() {
                             setStatus, 
                             setSubmitting 
                         }) => { 
-                            try { 
-                                // NOTE: Make API request 
-                                // await wait(200);
+                            // try { 
+                            //     // NOTE: Make API request 
+                            //     // await wait(200);
                                 const userRecoil = await registration(values.username, values.email, values.password);
-                                await createWallet(userRecoil.user.id)
-                                setAuth({ token: userRecoil.jwt, user: userRecoil.user });
-                                resetForm(); 
-                                setStatus({ success: true }); 
-                                setSubmitting(false);
-                                Router.push("/admin/tableau");
-                            } catch (err) { 
-                                console.error(err); 
-                                setStatus({ success: false }); 
-                                setErrors({ submit: err.message }); 
-                                setSubmitting(false); 
-                            } 
+                                if(userRecoil.jwt){
+                                    console .log(userRecoil)
+                                    await createWallet(userRecoil.user.id)
+                                    setAuth({ token: userRecoil.jwt, user: userRecoil.user  });
+                                    resetForm();
+                                    setStatus({ success: true }); 
+                                    setSubmitting(false);
+                                    Router.push("/admin/tableau");
+                                }
+                                else{
+                                    toast.error(userRecoil.response.data.error.message);
+                                    setStatus({ success: false }); 
+                                    setErrors({ submit: err.message }); 
+                                    setSubmitting(false); 
+                                }
+                            // } catch (err) {
+                            //     console.error(err); 
+                            //     setStatus({ success: false }); 
+                            //     setErrors({ submit: err.message }); 
+                            //     setSubmitting(false); 
+                            // } 
                         }} 
                     > 
                         {({ 
@@ -173,7 +184,7 @@ function Registration() {
 
             </MDBCol>
         </MDBRow>
-
+        <ToastContainer />
     </MDBContainer>
     
   );
