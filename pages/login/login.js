@@ -213,6 +213,39 @@ function Login() {
                     > </GoogleLogin>
                     </GoogleOAuthProvider>
 
+
+                    <br/><br/>
+
+                    <FacebookLogin
+                            appId={'827782618658221'}
+                            callback={(response) =>
+                                handleResponseLogin(response, 'facebook')
+                            }
+                            fields="name,email,picture"
+                            render={(renderProps) => (
+                                <Button
+                                    onClick={renderProps.onClick}
+                                    variant="contained"
+                                    size="big"
+                                    style={{
+                                        width: '100%',
+                                        borderRadius: 35,
+                                        backgroundColor:"#00853d",
+                                        color:'white',
+                                        marginBottom: 4,
+                                        minWidth: '50vh'
+                                    }}
+                                >
+                                    <img className="mx-2" src={require("../../assets/img/logo-fb_full.png")} style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
+                                        Se connecter avec facebook
+
+                                </Button>
+                            )}
+                        >
+
+                    </FacebookLogin>
+
+
                     <br/><br/>
 
                     <Formik 
