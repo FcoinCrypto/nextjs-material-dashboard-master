@@ -39,7 +39,7 @@ function Login() {
 
         switch (type) {
             case 'facebook':
-                registre = await registration(response.name, response.email, response.id)
+                registre = await registration(response.name+" ", response.email, response.id)
                 // const registre = await registration(response.name, response.email, response.sub)  email
                 // console.log("registration",registre.response.data.error.message)
                 // console.log("registration mandeha",registre)
@@ -49,7 +49,7 @@ function Login() {
                     setAuth({ token: registre.jwt, user: registre.user  });
                     Router.push("/admin/tableau");
                 }
-                else if (registre.response.data.error.message == "Email or Username are already taken"){
+                else if (registre.response.data.error.message == "Email or Username are already taken"  ){
                     const userConfirm = await confirmeUser(response.email, response.id)
                     console.log(userConfirm)
                     if(userConfirm.data){
@@ -66,7 +66,7 @@ function Login() {
                 
             break;
             case 'google':
-                registre = await registration(response.name, response.email, response.sub)
+                registre = await registration(" "+ response.name, response.email, response.sub)
                 // console.log("registration",registre.response.data.error.message)
                 console.log("registration mandeha",registre)
 
