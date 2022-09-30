@@ -25,7 +25,6 @@ const dashboardRoutes = [
   {
     path: "/envoyer",
     name: "Envoyer",
-    // rtlName: "الرموز",
     icon: Send,
 
     layout: "/admin",
@@ -33,7 +32,6 @@ const dashboardRoutes = [
   {
     path: "/reception",
     name: "Recevoir",
-    // rtlName: "قائمة الجدول",
     icon: Receipt,
 
     layout: "/admin",

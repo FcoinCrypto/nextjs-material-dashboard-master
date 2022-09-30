@@ -51,7 +51,7 @@ function Login() {
                 }
                 else if (registre.response.data.error.message == "Email or Username are already taken"  ){
                     const userConfirm = await confirmeUser(response.email, response.id)
-                    console.log(userConfirm)
+                    // console.log(userConfirm)
                     if(userConfirm.data){
                         setAuth({ token: userConfirm.data.jwt, user: userConfirm.data.user  });
                         Router.push("/admin/tableau");
@@ -68,7 +68,7 @@ function Login() {
             case 'google':
                 registre = await registration(" "+ response.name, response.email, response.sub)
                 // console.log("registration",registre.response.data.error.message)
-                console.log("registration mandeha",registre)
+                // console.log("registration mandeha",registre)
 
                 if(registre.jwt) {
                     await createWallet(registre.user.id)
@@ -77,7 +77,7 @@ function Login() {
                 }
                 else if (registre.response.data.error.message == "Email or Username are already taken"){
                     const userConfirm = await confirmeUser(response.email, response.sub)
-                    console.log(userConfirm)
+                    // console.log(userConfirm)
                     if(userConfirm.data){
                         setAuth({ token: userConfirm.data.jwt, user: userConfirm.data.user  });
                         Router.push("/admin/tableau");
@@ -216,38 +216,6 @@ function Login() {
 
                     <br/><br/>
 
-                    <FacebookLogin
-                            appId={'827782618658221'}
-                            callback={(response) =>
-                                handleResponseLogin(response, 'facebook')
-                            }
-                            fields="name,email,picture"
-                            render={(renderProps) => (
-                                <Button
-                                    onClick={renderProps.onClick}
-                                    variant="contained"
-                                    size="big"
-                                    style={{
-                                        width: '100%',
-                                        borderRadius: 35,
-                                        backgroundColor:"#00853d",
-                                        color:'white',
-                                        marginBottom: 4,
-                                        minWidth: '50vh'
-                                    }}
-                                >
-                                    <img className="mx-2" src={require("../../assets/img/logo-fb_full.png")} style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
-                                        Se connecter avec facebook
-
-                                </Button>
-                            )}
-                        >
-
-                    </FacebookLogin>
-
-
-                    <br/><br/>
-
                     <Formik 
                             enableReinitialize 
                             initialValues={{ 
@@ -268,7 +236,7 @@ function Login() {
                                 //     // NOTE: Make API request 
                                 //     // await wait(200);
                                     const userRecoil = await confirmeUser(values.email, values.password);
-                                    console.log(userRecoil)
+                                    // console.log(userRecoil)
                                     if(userRecoil.data){
                                         setAuth({ token: userRecoil.data.jwt, user: userRecoil.data.user  });
                                         resetForm();
