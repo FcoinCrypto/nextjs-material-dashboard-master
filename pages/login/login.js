@@ -165,7 +165,7 @@ function Login() {
                                         minWidth: '50vh'
                                     }}
                                 >
-                                    <img className="mx-2" src="https://cdn-icons-png.flaticon.com/512/124/124010.png" style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
+                                    <img className="mx-2" src={require("../../assets/img/logo-fb_full.png")} style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
                                         Se connecter avec facebook
 
                                 </Button>
