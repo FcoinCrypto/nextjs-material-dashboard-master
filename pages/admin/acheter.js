@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Radio } from "@nextui-org/react";
 import Admin from "layouts/Admin.js";
 import { useSetRecoilState, useRecoilValue } from 'recoil';
-import { Button, Grid } from "@material-ui/core";
-import TextField from '@mui/material/TextField';
+import { Button, Grid, Input, TextField } from "@material-ui/core";
 import {Formik, Form} from 'formik';
 import * as Yup from 'yup';
 import { updateWallet } from "../../services/achat";
@@ -25,9 +24,13 @@ function Acheter() {
   const [unite, setUnite] = useState('USDT');
   const [hideMobileMoney, setHideMobileMoney] = useState('none');
   const [hideBank, setHideBank] = useState('');
+  const [infoMoney, setNoneInfoMoney] = useState('none');
   const { user } = useRecoilValue(authAtom);
- 
-
+  const [checked, setChecked] = useState('???');
+  const checkedRadio = (e) =>{
+    setChecked(e)
+    setNoneInfoMoney('')
+  }
   const [open, setOpen] = useState(false);
     // getModalStyle is not a pure function, we roll the style only on the first render
     const [modalStyle] = useState(getModalStyle);
@@ -39,6 +42,31 @@ function Acheter() {
         Info: "Mobile Money"
       }
     ];
+
+    const handleOpen = index => {
+      setOpen(true);
+      setData(data[index]);
+    };
+  
+    const handleClose = () => {
+      setOpen(false);
+      setNoneInfoMoney('none')
+      setChecked('')
+    };
+
+
+    const useStyles = makeStyles(theme => ({
+      paper: {
+        position: "absolute",
+        width: '70%',
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(4),
+        outline: "none"
+      }
+    }));
+    const classes = useStyles();
+
     const CustomModal = () => {
       return modalData ? (
         <Modal
@@ -52,8 +80,21 @@ function Acheter() {
               {modalData.Info}
             </Typography>
             <Typography variant="string" id="simple-modal-description">
-              <Radio.Group orientation="horizontal" label="Quel est votre opérateur ?" defaultValue="primary" >
-                    <Radio value="orange" color="warning" labelColor="warning">
+              <Radio.Group 
+                orientation="horizontal" 
+                label="Quel est votre opérateur ?"
+                labels="options" 
+                value={checked}
+                onChange={checkedRadio} 
+               >
+                    <Radio 
+                        value="Orange Money" 
+                        color="warning" 
+                        labelColor="warning"
+                        autoFocus="true"
+                        
+                        
+                    >
                       <Button
                         variant="string"
                         size="big"
@@ -76,7 +117,7 @@ function Acheter() {
                       </Button>
                       Orange Money
                     </Radio>
-                    <Radio value="telma" color="success" labelColor="success">
+                    <Radio value="MVola" color="success" labelColor="success">
                       <Button
                         variant="string"
                         size="big"
@@ -99,7 +140,7 @@ function Acheter() {
                       </Button>
                       Mvola
                     </Radio>
-                    <Radio value="airtel" color="error" labelColor="error">
+                    <Radio value="Airtel Money" color="error" labelColor="error">
                       <Button
                         variant="string"
                         size="big"
@@ -123,27 +164,31 @@ function Acheter() {
                       Airtel Money
                     </Radio>
               </Radio.Group>
+              <p style={{display:infoMoney, marginBottom:-4}}>Acheter avec {checked}</p>
               <Formik
+                
                 enableReinitialize 
-                initialValues={{ 
+                initialValues={{
+                    fcoin:'', 
                     montant: '', 
                     tel:'',
                     description:''
                 }} 
                 validationSchema={Yup.object().shape({ 
-                    montant: Yup.number()
+                    fcoin: Yup.number()
                         .typeError("type error")
                         .positive("A number can't start with a minus")
                         .min(500)
                         .required('require'),
+                    secret: Yup.number()
+                        .typeError("type error")
+                        .positive("A number can't start with a minus")
+                        .min(4)
+                        .max(4)
+                        .required('require'),
                     tel: Yup.string()
                         .required("This field is Required")
-                        .matches(
-                            /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
-                            "Phone number is not valid"
-                        )
-                        .min(10, 'Must be exactly 10 digits')
-                        .max(12, 'Must be exactly 12 digits')
+                        
                         ,
                     description: Yup.string()
                         .required("This field is Required")
@@ -178,39 +223,68 @@ function Acheter() {
                 touched, 
                 values 
               }) => (
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} style={{display:infoMoney}}>
                   <Grid container >
-                      <Grid item xs={4}>
+                      <Grid item xs={6}>
                         <TextField
-                          error={Boolean(touched.montant && errors.montant)} 
-                          helperText={touched.montant && errors.montant} 
+                          error={Boolean(touched.fcoin && errors.fcoin)} 
+                          helperText={touched.fcoin && errors.fcoin} 
                           type="number" 
                           onBlur={handleBlur} 
                           onChange={handleChange} 
-                          value={values.montant} 
+                          value={values.fcoin} 
                           fullWidth
                           style={{marginTop : 23, marginBottom : 23}}
-                          label="Montant"
-                          placeholder="Montant" 
-                          name="montant" 
+                          label="Fcoin"
+                          placeholder="fcoin" 
+                          name="fcoin" 
                           required 
+                          variant="standard"             
+                        />
+                      </Grid>
+                      <Grid item xs={6}>
+                        <TextField
+                          value={conversion(values.fcoin,'Ariary')} 
+                          fullWidth
+                          style={{marginTop : 23, marginBottom : 23, marginLeft: 10}}
+                          label="Montant en Ariary"
+                          placeholder="Montant en Ariary" 
+                          name="montant" 
                           variant="standard"             
                         />
                       </Grid>
                   </Grid>
                   <Grid container >
-                      <Grid item xs={4}>
-                      <MuiPhoneNumber
-                    name="tel"
-                    label="N° Tel"
-                    data-cy="user-phone"
-                    defaultCountry={"mg"}
-                    onChange={handleChange}
-                  />
+                      <Grid item xs={6}>
+                        <MuiPhoneNumber
+                          name="tel"
+                          label="N° Tel"
+                          data-cy="user-phone"
+                          defaultCountry={"mg"}
+                          onChange={handleChange}
+                          value={values.tel}
+                        />
                       </Grid>
+                      <Grid item xs={6}>          
+                        <TextField
+                            error={Boolean(touched.secret && errors.secret)} 
+                            helperText={touched.secret && errors.secret} 
+                            type="number" 
+                            onBlur={handleBlur} 
+                            onChange={handleChange} 
+                            value={values.secret} 
+                            fullWidth
+                            style={{marginLeft : 10}}
+                            label="Code secret"
+                            placeholder="Code secret" 
+                            name="secret" 
+                            required 
+                            variant="standard"             
+                          />
+                        </Grid>
                   </Grid>
                   <Grid container >
-                      <Grid item xs={4}>
+                      <Grid item xs={12}>
                         <TextField
                           error={Boolean(touched.description && errors.description)} 
                           helperText={touched.description && errors.description} 
@@ -227,6 +301,22 @@ function Acheter() {
                         />
                       </Grid>
                   </Grid>
+                  <Grid
+                    container
+                    spacing={0}
+                    direction="column"
+                    alignItems="center"
+                    justifyContent="center"
+                    >
+                        <Button
+                            variant="contained" 
+                            color="primary" 
+                            disabled={isSubmitting} 
+                            type="submit"
+                        > 
+                            valider
+                        </Button>
+                  </Grid>
                 </form>
               )}
               </Formik>
@@ -236,27 +326,7 @@ function Acheter() {
       ) : null;
     };
   
-    const handleOpen = index => {
-      setOpen(true);
-      setData(data[index]);
-    };
-  
-    const handleClose = () => {
-      setOpen(false);
-    };
-
-
-    const useStyles = makeStyles(theme => ({
-      paper: {
-        position: "absolute",
-        width: '100%',
-        backgroundColor: theme.palette.background.paper,
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(4),
-        outline: "none"
-      }
-    }));
-    const classes = useStyles();
+    
 
   
   useEffect(async () => {
@@ -442,7 +512,7 @@ function Acheter() {
                         value={values.fcoin} 
                         fullWidth
                         style={{marginTop : 23, marginBottom : 23}}
-                        label="FCOIN" 
+                        placeholder="FCOIN" 
                         name="fcoin" 
                         required 
                         variant="outlined"             
@@ -549,8 +619,8 @@ function rand() {
   }
   
   function getModalStyle() {
-    const top = 10 + rand();
-    const left = 10 + rand();
+    const top = 50 + rand();
+    const left = 50 + rand();
   
     return {
       top: `${top}%`,
