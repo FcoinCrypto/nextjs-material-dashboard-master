@@ -8,7 +8,7 @@ export default function MobileMoney(){
   return(
   <div>
     <h4>Paiement Mobile Money</h4>
-    <Popup trigger={
+    {/* <Popup trigger={ */}
         <Button
             
             variant="contained"
@@ -29,9 +29,9 @@ export default function MobileMoney(){
             />
                 Mobile Money
         </Button>
-    } 
-     position="right center">
-     
+    {/* }  */}
+     {/* position="right center"> */}
+        
       <Button
             variant="contained"
             size="big"
@@ -57,7 +57,7 @@ export default function MobileMoney(){
             style={{
                 width: '90%',
                 borderRadius: 5,
-                backgroundColor:"#6aaa70",
+                backgroundColor:"#00703d",
                 color:'white',
                 marginBottom: 4,
                 height: '20vh'
@@ -65,8 +65,8 @@ export default function MobileMoney(){
         >
             <img className="mx-2" 
                 src="https://pbs.twimg.com/media/CEdwx6OVEAAfGzN.png:large" 
-                style={{width: '15vh',backgroundColor:'white',borderRadius:5}} 
-                alt="Mobile Money" 
+                style={{width: '20vh',backgroundColor:'white',borderRadius:5}} 
+                alt="Mvola" 
             />
                 Mvola
       </Button>
@@ -76,8 +76,8 @@ export default function MobileMoney(){
             style={{
                 width: '90%',
                 borderRadius: 5,
-                backgroundColor:"#6aaa70",
-                color:'white',
+                backgroundColor:"#eef1f5",
+                color:'black',
                 marginBottom: 4,
                 height: '20vh'
             }}
@@ -87,9 +87,9 @@ export default function MobileMoney(){
                 style={{width: '15vh',backgroundColor:'white',borderRadius:5}} 
                 alt="Mobile Money" 
             />
-                Mobile Money
+                Airtel Money
       </Button>
-    </Popup>
+    {/* </Popup> */}
   </div>
   )
 };
