@@ -3,8 +3,7 @@ import Link from 'next/link';
 import Router from "next/router";
 
 // import GoogleLogin from 'react-google-login/dist/google-login';
-import { useGoogleLogin } from '@react-oauth/google';
-import { CodeClientConfig, GoogleLogin } from '@react-oauth/google';
+import {  GoogleLogin } from '@react-oauth/google';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import Image from 'next/image'
@@ -25,8 +24,9 @@ import {useSetRecoilState } from 'recoil';
 import ENV from '../../utils/env';
 import jwt_decode from "jwt-decode";
 import { createWallet } from '../../services/wallet';
-import { MicNone } from '@material-ui/icons';
 import TextField from '@mui/material/TextField';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Login() {
 
@@ -51,12 +51,19 @@ function Login() {
                 }
                 else if (registre.response.data.error.message == "Email or Username are already taken"){
                     const userConfirm = await confirmeUser(response.email, response.id)
-                    setAuth({ token: userConfirm.data.jwt, user: userConfirm.data.user  });
-                    Router.push("/admin/tableau");
+                    console.log(userConfirm)
+                    if(userConfirm.data){
+                        setAuth({ token: userConfirm.data.jwt, user: userConfirm.data.user  });
+                        Router.push("/admin/tableau");
+                    }
+                    else{
+                        toast.error(userConfirm.response.data.error.message);
+                    }
                 }
                 else {
-                    console.log(registre.response.data.error.message);
+                    toast.error(registre.response.data.error.message);
                 }
+                
             break;
             case 'google':
                 registre = await registration(response.name, response.email, response.sub)
@@ -71,11 +78,16 @@ function Login() {
                 else if (registre.response.data.error.message == "Email or Username are already taken"){
                     const userConfirm = await confirmeUser(response.email, response.sub)
                     console.log(userConfirm)
-                    setAuth({ token: userConfirm.data.jwt, user: userConfirm.data.user  });
-                    Router.push("/admin/tableau");
+                    if(userConfirm.data){
+                        setAuth({ token: userConfirm.data.jwt, user: userConfirm.data.user  });
+                        Router.push("/admin/tableau");
+                    }
+                    else{
+                        toast.error(userConfirm.response.data.error.message);
+                    }
                 }
                 else {
-                    console.log(registre.response.data.error.message);
+                    toast.error(registre.response.data.error.message);
                 }
             break;
             default:
@@ -219,21 +231,30 @@ function Login() {
                                 setStatus, 
                                 setSubmitting 
                             }) => { 
-                                try { 
-                                    // NOTE: Make API request 
-                                    // await wait(200);
+                                // try { 
+                                //     // NOTE: Make API request 
+                                //     // await wait(200);
                                     const userRecoil = await confirmeUser(values.email, values.password);
-                                    setAuth({ token: userRecoil.data.jwt, user: userRecoil.data.user  });
-                                    resetForm();
-                                    setStatus({ success: true }); 
-                                    setSubmitting(false);
-                                    Router.push("/admin/tableau");
-                                } catch (err) { 
-                                    console.error(err); 
-                                    setStatus({ success: false }); 
-                                    setErrors({ submit: err.message }); 
-                                    setSubmitting(false); 
-                                } 
+                                    console.log(userRecoil)
+                                    if(userRecoil.data){
+                                        setAuth({ token: userRecoil.data.jwt, user: userRecoil.data.user  });
+                                        resetForm();
+                                        setStatus({ success: true }); 
+                                        setSubmitting(false);
+                                        Router.push("/admin/tableau");
+                                    }
+                                    else{
+                                        toast.error(userRecoil.response.data.error.message);
+                                        setStatus({ success: false }); 
+                                        setErrors({ submit: err.message }); 
+                                        setSubmitting(false); 
+                                    }
+                                // } catch (err) { 
+                                //     console.error(err); 
+                                    // setStatus({ success: false }); 
+                                    // setErrors({ submit: err.message }); 
+                                    // setSubmitting(false); 
+                                // } 
                             }} 
                         > 
                             {({ 
@@ -276,7 +297,7 @@ function Login() {
                             />
 
 
-                            <div className="d-flex justify-content-between mx-4 mb-4">
+                            <div className="d-flex justify-content-between mx-4 mb-4" style={{minWidth:'45vh'}}>
                                 <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me' />
                                 <a href="!#">Forgot password?</a>
                             </div>
@@ -304,7 +325,7 @@ function Login() {
 
                     </MDBCol>
                 </MDBRow>
-
+                <ToastContainer />
             </MDBContainer>
         </>
     );
