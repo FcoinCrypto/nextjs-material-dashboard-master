@@ -427,6 +427,8 @@ function Acheter() {
                        onClick={() => {
                           handleOpen(index);
                         setUnite('ariary')
+                        setHideMobileMoney('')
+                        setHideBank('none')
 
                       }}
                       variant="contained"
