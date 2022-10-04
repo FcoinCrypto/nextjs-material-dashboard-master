@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Radio } from "@nextui-org/react";
 import Admin from "layouts/Admin.js";
 import { useSetRecoilState, useRecoilValue } from 'recoil';
-import { Button, Grid, Input, TextField } from "@material-ui/core";
+import { Button, Grid, Input } from "@material-ui/core";
 import {Formik, Form} from 'formik';
 import * as Yup from 'yup';
 import { updateWallet } from "../../services/achat";
@@ -16,6 +16,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Modal from "@material-ui/core/Modal";
 import MuiPhoneNumber from "material-ui-phone-number";
+import { TextField } from "@mui/material";
 
   
 function Acheter() {
@@ -244,7 +245,6 @@ function Acheter() {
                           fullWidth
                           style={{marginTop : 23, marginBottom : 23}}
                           label="Fcoin"
-                          placeholder="fcoin" 
                           name="fcoin" 
                           required 
                           variant="standard"             
@@ -525,7 +525,7 @@ function Acheter() {
                         value={values.fcoin} 
                         fullWidth
                         style={{marginTop : 23, marginBottom : 23}}
-                        placeholder="FCOIN" 
+                        label="Fcoin" 
                         name="fcoin" 
                         required 
                         variant="outlined"             
