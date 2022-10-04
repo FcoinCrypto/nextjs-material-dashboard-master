@@ -155,64 +155,66 @@ function Login() {
                         // }}
                     >
                         <br/><br/>
-                    <GoogleLogin
-                        style={{minWidth : '50vh'}}
-                        borderRadius={'100vh'}
-                        theme={'outline'}
-                        width={'290'}
-                        type={'standard'}
-                        size={'50'}
-                        logo_alignment={'center'}
-                        useOneTap
-                        // render={(renderProps) => (
-                        //     <Button
-                        //         onClick={renderProps.onClick}
-                        //         variant="contained"
-                        //         size="big"
-                        //         style={{
-                        //             width: '100%',
-                        //             borderRadius: 35,
-                        //             backgroundColor:"#00853d",
-                        //             color:'white',
-                        //             marginBottom: 4,
-                        //             minWidth: '50vh'
-                        //         }}
-                        //     >
-                        //         <img className="mx-2" src="https://cdn-icons-png.flaticon.com/512/2504/2504739.png" style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
-                        //             Se connecter avec google
-                        //     </Button>
-                        // )}
-                        onSuccess={(response) =>
-                            handleResponseLogin(jwt_decode(response.credential), 'google')
-                        }
-                        onFailure={(response) =>
-                            toast.error(response)
-                        }
-                        scope={
-                            "https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/dialogflow"
-                        }
-                        cookiePolicy={'single_host_origin'}
-                        isSignedIn={true}
-                        render={(renderProps) => (
-                            <Button
-                                onClick={renderProps.onClick}
-                                variant="contained"
-                                size="big"
-                                style={{
-                                    width: '100%',
-                                    borderRadius: 35,
-                                    backgroundColor:"#00853d",
-                                    color:'white',
-                                    marginBottom: 4,
-                                    minWidth: '50vh'
-                                }}
-                            >
-                                <Image className="mx-2" src="https://cdn-icons-png.flaticon.com/512/124/124010.png" style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" layout="fixed" />
-                                    Se connecter avec facebook
+                    <div style={{ width: "194%", backgroundColor: "orange"}}>
+                        <GoogleLogin
+                            style={{minWidth : '194%'}}
+                            borderRadius={'100vh'}
+                            theme={'outline'}
+                            // width={'460'}
+                            type={'standard'}
+                            size={'50'}
+                            logo_alignment={'center'}
+                            useOneTap
+                            // render={(renderProps) => (
+                            //     <Button
+                            //         onClick={renderProps.onClick}
+                            //         variant="contained"
+                            //         size="big"
+                            //         style={{
+                            //             width: '100%',
+                            //             borderRadius: 35,
+                            //             backgroundColor:"#00853d",
+                            //             color:'white',
+                            //             marginBottom: 4,
+                            //             minWidth: '50vh'
+                            //         }}
+                            //     >
+                            //         <img className="mx-2" src="https://cdn-icons-png.flaticon.com/512/2504/2504739.png" style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
+                            //             Se connecter avec google
+                            //     </Button>
+                            // )}
+                            onSuccess={(response) =>
+                                handleResponseLogin(jwt_decode(response.credential), 'google')
+                            }
+                            onFailure={(response) =>
+                                console.log(response)
+                            }
+                            scope={
+                                "https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/dialogflow"
+                            }
+                            cookiePolicy={'single_host_origin'}
+                            isSignedIn={true}
+                            render={(renderProps) => (
+                                <Button
+                                    onClick={renderProps.onClick}
+                                    variant="contained"
+                                    size="big"
+                                    style={{
+                                        width: '100%',
+                                        borderRadius: 35,
+                                        backgroundColor:"#00853d",
+                                        color:'white',
+                                        marginBottom: 4,
+                                        minWidth: '50vh'
+                                    }}
+                                >
+                                    <Image className="mx-2" src="https://cdn-icons-png.flaticon.com/512/124/124010.png" style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" layout="fixed" />
+                                        Se connecter avec facebook
 
-                            </Button>
-                        )}
-                    > </GoogleLogin>
+                                </Button>
+                            )}
+                        > </GoogleLogin>
+                    </div>
                     </GoogleOAuthProvider>
 
 
@@ -240,13 +242,21 @@ function Login() {
                                     const userRecoil = await confirmeUser(values.email, values.password);
                                     // console.log(userRecoil)
                                     if(userRecoil.data){
-                                        setAuth({ token: userRecoil.data.jwt, user: userRecoil.data.user  });
-                                        resetForm();
-                                        setStatus({ success: true }); 
-                                        setSubmitting(false);
-                                        Router.push("/admin/tableau");
+                                        if(userRecoil.data.user.access == "user"){
+                                            setAuth({ token: userRecoil.data.jwt, user: userRecoil.data.user  });
+                                            resetForm();
+                                            setStatus({ success: true }); 
+                                            setSubmitting(false);
+                                            Router.push("/admin/tableau");
+                                        }
+                                        if(userRecoil.data.user.access == "SuperAdmin"){
+                                            setAuth({ token: userRecoil.data.jwt, user: userRecoil.data.user  });
+                                            resetForm();
+                                            setStatus({ success: true }); 
+                                            setSubmitting(false);
+                                            Router.push("/superAdmin/dashboard");
+                                        }
                                     }
-                                    
                                     if(userRecoil.message == "Request failed with status code 400"){
                                         toast.error(userRecoil.response.data.error.message);
                                     }
