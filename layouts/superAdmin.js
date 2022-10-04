@@ -82,10 +82,10 @@ export default function SuperAdmin({ children, ...rest }) {
   // console.log(token)
 
   useEffect(() => {
-    if (!token) {
+    if (!token || user.access != "SuperAdmin") {
       router.push('/login/login')
     }
-  }, [user, token])
+  }, [])
 
   return (
     <div className={classes.wrapper}>
