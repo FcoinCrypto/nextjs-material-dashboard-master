@@ -12,6 +12,7 @@ function Tableau() {
   useEffect(async () => {
     if (!wallet) {
       const data = await getUser(user.id);
+      console.log(data)
       setWallet(data.data.wallet.fcoin);
     }
   }, [wallet])

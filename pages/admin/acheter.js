@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Radio } from "@nextui-org/react";
 import Admin from "layouts/Admin.js";
+import SMFooter from "../../components/Footer/FooterMediaSocial";
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { Button, Grid, Input, TextField } from "@material-ui/core";
 import {Formik, Form} from 'formik';
@@ -27,7 +28,24 @@ function Acheter() {
   const [infoMoney, setNoneInfoMoney] = useState('none');
   const { user } = useRecoilValue(authAtom);
   const [checked, setChecked] = useState('???');
+  const [moneyColor, SetMoneyColor] = useState();
+
   const checkedRadio = (e) =>{
+    console.log(e)
+    switch (e) {
+      case 'Orange Money': SetMoneyColor('#f6ab32')
+        
+        break;
+      case 'MVola': SetMoneyColor('#00703d')
+        
+        break;
+      case 'Airtel Money': SetMoneyColor('#fb0405')
+        
+        break;
+    
+      default:
+        break;
+    }
     setChecked(e)
     setNoneInfoMoney('')
   }
@@ -54,7 +72,7 @@ function Acheter() {
       setChecked('')
     };
 
-
+ 
     const useStyles = makeStyles(theme => ({
       paper: {
         position: "absolute",
@@ -83,18 +101,11 @@ function Acheter() {
               <Radio.Group 
                 orientation="horizontal" 
                 label="Quel est votre opérateur ?"
-                labels="options" 
+                 
                 value={checked}
                 onChange={checkedRadio} 
                >
-                    <Radio 
-                        value="Orange Money" 
-                        color="warning" 
-                        labelColor="warning"
-                        autoFocus="true"
-                        
-                        
-                    >
+                    <Radio value="Orange Money" color="#" labelColor="#">
                       <Button
                         variant="string"
                         size="big"
@@ -115,9 +126,9 @@ function Acheter() {
                         />
 
                       </Button>
-                      Orange Money
+                      <span style={{ color:'#f27f2c'}}>Orange Money</span>
                     </Radio>
-                    <Radio value="MVola" color="success" labelColor="success">
+                    <Radio value="MVola" color="#" labelColor="#">
                       <Button
                         variant="string"
                         size="big"
@@ -138,16 +149,16 @@ function Acheter() {
                         />
 
                       </Button>
-                      Mvola
+                      <span style={{ color:'#00703d'}}>Mvola</span>
                     </Radio>
-                    <Radio value="Airtel Money" color="error" labelColor="error">
+                    <Radio value="Airtel Money" labelColor="#" color="#">
                       <Button
                         variant="string"
                         size="big"
                         style={{
                             width: '10%',
                             borderRadius: 5,
-                            backgroundColor:"#eef1f5",
+                            backgroundColor:"#fb0405",
                             color:'white',
                             margin: 10,
 
@@ -161,10 +172,10 @@ function Acheter() {
                         />
 
                       </Button> 
-                      Airtel Money
+                      <span style={{ color:'#fb0405'}}>Airtel Money</span>
                     </Radio>
               </Radio.Group>
-              <p style={{display:infoMoney, marginBottom:-4}}>Acheter avec {checked}</p>
+              <p style={{display:infoMoney, marginBottom:-4, color:moneyColor}}>Acheter avec {checked}</p>
               <Formik
                 
                 enableReinitialize 
@@ -172,6 +183,7 @@ function Acheter() {
                     fcoin:'', 
                     montant: '', 
                     tel:'',
+                    secret:'',
                     description:''
                 }} 
                 validationSchema={Yup.object().shape({ 
@@ -180,15 +192,12 @@ function Acheter() {
                         .positive("A number can't start with a minus")
                         .min(500)
                         .required('require'),
-                    secret: Yup.number()
+                    secret: Yup.string()
                         .typeError("type error")
-                        .positive("A number can't start with a minus")
-                        .min(4)
-                        .max(4)
+                        .matches(/\b\d{4}\b/, {message: 'Must be exactly 4 numbers', excludeEmptyString: true})
                         .required('require'),
                     tel: Yup.string()
                         .required("This field is Required")
-                        
                         ,
                     description: Yup.string()
                         .required("This field is Required")
@@ -257,6 +266,8 @@ function Acheter() {
                   <Grid container >
                       <Grid item xs={6}>
                         <MuiPhoneNumber
+                         error={Boolean(touched.tel && errors.tel)} 
+                         helperText={touched.tel && errors.tel} 
                           name="tel"
                           label="N° Tel"
                           data-cy="user-phone"
@@ -269,7 +280,7 @@ function Acheter() {
                         <TextField
                             error={Boolean(touched.secret && errors.secret)} 
                             helperText={touched.secret && errors.secret} 
-                            type="number" 
+                            type="password" 
                             onBlur={handleBlur} 
                             onChange={handleChange} 
                             value={values.secret} 
@@ -447,7 +458,7 @@ function Acheter() {
                           style={{width: '15vh',backgroundColor:'white',borderRadius:5}} 
                           alt="Mobile Money" 
                       />
-                          Mobile Money
+                          Mobile Banking
                     </Button>
                   </div>
                 ))}
@@ -607,7 +618,42 @@ function Acheter() {
             </form>
                 
         )}
-        </Formik> 
+        </Formik>
+      <div
+        style={{
+          transform:'translate(0%,2400%)'
+        }}
+      >
+          <Grid container>
+            <Grid items xs={3}/>
+            <Grid items xs={2}>
+              <a href="https://www.facebook.com/Fanampiana.mg/posts/1507007569718937" className={classes.block}>
+                <img src={require('../../assets/img/logo-fb_full.png')} style={{
+                      width:"15%"
+                  }}/>
+                  Facebook
+                </a>  
+            </Grid>
+            <Grid items xs={2}>
+              <a href="#R" className={classes.block}>
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" style={{
+                      width:"15%"
+                  }}/>
+                  Discord
+                </a>  
+            </Grid>
+            <Grid items xs={2}>
+              <a href="#R" className={classes.block}>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png" style={{
+                      width:"15%"
+                  }}/>
+                  Telegram
+                </a>  
+            </Grid>
+            <Grid items xs={3}/>
+          </Grid>
+      </div>
+        
         
     </>
   )
