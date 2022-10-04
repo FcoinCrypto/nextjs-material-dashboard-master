@@ -5,8 +5,3 @@ export const allTransaction = async () =>{
     return response;
     
 }
-export const test = async () =>{
-    const response = await api.get('/transactions')
-    return response;
-    
-}

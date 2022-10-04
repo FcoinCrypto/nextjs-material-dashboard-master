@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Radio } from "@nextui-org/react";
 import Admin from "layouts/Admin.js";
-import SMFooter from "../../components/Footer/FooterMediaSocial";
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { Button, Grid, Input } from "@material-ui/core";
 import {Formik, Form} from 'formik';
