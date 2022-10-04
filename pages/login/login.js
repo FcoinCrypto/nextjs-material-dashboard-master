@@ -52,7 +52,6 @@ function Login() {
                 }
                 if (registre.message == "Request failed with status code 400"){
                     const userConfirm = await confirmeUser(response.email, response.sub)
-                        console.log(userConfirm)
                     if(userConfirm.data){
                         setAuth({ token: userConfirm.data.jwt, user: userConfirm.data.user  });
                         Router.push("/admin/tableau");
@@ -73,15 +72,12 @@ function Login() {
                 
 
                 if(registre.jwt) {
-                    console.log("registration mandeha",registre.user.id)
                     const wallet = await createWallet(registre.user.id)
                     setAuth({ token: registre.jwt, user: registre.user  });
-                    console.log("registration mandeha",wallet)
                     Router.push("/admin/tableau");
                 }
                 if (registre.message == "Request failed with status code 400"){
                     const userConfirm = await confirmeUser(response.email, response.sub)
-                        console.log(userConfirm)
                     if(userConfirm.data){
                         setAuth({ token: userConfirm.data.jwt, user: userConfirm.data.user  });
                         Router.push("/admin/tableau");
@@ -190,7 +186,7 @@ function Login() {
                             handleResponseLogin(jwt_decode(response.credential), 'google')
                         }
                         onFailure={(response) =>
-                            console.log(response)
+                            toast.error(response)
                         }
                         scope={
                             "https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/dialogflow"
@@ -250,7 +246,7 @@ function Login() {
                                         setSubmitting(false);
                                         Router.push("/admin/tableau");
                                     }
-                                    console.log()
+                                    
                                     if(userRecoil.message == "Request failed with status code 400"){
                                         toast.error(userRecoil.response.data.error.message);
                                     }

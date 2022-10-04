@@ -1,34 +1,22 @@
 import React,{useState, useEffect} from "react";
 // @material-ui/core components
-import PropTypes from "prop-types";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
 // core components
 import styles from "assets/jss/nextjs-material-dashboard/components/footerStyle.js";
-import Link from 'next/link';
 // layout for this page
 import superAdmin from "layouts/superAdmin.js";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
-import TableSuperTransaction from "../../components/Table/TableSuperTransaction";
-import TableAchat from "../../components/Table/TableAchat";
-import TableEnvoyer from "../../components/Table/TableEnvoyer";
-import TableRecevoir from "../../components/Table/TableRecevoir";
+import TableSuperAllEnvoyers from "../../components/Table/TableSuperAllEnvoyers";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-import axios from "axios"
-import Footer from "../../components/Footer/Footer";
-import { achats, transactions, envoyers, recevoirs } from "../../services/table";
-import { allTransaction, test } from "../../services/allTransaction";
+import { allEnvoyers} from "../../services/allEnvoyers";
 
-import { getUser } from "../../services/user";
-import { useSetRecoilState, useRecoilValue } from 'recoil';
-import { authAtom } from "../../recoil/atom/authAtom";
 
 
 const cardstyles = {
@@ -67,24 +55,23 @@ const cardstyles = {
 
 function TableList() {
   const useStyles = makeStyles(styles);
-  const[dataTransaction, setDataTransaction] = useState();
+  const[dataEnvoyer, setDataEnvoyer] = useState();
 
   const classes = useStyles();
 
   useEffect(async () => {
-    if(!dataTransaction){
+    if(!dataEnvoyer){
 
-      const res = await allTransaction();
-      
-      setDataTransaction(res.data.data);
+      const res = await allEnvoyers();
+      setDataEnvoyer(res.data.data);
      
 
     } 
-  }, [dataTransaction])
+  }, [dataEnvoyer])
 
   return (
     <>
-      { dataTransaction &&
+      { dataEnvoyer &&
         <GridContainer>
           <footer>
             <div className={classes.container}>
@@ -92,7 +79,7 @@ function TableList() {
                 <List className={classes.list}>
                   <ListItem className={classes.inlineBlock}>
                     <a href="#" className={classes.block}>
-                      Toutes les transactions
+                      Toutes les Envoies
                     </a>
                   </ListItem>
 
@@ -106,14 +93,14 @@ function TableList() {
                 <CardHeader color="info">
                   <h4 className={classes.cardTitleWhite}>Title</h4>
                   <p className={classes.cardCategoryWhite}>
-                    Transactions
+                    Envoies
                   </p>
                 </CardHeader>
                 <CardBody>
-                  <TableSuperTransaction
+                  <TableSuperAllEnvoyers
                     tableHeaderColor="primary"
-                    tableHead={["date", "type", "etiquette", "montant","utilisateur"]}
-                    tableData={dataTransaction}
+                    tableHead={["date","destinataire", "etiquette", "montant", "utilisateur"]}
+                    tableData={dataEnvoyer}
                   />
                   
                 </CardBody>
@@ -128,14 +115,5 @@ function TableList() {
 }
 
 TableList.layout = superAdmin;
-
 export default TableList;
-async function getTransactions () {
-  const res = await transactions();
-  return res
-}
-async function getRecevoirs () {
-  const res = await getRecevoirs();
-  return res
-}
 
