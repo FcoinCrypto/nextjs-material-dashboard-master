@@ -40,18 +40,19 @@ function Login() {
         switch (type) {
             case 'facebook':
                 registre = await registration(response.name+" ", response.email, response.id)
+                
                 // const registre = await registration(response.name, response.email, response.sub)  email
                 // console.log("registration",registre.response.data.error.message)
-                // console.log("registration mandeha",registre)
+                 //console.log("registration mandeha",registre)
 
                 if(registre.jwt) {
                     await createWallet(registre.user.id)
                     setAuth({ token: registre.jwt, user: registre.user  });
                     Router.push("/admin/tableau");
                 }
-                else if (registre.response.data.error.message == "Email or Username are already taken"  ){
-                    const userConfirm = await confirmeUser(response.email, response.id)
-                    // console.log(userConfirm)
+                if (registre.message == "Request failed with status code 400"){
+                    const userConfirm = await confirmeUser(response.email, response.sub)
+                        console.log(userConfirm)
                     if(userConfirm.data){
                         setAuth({ token: userConfirm.data.jwt, user: userConfirm.data.user  });
                         Router.push("/admin/tableau");
@@ -61,23 +62,26 @@ function Login() {
                     }
                 }
                 else {
-                    toast.error(registre.response.data.error.message);
+                    toast.error(registre.message);
                 }
+                    
+                
                 
             break;
             case 'google':
                 registre = await registration(" "+ response.name, response.email, response.sub)
-                // console.log("registration",registre.response.data.error.message)
-                // console.log("registration mandeha",registre)
+                
 
                 if(registre.jwt) {
-                    await createWallet(registre.user.id)
+                    console.log("registration mandeha",registre.user.id)
+                    const wallet = await createWallet(registre.user.id)
                     setAuth({ token: registre.jwt, user: registre.user  });
+                    console.log("registration mandeha",wallet)
                     Router.push("/admin/tableau");
                 }
-                else if (registre.response.data.error.message == "Email or Username are already taken"){
+                if (registre.message == "Request failed with status code 400"){
                     const userConfirm = await confirmeUser(response.email, response.sub)
-                    // console.log(userConfirm)
+                        console.log(userConfirm)
                     if(userConfirm.data){
                         setAuth({ token: userConfirm.data.jwt, user: userConfirm.data.user  });
                         Router.push("/admin/tableau");
@@ -87,8 +91,9 @@ function Login() {
                     }
                 }
                 else {
-                    toast.error(registre.response.data.error.message);
+                    toast.error(registre.message);
                 }
+                    
             break;
             default:
             break;
@@ -122,11 +127,12 @@ function Login() {
                                     variant="contained"
                                     size="big"
                                     style={{
-                                        width: '100%',
+                                        
                                         borderRadius: 5,
                                         backgroundColor:"#1f80b3",
                                         color:'white',
                                         marginBottom: 4,
+                                        fontSize:'0.8rem',
                                         minWidth: '50vh'
                                     }}
                                 >
@@ -143,21 +149,21 @@ function Login() {
                     <GoogleOAuthProvider 
                     
                         clientId={'66220988134-n1m5v05ri12up8gvv6ugnc4790ktatvt.apps.googleusercontent.com'}
-                        style={{
-                            width: '100%',
-                            borderRadius: 35,
-                            backgroundColor:"#00853d",
-                            color:'white',
-                            marginBottom: 4,
-                            minWidth: '50vh'
-                        }}
+                        // style={{
+                        //     width: '100%',
+                        //     borderRadius: 35,
+                        //     backgroundColor:"#00853d",
+                        //     color:'white',
+                        //     marginBottom: 4,
+                        //     minWidth: '50vh'
+                        // }}
                     >
                         <br/><br/>
                     <GoogleLogin
                         style={{minWidth : '50vh'}}
                         borderRadius={'100vh'}
                         theme={'outline'}
-                        width={'359'}
+                        width={'290'}
                         type={'standard'}
                         size={'50'}
                         logo_alignment={'center'}
@@ -244,8 +250,12 @@ function Login() {
                                         setSubmitting(false);
                                         Router.push("/admin/tableau");
                                     }
-                                    else{
+                                    console.log()
+                                    if(userRecoil.message == "Request failed with status code 400"){
                                         toast.error(userRecoil.response.data.error.message);
+                                    }
+                                    else{
+                                        toast.error(userRecoil.message);
                                         setStatus({ success: false }); 
                                         setErrors({ submit: err.message }); 
                                         setSubmitting(false); 
