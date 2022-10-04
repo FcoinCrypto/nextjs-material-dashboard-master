@@ -11,7 +11,7 @@ import TableCell from "@material-ui/core/TableCell";
 // core components
 import styles from "assets/jss/nextjs-material-dashboard/components/tableStyle.js";
 
-export default function CustomTable(props) {
+export default function TableSuperTransaction(props) {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   moment.locale('fr')
@@ -42,6 +42,7 @@ export default function CustomTable(props) {
                 <TableCell align="left">{row.attributes.type}</TableCell>
                 <TableCell align="left">{row.attributes.etiquette}</TableCell>
                 <TableCell align="left">{row.attributes.montant}</TableCell>
+                <TableCell align="left">{row.attributes.user.data.attributes.username}</TableCell>
               </TableRow>
             )).reverse()}
           </TableBody>
@@ -50,11 +51,11 @@ export default function CustomTable(props) {
   );
 }
 
-CustomTable.defaultProps = {
+TableSuperTransaction.defaultProps = {
   tableHeaderColor: "gray",
 };
 
-CustomTable.propTypes = {
+TableSuperTransaction.propTypes = {
   tableHeaderColor: PropTypes.oneOf([
     "warning",
     "primary",
