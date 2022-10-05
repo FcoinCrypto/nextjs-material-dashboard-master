@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Router from "next/router";
 
@@ -29,9 +29,15 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function Login() {
-
+    const [width, setWidth] = useState();
+    useEffect(() => {
+       
+        const el = document.getElementById('gl').offsetWidth
+        setWidth(el)
+        console.log(el)
+        
+      }, []);
     const setAuth = useSetRecoilState(authAtom);
-    
 
     const  handleResponseLogin = async (response, type) => {
         let input = null;
@@ -145,44 +151,19 @@ function Login() {
                     <GoogleOAuthProvider 
                     
                         clientId={'66220988134-n1m5v05ri12up8gvv6ugnc4790ktatvt.apps.googleusercontent.com'}
-                        // style={{
-                        //     width: '100%',
-                        //     borderRadius: 35,
-                        //     backgroundColor:"#00853d",
-                        //     color:'white',
-                        //     marginBottom: 4,
-                        //     minWidth: '50vh'
-                        // }}
                     >
                         <br/><br/>
-                    <div style={{ width: "194%", backgroundColor: "orange"}}>
+                    <div id="gl" style={{ width: "100%", backgroundColor: "#ea4335"}}>
                         <GoogleLogin
-                            style={{minWidth : '194%'}}
+                            style={{minWidth : '100%'}}
                             borderRadius={'100vh'}
                             theme={'outline'}
-                            // width={'460'}
                             type={'standard'}
                             size={'50'}
                             logo_alignment={'center'}
                             useOneTap
-                            // render={(renderProps) => (
-                            //     <Button
-                            //         onClick={renderProps.onClick}
-                            //         variant="contained"
-                            //         size="big"
-                            //         style={{
-                            //             width: '100%',
-                            //             borderRadius: 35,
-                            //             backgroundColor:"#00853d",
-                            //             color:'white',
-                            //             marginBottom: 4,
-                            //             minWidth: '50vh'
-                            //         }}
-                            //     >
-                            //         <img className="mx-2" src="https://cdn-icons-png.flaticon.com/512/2504/2504739.png" style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
-                            //             Se connecter avec google
-                            //     </Button>
-                            // )}
+                            width={width}
+
                             onSuccess={(response) =>
                                 handleResponseLogin(jwt_decode(response.credential), 'google')
                             }
