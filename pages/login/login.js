@@ -138,7 +138,7 @@ function Login() {
                                         minWidth: '50vh'
                                     }}
                                 >
-                                    <img className="mx-2" src="http://www.agriculture-biodiversite-oi.org/var/ez_site/storage/images/media/images/contribution/logo-fb/132144-1-fre-FR/logo-fb_full.png" style={{width:30,backgroundColor:'white',borderRadius:50}} alt="Facebook image" layout='fixed' />
+                                    <img className="mx-2" src={require('../../assets/img/logo-fb_full.png')} style={{width:30,backgroundColor:'white',borderRadius:50}} alt="Facebook image" layout='fixed' />
                                         Se connecter avec facebook
 
                                 </Button>
@@ -153,16 +153,17 @@ function Login() {
                         clientId={'66220988134-n1m5v05ri12up8gvv6ugnc4790ktatvt.apps.googleusercontent.com'}
                     >
                         <br/><br/>
-                    <div id="gl" style={{ width: "100%", backgroundColor: "#ea4335"}}>
+                    <div id="gl" style={{ width: "100%", backgroundColor: "#eeeeee"}}>
                         <GoogleLogin
                             style={{minWidth : '100%'}}
                             borderRadius={'100vh'}
                             theme={'outline'}
                             type={'standard'}
-                            size={'50'}
+                            size={'large'}
                             logo_alignment={'center'}
                             useOneTap
                             width={width}
+                            text="Se connecter avec Google"
 
                             onSuccess={(response) =>
                                 handleResponseLogin(jwt_decode(response.credential), 'google')
