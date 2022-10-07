@@ -13,16 +13,20 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import { useRecoilValue } from 'recoil';
 import { authAtom } from "../../recoil/atom/authAtom";
 import SwapVertRounded from "@material-ui/icons/SwapVertRounded";
-import { getAllSymboles } from "../../services/dexTrade";
+import { getAllSymboles, getTicker } from "../../services/dexTrade";
+import { conversion } from "../../utils/utilAchat";
 
 
 
 function Exchange() {
-    const [wallet, setWallet] = useState();
+    const [prix, setPrix] = useState();
+    const [frais, setFrais] = useState("coming");
+    const [payer, setPayer] = useState();
+    const [reçu, setReçu] = useState();
     const [symboles, setSymboles] = useState();
-    const { user } = useRecoilValue(authAtom);
-    const [insuffisant, setInsuffisant] = useState();
-    const [dNone, setdNone] = useState('none');
+    // const { user } = useRecoilValue(authAtom);
+    const [dNone, setdNone] = useState(false);
+    const [titleDropdown, setTitleDropdown] = useState("FCOIN");
   
     useEffect(async () => {
         if (!symboles) {
@@ -34,6 +38,16 @@ function Exchange() {
             setSymboles(listCrypto);
         }
     }, [symboles])
+
+    const handlerConversion = async (event) => {
+        const tiker = await getTicker("FTCUSDT");
+        console.log(tiker)
+        setPrix(tiker.data.data.last);
+        setReçu();
+        setPayer();
+        setFrais("exemple");
+        setdNone(!dNone);
+    }
    
   return (
     <Container maxWidth="sm" sx={20}>
@@ -96,15 +110,17 @@ function Exchange() {
                     <Form.Control aria-label="Text input with dropdown button" />
                     <DropdownButton
                         variant="outline-secondary"
-                        title="Fcoin"
-                        id="input-group-dropdown-2"
+                        title="FCOIN"
+                        id="input-group-dropdown-1"
                         align="end"
                         
                     >
                         {  symboles &&
                             symboles.map((symbole)=>{
                                 return (
-                                    <Dropdown.Item href="#"> {symbole.quote} </Dropdown.Item>
+                                    <Dropdown.Item href="#" as="button" >
+                                        {symbole.quote} 
+                                    </Dropdown.Item>
                                 )
                             } )
                         }
@@ -130,44 +146,130 @@ function Exchange() {
                     </InputLabel>
                     <br/>
                     <InputGroup className="mb-3">
-                    <img 
-                        className="mx-2" 
-                        src="https://cdn-icons-png.flaticon.com/512/2150/2150062.png" 
-                        style={{width:40,backgroundColor:'white',borderRadius:50}} alt="Facebook image" 
-                    />
-                    <Form.Control aria-label="Text input with dropdown button" />
-                    <DropdownButton
-                        variant="outline-secondary"
-                        title="USDT"
-                        id="input-group-dropdown-2"
-                        align="end"
-                        
-                    >
-                        {  symboles &&
-                            symboles.map((symbole)=>{
-                                return (
-                                    <Dropdown.Item href="#"> {symbole.quote} </Dropdown.Item>
-                                )
-                            } )
-                        }
-                    </DropdownButton>
-                </InputGroup>
+                        <img 
+                            className="mx-2" 
+                            src="https://cdn-icons-png.flaticon.com/512/2150/2150062.png" 
+                            style={{width:40,backgroundColor:'white',borderRadius:50}} alt="Facebook image" 
+                        />
+                        <Form.Control aria-label="Text input with dropdown button" />
+                        <DropdownButton
+                            variant="outline-secondary"
+                            title={titleDropdown}
+                            id="input-group-dropdown-2"
+                            align="end"
+                            
+                        >
+                            {  symboles &&
+                                symboles.map((symbole)=>{
+                                    return (
+                                        <Dropdown.Item href="#" as="button" onClick={() => setTitleDropdown(symbole.quote)}> 
+                                            {symbole.quote} 
+                                        </Dropdown.Item>
+                                    )
+                                } )
+                            }
+                        </DropdownButton>
+                    </InputGroup>
                 </Grid>
 
+                { dNone &&
+                    <>
+                    <Grid 
+                        xs={12} 
+                        container 
+                        spacing={5} 
+                        style={{
+                            padding: "5px",
+                        }} 
+                    >
+                        <Grid xs={2} />
+                        <Grid item xs={3}> 
+                            <span>Prix : </span>
+                        </Grid>
+                        <Grid item xs={6}> 
+                            <span> 
+                                1 FTC ≈
+                                { prix }
+                                USDT
+                            </span>
+                        </Grid>
+                        <Grid xs={2}/>
+                    </Grid>
+                    <Grid 
+                        xs={12} 
+                        container 
+                        spacing={5} 
+                        style={{
+                            padding: "5px"
+                        }}
+                    >
+                        <Grid xs={2}/>
+                        <Grid item xs={3}> 
+                            <span>Frais : </span>
+                        </Grid>
+                        <Grid item xs={6}> 
+                            <span> 
+                                0.0719915 BTC
+                            </span>
+                        </Grid>
+                        <Grid xs={2}/>
+                    </Grid>
+                    <Grid 
+                        xs={12} 
+                        container 
+                        spacing={5} 
+                        style={{
+                            padding: "5px"
+                        }}
+                    >
+                        <Grid xs={2}/>
+                        <Grid item xs={3}> 
+                            <span>Depense : </span>
+                        </Grid>
+                        <Grid item xs={6}> 
+                            <span> 
+                                20,086.37339641 USDT
+                            </span>
+                        </Grid>
+                        <Grid xs={2}/>
+                    </Grid>
+                    <Grid 
+                        xs={12} 
+                        container 
+                        spacing={5} 
+                        style={{
+                            padding: "5px"
+                        }}
+                    >
+                        <Grid xs={2}/>
+                        <Grid item xs={3}> 
+                            <span>Reçu : </span>
+                        </Grid>
+                        <Grid item xs={6}> 
+                            <span> 
+                                1 BTC
+                            </span>
+                        </Grid>
+                        <Grid xs={2}/>
+                    </Grid>
+                </>
+            }
             </Grid>
+
             <Grid
                 container
                 spacing={0}
                 direction="column"
                 alignItems="center"
                 justifyContent="center"
-                style={{ minHeight: '100vh' }}
+                style={{ minHeight: '100vh', padding: "15px" }}
             >
                 <Button
                     variant="contained" 
                     color="primary" 
                     disabled={isSubmitting} 
                     type="submit"
+                    onClick={() => handlerConversion()}
                 > 
                     Conversion
                 </Button>

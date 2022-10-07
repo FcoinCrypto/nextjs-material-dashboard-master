@@ -14,3 +14,11 @@ export function conversion(fcoin, unite){
         break;
     }
 }
+
+export function FcoinToUsdT(fcoin, lastUsdt){
+            return fcoin * lastUsdt;
+}
+
+export function UsdtToFcoin(fcoin, lastUsdt){
+    return lastUsdt / fcoin;
+}
