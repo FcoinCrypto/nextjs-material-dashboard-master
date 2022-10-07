@@ -28,9 +28,70 @@ function Exchange() {
     const [dNone, setdNone] = useState(false);
     const [titleDropdown, setTitleDropdown] = useState("FCOIN");
   
+    const { user } = useRecoilValue(authAtom);
+    const [insuffisant, setInsuffisant] = useState();
+    const [substiteFcoin, setSubstiteFcoin] = useState(inputFcoin);
+    const [substiteUsdt, setSubstiteUsdt] = useState(inputUsdt);
+    
+    function inputFcoin() {
+            return ( 
+                    <InputGroup className="mb-3" id="fcoin">
+                    <img 
+                        className="mx-2" 
+                        src="https://raw.githubusercontent.com/FcoinCrypto/Fcoin/main/logo/1024x1024fcoin.png" 
+                        style={{width:40,backgroundColor:'white',borderRadius:50}} alt="Facebook image" 
+                    />
+                    <Form.Control aria-label="Text input with dropdown button" />
+                    <DropdownButton
+                        variant="outline-secondary"
+                        title="Fcoin"
+                        id="input-group-dropdown-2"
+                        align="end"
+                        
+                    >
+                        {  symboles &&
+                            symboles.map((symbole)=>{
+                                return (
+                                    <Dropdown.Item href="#"> {symbole.quote} </Dropdown.Item>
+                                )
+                            } )
+                        }
+                        {/* <Dropdown.Divider />
+                        <Dropdown.Item href="#">Separated link</Dropdown.Item> */}
+                    </DropdownButton>
+                    </InputGroup>
+            );
+        
+      }
+    function inputUsdt() {
+        return (
+            <InputGroup className="mb-3">
+                <img 
+                    className="mx-2" 
+                    src="https://cdn-icons-png.flaticon.com/512/2150/2150062.png" 
+                    style={{width:40,backgroundColor:'white',borderRadius:50}} alt="Facebook image" 
+                />
+                <Form.Control aria-label="Text input with dropdown button" />
+                <DropdownButton
+                    variant="outline-secondary"
+                    title="USDT"
+                    id="input-group-dropdown-2"
+                    align="end"
+                    
+                >
+                    {  symboles &&
+                        symboles.map((symbole)=>{
+                            return (
+                                <Dropdown.Item href="#"> {symbole.quote} </Dropdown.Item>
+                            )
+                        } )
+                    }
+                </DropdownButton>
+            </InputGroup>
+        );
+      }
     useEffect(async () => {
         if (!symboles) {
-            
             const data = await getAllSymboles();
             const  listCrypto = data.data.filter( v => {
                 if(v.base == "FTC") return v
@@ -101,33 +162,7 @@ function Exchange() {
                         Swap from
                     </InputLabel>
                     <br/>
-                    <InputGroup className="mb-3">
-                    <img 
-                        className="mx-2" 
-                        src="https://raw.githubusercontent.com/FcoinCrypto/Fcoin/main/logo/1024x1024fcoin.png" 
-                        style={{width:40,backgroundColor:'white',borderRadius:50}} alt="Facebook image" 
-                    />
-                    <Form.Control aria-label="Text input with dropdown button" />
-                    <DropdownButton
-                        variant="outline-secondary"
-                        title="FCOIN"
-                        id="input-group-dropdown-1"
-                        align="end"
-                        
-                    >
-                        {  symboles &&
-                            symboles.map((symbole)=>{
-                                return (
-                                    <Dropdown.Item href="#" as="button" >
-                                        {symbole.quote} 
-                                    </Dropdown.Item>
-                                )
-                            } )
-                        }
-                        {/* <Dropdown.Divider />
-                        <Dropdown.Item href="#">Separated link</Dropdown.Item> */}
-                    </DropdownButton>
-                </InputGroup>
+                   {substiteFcoin}
                 </Grid>
                 <Grid
                     container
@@ -136,8 +171,17 @@ function Exchange() {
                     alignItems="center"
                     justifyContent="center"
                 >
-                    <IconButton >
-                        <SwapVertRounded />
+                    <IconButton onClick={()=>{
+                        if(substiteFcoin.props.id==inputFcoin().props.id){
+                            setSubstiteFcoin(inputUsdt);
+                            setSubstiteUsdt(inputFcoin) ;
+                        }else{
+                            setSubstiteFcoin(inputFcoin);
+                            setSubstiteUsdt(inputUsdt) ;
+                        }
+                          
+                        }}>
+                        <SwapVertRounded/>
                     </IconButton>
                 </Grid>
                 <Grid item xs={12}>
@@ -145,31 +189,7 @@ function Exchange() {
                         Swap to
                     </InputLabel>
                     <br/>
-                    <InputGroup className="mb-3">
-                        <img 
-                            className="mx-2" 
-                            src="https://cdn-icons-png.flaticon.com/512/2150/2150062.png" 
-                            style={{width:40,backgroundColor:'white',borderRadius:50}} alt="Facebook image" 
-                        />
-                        <Form.Control aria-label="Text input with dropdown button" />
-                        <DropdownButton
-                            variant="outline-secondary"
-                            title={titleDropdown}
-                            id="input-group-dropdown-2"
-                            align="end"
-                            
-                        >
-                            {  symboles &&
-                                symboles.map((symbole)=>{
-                                    return (
-                                        <Dropdown.Item href="#" as="button" onClick={() => setTitleDropdown(symbole.quote)}> 
-                                            {symbole.quote} 
-                                        </Dropdown.Item>
-                                    )
-                                } )
-                            }
-                        </DropdownButton>
-                    </InputGroup>
+                    {substiteUsdt}
                 </Grid>
 
                 { dNone &&
