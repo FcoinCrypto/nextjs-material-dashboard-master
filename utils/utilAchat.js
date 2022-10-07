@@ -20,5 +20,5 @@ export function FcoinToUsdT(fcoin, lastUsdt){
 }
 
 export function UsdtToFcoin(fcoin, lastUsdt){
-    return lastUsdt / fcoin;
+    return fcoin/lastUsdt;
 }
