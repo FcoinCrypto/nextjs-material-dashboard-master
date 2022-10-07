@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Admin from "layouts/Admin.js";
 import { Box, Button, Container, Grid, IconButton, InputLabel } from "@material-ui/core";
 import TextField from '@mui/material/TextField';
@@ -14,7 +14,7 @@ import { useRecoilValue } from 'recoil';
 import { authAtom } from "../../recoil/atom/authAtom";
 import SwapVertRounded from "@material-ui/icons/SwapVertRounded";
 import { getAllSymboles, getTicker } from "../../services/dexTrade";
-import { conversion } from "../../utils/utilAchat";
+import { conversion, FcoinToUsdT, UsdtToFcoin } from "../../utils/utilAchat";
 
 
 
@@ -26,22 +26,35 @@ function Exchange() {
     const [symboles, setSymboles] = useState();
     // const { user } = useRecoilValue(authAtom);
     const [dNone, setdNone] = useState(false);
-    const [titleDropdown, setTitleDropdown] = useState("FCOIN");
-  
+
+    const [valueFcoin, setValueFcoin] = useState();
+    const [valueUsdt, setValueUsdt] = useState();
+
+    const [fcoinDisabled, setFcoinDisabled] = useState(false);
+    const [btnDisabled, setBtnDisabled] = useState('disabled');
+
+    const[unite, setUnite]  =useState();
     const { user } = useRecoilValue(authAtom);
-    const [insuffisant, setInsuffisant] = useState();
-    const [substiteFcoin, setSubstiteFcoin] = useState(inputFcoin);
-    const [substiteUsdt, setSubstiteUsdt] = useState(inputUsdt);
+    const [insuffisant, setInsuffisant] = useState(); 
     
-    function inputFcoin() {
+    const inputFcoin= useCallback(() => {
             return ( 
-                    <InputGroup className="mb-3" id="fcoin">
+                    <InputGroup className="mb-3" id="fcoin" name="fcoin" >
                     <img 
                         className="mx-2" 
                         src="https://raw.githubusercontent.com/FcoinCrypto/Fcoin/main/logo/1024x1024fcoin.png" 
                         style={{width:40,backgroundColor:'white',borderRadius:50}} alt="Facebook image" 
                     />
-                    <Form.Control aria-label="Text input with dropdown button" />
+                    <Form.Control
+                        disabled={fcoinDisabled}
+                        aria-label="Text input with dropdown button"
+                        onChange={(e)=>{
+                                setValueFcoin(e.target.value)
+                                setdNone(false)
+                                setBtnDisabled('')
+                            }
+                        }
+                    />
                     <DropdownButton
                         variant="outline-secondary"
                         title="Fcoin"
@@ -62,8 +75,8 @@ function Exchange() {
                     </InputGroup>
             );
         
-      }
-    function inputUsdt() {
+      }, [fcoinDisabled])
+    const inputUsdt = useCallback(() => {
         return (
             <InputGroup className="mb-3">
                 <img 
@@ -71,7 +84,16 @@ function Exchange() {
                     src="https://cdn-icons-png.flaticon.com/512/2150/2150062.png" 
                     style={{width:40,backgroundColor:'white',borderRadius:50}} alt="Facebook image" 
                 />
-                <Form.Control aria-label="Text input with dropdown button" />
+                <Form.Control
+                    disabled={!fcoinDisabled}
+                    aria-label="Text input with dropdown button"
+                    onChange={(e)=>{
+                        setValueUsdt(e.target.value)
+                        setBtnDisabled('')
+                        setdNone(false)
+                    }
+                }
+                />
                 <DropdownButton
                     variant="outline-secondary"
                     title="USDT"
@@ -89,7 +111,29 @@ function Exchange() {
                 </DropdownButton>
             </InputGroup>
         );
-      }
+      }, [fcoinDisabled])
+      const swapComponent = useCallback (()=>{
+        {
+            setdNone(false)
+            setFcoinDisabled(!fcoinDisabled)
+            if(substiteFcoin.props.id == inputFcoin().props.id){
+                
+                setSubstiteFcoin(inputUsdt);
+                setSubstiteUsdt(inputFcoin) ;
+                setUnite('FTC')
+                
+            }else{
+                
+                setSubstiteFcoin(inputFcoin);
+                setSubstiteUsdt(inputUsdt) ;
+                setUnite('USDT')
+            }
+              
+            }
+      }, [fcoinDisabled])
+
+      const [substiteFcoin, setSubstiteFcoin] = useState(inputFcoin);
+      const [substiteUsdt, setSubstiteUsdt] = useState(inputUsdt);
     useEffect(async () => {
         if (!symboles) {
             const data = await getAllSymboles();
@@ -100,11 +144,18 @@ function Exchange() {
         }
     }, [symboles])
 
-    const handlerConversion = async (event) => {
+    const handlerConversion = async (unite) => {
+        setBtnDisabled('disabled')
         const tiker = await getTicker("FTCUSDT");
         console.log(tiker)
         setPrix(tiker.data.data.last);
-        setReçu();
+        if(unite=='FTC'){
+
+            setReçu(FcoinToUsdT(valueFcoin, tiker.data.data.last));
+        }else{
+            setReçu(UsdtToFcoin(valueUsdt, tiker.data.data.last));
+        }
+        
         setPayer();
         setFrais("exemple");
         setdNone(!dNone);
@@ -171,16 +222,10 @@ function Exchange() {
                     alignItems="center"
                     justifyContent="center"
                 >
-                    <IconButton onClick={()=>{
-                        if(substiteFcoin.props.id==inputFcoin().props.id){
-                            setSubstiteFcoin(inputUsdt);
-                            setSubstiteUsdt(inputFcoin) ;
-                        }else{
-                            setSubstiteFcoin(inputFcoin);
-                            setSubstiteUsdt(inputUsdt) ;
-                        }
-                          
-                        }}>
+                    <IconButton 
+                        onClick={()=> swapComponent()}
+                        
+                    >
                         <SwapVertRounded/>
                     </IconButton>
                 </Grid>
@@ -208,9 +253,9 @@ function Exchange() {
                         </Grid>
                         <Grid item xs={6}> 
                             <span> 
-                                1 FTC ≈
-                                { prix }
-                                USDT
+                                {valueFcoin} {unite} ≈
+                                { reçu }
+                                {unite}
                             </span>
                         </Grid>
                         <Grid xs={2}/>
@@ -229,7 +274,7 @@ function Exchange() {
                         </Grid>
                         <Grid item xs={6}> 
                             <span> 
-                                0.0719915 BTC
+                                0.0719915 {unite}
                             </span>
                         </Grid>
                         <Grid xs={2}/>
@@ -248,7 +293,7 @@ function Exchange() {
                         </Grid>
                         <Grid item xs={6}> 
                             <span> 
-                                20,086.37339641 USDT
+                                {reçu} {unite=='FTC'?'USDT':'FTC'}
                             </span>
                         </Grid>
                         <Grid xs={2}/>
@@ -267,7 +312,7 @@ function Exchange() {
                         </Grid>
                         <Grid item xs={6}> 
                             <span> 
-                                1 BTC
+                                {valueFcoin} {unite}
                             </span>
                         </Grid>
                         <Grid xs={2}/>
@@ -287,9 +332,10 @@ function Exchange() {
                 <Button
                     variant="contained" 
                     color="primary" 
-                    disabled={isSubmitting} 
+                    disabled={btnDisabled} 
                     type="submit"
-                    onClick={() => handlerConversion()}
+                    onClick={() => handlerConversion(unite)}
+                    
                 > 
                     Conversion
                 </Button>
