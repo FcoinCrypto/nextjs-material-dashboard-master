@@ -15,10 +15,19 @@ import { authAtom } from "../../recoil/atom/authAtom";
 import SwapVertRounded from "@material-ui/icons/SwapVertRounded";
 import { getAllSymboles, getTicker } from "../../services/dexTrade";
 import { conversion, FcoinToUsdT, UsdtToFcoin } from "../../utils/utilAchat";
-
+import CurrencyInput from "../../components/CustomInput/CurrencyInput";
 
 
 function Exchange() {
+
+    const [amount1, setAmount1] = useState();
+    const [amount2, setAmount2] = useState();
+    
+    const [currency2, setCurrency2] = useState('EUR');
+    const [rates, setRates] = useState([]);
+
+   
+
     const [prix, setPrix] = useState();
     const [frais, setFrais] = useState("coming");
     const [payer, setPayer] = useState();
@@ -30,13 +39,39 @@ function Exchange() {
     const [valueFcoin, setValueFcoin] = useState();
     const [valueUsdt, setValueUsdt] = useState();
 
+    const [currencyUsdt, setCurrencyUsdt] = useState();
+    const [usdtValue, setUsdtvalue] = useState();
+
+    function handleUsdtChange(usdtValue) {
+        setUsdtvalue(usdtValue);
+        console.log(usdtValue)
+      }
+    
+    function handleCurrencyUsdtChange(currencyUsdt) {
+        setCurrencyUsdt(currencyUsdt);
+    
+    }
+
+    const [currencyFcoin, setCurrencyFcoin] = useState();
+    const [fcoinValue, setFcoinvalue] = useState();
+
+    function handleFcoinChange(fcoinValue) {
+        setFcoinvalue(fcoinValue);
+        console.log(fcoinValue)
+      }
+    
+    function handleCurrencyFcoinChange(currencyFcoin) {
+        setCurrencyFcoin(currencyFcoin);
+    
+    }
+
     const [fcoinDisabled, setFcoinDisabled] = useState(false);
     const [btnDisabled, setBtnDisabled] = useState('disabled');
 
     const[unite, setUnite]  =useState();
     const { user } = useRecoilValue(authAtom);
     const [insuffisant, setInsuffisant] = useState(); 
-    
+
     const inputFcoin= useCallback(() => {
             return ( 
                     <InputGroup className="mb-3" id="fcoin" name="fcoin" >
@@ -114,9 +149,10 @@ function Exchange() {
       }, [fcoinDisabled])
       const swapComponent = useCallback (()=>{
         {
-            setdNone(false)
             setFcoinDisabled(!fcoinDisabled)
-            if(substiteFcoin.props.id == inputFcoin().props.id){
+            setValueFcoin
+            setdNone(false)
+            if(!fcoinDisabled){
                 
                 setSubstiteFcoin(inputUsdt);
                 setSubstiteUsdt(inputFcoin) ;
@@ -131,17 +167,20 @@ function Exchange() {
               
             }
       }, [fcoinDisabled])
-
+   
       const [substiteFcoin, setSubstiteFcoin] = useState(inputFcoin);
       const [substiteUsdt, setSubstiteUsdt] = useState(inputUsdt);
     useEffect(async () => {
+        setSubstiteFcoin(inputUsdt)
+        setSubstiteUsdt(inputFcoin)
         if (!symboles) {
             const data = await getAllSymboles();
             const  listCrypto = data.data.filter( v => {
-                if(v.base == "FTC") return v
+                if(v.base == "BTC") return v
             })
             setSymboles(listCrypto);
         }
+        console.log(symboles)
     }, [symboles])
 
     const handlerConversion = async (unite) => {
@@ -339,7 +378,28 @@ function Exchange() {
                 > 
                     Conversion
                 </Button>
-                <p style={{ fontSize : 15}}>Avertissement : Tout achat de cryptomonnaie est un investissement risqué. Le cours du Fcoin dépend de l’offre et de la demande sur les marchés de cryptomonnaies et celui-ci peut significativement monter ou baisser, voire même devenir nul.</p>
+                
+                    { symboles &&
+                        <CurrencyInput
+                        onAmountChange={handleUsdtChange}
+                        onCurrencyChange={handleCurrencyUsdtChange}
+                        currencies={symboles}
+                        amount={usdtValue}
+                        currency={currencyUsdt}
+                        linkImage={'https://cdn-icons-png.flaticon.com/512/2150/2150062.png'}
+                        /> 
+                    }
+                    { symboles &&
+                        <CurrencyInput
+                        onAmountChange={handleFcoinChange}
+                        onCurrencyChange={handleCurrencyFcoinChange}
+                        currencies={symboles}
+                        amount={fcoinValue}
+                        currency={currencyFcoin}
+                        linkImage={'https://raw.githubusercontent.com/FcoinCrypto/Fcoin/main/logo/1024x1024fcoin.png'}
+                        /> 
+                    }
+                <p style={{ fontSize : 15 }}>Avertissement : Tout achat de cryptomonnaie est un investissement risqué. Le cours du Fcoin dépend de l’offre et de la demande sur les marchés de cryptomonnaies et celui-ci peut significativement monter ou baisser, voire même devenir nul.</p>
             </Grid> 
             </form>
                 
