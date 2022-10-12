@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { makeStyles } from '@material-ui/core/styles';
+import { useState } from "react";
 const useStyles = makeStyles({
     root: {
       width:200,
@@ -45,15 +46,27 @@ const useStyles = makeStyles({
     }
   });
 function CurrencyInput(props) {
-    const classes = useStyles();
+  const classes = useStyles();
+
+  const handleFocus = (e) => {
+    e.target.value = "";
+    props.onFocusChange();
+  }
   return (
     <div className={classes.group}>
       <img 
-                            className="mx-2" 
-                            src={props.linkImage}
-                            style={{width:35,backgroundColor:'white',borderRadius:50,marginTop:10,borderRight:'solid 1px white'}} alt="Facebook image" 
-                        />
-      <input className={classes.input} type="text" value={props.amount} onChange={ev => props.onAmountChange(ev.target.value)} />
+          className="mx-2" 
+          src={props.linkImage}
+          style={{width:35,backgroundColor:'white',borderRadius:50,marginTop:10,borderRight:'solid 1px white'}} alt="Facebook image" 
+      />
+      <input 
+        className={classes.input} 
+        type="text" 
+        value={props.amount} 
+        onChange={ev => props.onAmountChange(ev.target.value)}
+        onFocus = {(e) => handleFocus(e)}
+        disabled={props.disabled}
+      />
       <select className={classes.select} value={props.currency} onChange={ev => props.onCurrencyChange(ev.target.value)}>
         {props.currencies.map((currency => (
           <option className={classes.option} value={currency.quote}>{currency.quote}</option>
@@ -70,6 +83,8 @@ CurrencyInput.propTypes = {
   currencies: PropTypes.array,
   onAmountChange: PropTypes.func,
   onCurrencyChange: PropTypes.func,
+  onFocusChange: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
 export default CurrencyInput;
