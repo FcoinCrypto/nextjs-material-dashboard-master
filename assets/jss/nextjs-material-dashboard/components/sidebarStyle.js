@@ -124,7 +124,7 @@ const sidebarStyle = (theme) => ({
       height: "100%",
       content: '""',
       display: "block",
-      background: blackColor,
+      background: "linear-gradient(145deg, rgba(51,155,158,1) 0%, rgba(104,204,152,1) 100%)",
       opacity: ".8",
     },
   },
