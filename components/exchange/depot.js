@@ -84,7 +84,6 @@ export default function Depot(props) {
   const [etiquette, setEtiquette] = useState();
   function handleEtiquetteChange(e) {
     setEtiquette(e.target.value)
-    console.log(etiquette)
   }
     return (
         <div>
