@@ -4,6 +4,7 @@ import { Button, Grid, InputLabel } from "@material-ui/core";
 import {  UsdtToFcoin } from "../../utils/utilAchat";
 import CurrencyInput from "../../components/CustomInput/CurrencyInput";
 import {  getTicker } from "../../services/dexTrade";
+import Input from "@material-ui/core/Input";
 
 
 export default function Depot(props) {
@@ -79,7 +80,12 @@ export default function Depot(props) {
           quote: "FTC"
       }
   ]
-  
+
+  const [etiquette, setEtiquette] = useState();
+  function handleEtiquetteChange(e) {
+    setEtiquette(e.target.value)
+    console.log(etiquette)
+  }
     return (
         <div>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
@@ -189,7 +195,11 @@ export default function Depot(props) {
 
                
             </Grid>
-
+            <InputLabel htmlFor="input-with-icon-adornment">
+                       Votre Etiquette
+                    </InputLabel>
+                    <br/>
+            <Input onChange={handleEtiquetteChange} style={{paddingLeft:8,width:"100%",borderRadius:5,background:"linear-gradient(145deg, rgba(51,155,158,1) 0%, rgba(104,204,152,1) 100%)"}}></Input>
             <Grid
                 container
                 spacing={0}
