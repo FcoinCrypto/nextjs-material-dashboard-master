@@ -26,7 +26,7 @@ const dashboardRoutes = [
     },
     {
         path: "/envoyers",
-        name: "Toutes les envoies",
+        name: "Toutes les transactions envoyées",
         // rtlName: "طباعة",
         icon: Send,
 
@@ -34,7 +34,7 @@ const dashboardRoutes = [
     },
     {
         path: "/recevoirs",
-        name: "Toutes les reçues",
+        name: "Toutes les transactions recues",
         // rtlName: "طباعة",
         icon: Receipt,
 
@@ -43,7 +43,7 @@ const dashboardRoutes = [
    
     {
         path: "/dashboard",
-        name: "Voir toutes les transactions",
+        name: "Toutes les transactions",
         // rtlName: "طباعة",
         icon: LibraryBooks,
 

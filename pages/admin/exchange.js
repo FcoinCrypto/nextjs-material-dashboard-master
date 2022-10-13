@@ -28,7 +28,7 @@ function Exchange() {
         if (!symboles) {
             const data = await getAllSymboles();
             const  listCrypto = data.data.filter( v => {
-                if(v.base == "BTC") return v
+                if(v.base == "FTC") return v
             })
             setSymboles(listCrypto);
         }
