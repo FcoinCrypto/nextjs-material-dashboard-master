@@ -30,11 +30,14 @@ function Exchange() {
             const  listCrypto = data.data.filter( v => {
                 if(v.base == "FTC") return v
             })
+           
             setSymboles(listCrypto);
         }
         console.log(symboles)
     }, [symboles])
-   
+   const ftc ={
+    quote:"FTC"
+   }
   return (
     <Container maxWidth="sm" sx={20}>
         <Grid 
@@ -43,13 +46,14 @@ function Exchange() {
             direction="row"
             style={{ marginBottom : 25 }}
         >
-            <Grid item xs={3}>
+            
+            <Grid item xs={4}>
                 <Button
                     variant="outlined" 
                     color="default"
                     textPrimary
                     disableElevation
-                    style={{ borderTopLeftRadius: 25, borderBottomLeftRadius: 25, height: 30 }}
+                    style={{ borderTopLeftRadius: 25, borderBottomLeftRadius: 25, height: 30, fontSize:"0.7rem"}}
                     // disabled={btnDisabled} 
                     // type="button"
                     onClick={() => handleRetrait()}   
@@ -57,12 +61,14 @@ function Exchange() {
                     Retrait Fcoin
                 </Button>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={4}/>
+            <Grid item xs={4}>
                 <Button
                     variant="outlined" 
                     color="default"
+                    typeOf="string"
                     disableElevation
-                    style={{ borderTopRightRadius: 25, borderBottomRightRadius: 25, height: 30 }}
+                    style={{ borderTopRightRadius: 25, borderBottomRightRadius: 25, height: 30,fontSize:"0.7rem" }}
                     // disabled={btnDisabled} 
                     // type="button"
                     onClick={() => handleDepot()}   
@@ -72,7 +78,7 @@ function Exchange() {
             </Grid>
         </Grid>
 
-        { retrait && <Retrait symboles={symboles}/> }
+        { retrait && <Retrait symboles={symboles} /> }
 
         { depot && <Depot symboles={symboles} />}
             

@@ -13,7 +13,7 @@ const useStyles = makeStyles({
       padding: '0 30px',
     },
     group:{
-        background: '#335',
+        background: 'linear-gradient(145deg, rgba(51,155,158,1) 0%, rgba(104,204,152,1) 100%)',
         width: '100%',
         margin: '0 auto 20px',
         display: 'grid',
@@ -55,9 +55,9 @@ function CurrencyInput(props) {
   return (
     <div className={classes.group}>
       <img 
-          className="mx-2" 
+          className="mx-3" 
           src={props.linkImage}
-          style={{width:35,backgroundColor:'white',borderRadius:50,marginTop:10,borderRight:'solid 1px white'}} alt="Facebook image" 
+          style={{width:32,backgroundColor:'white',borderRadius:50,marginTop:10,borderRight:'solid 1px white'}} alt="Facebook image" 
       />
       <input 
         className={classes.input} 
