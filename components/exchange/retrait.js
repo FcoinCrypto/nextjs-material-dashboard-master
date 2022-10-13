@@ -63,7 +63,15 @@ export default function Retrait(props) {
         setFrais("exemple");
         setdNone(true);
     }
+    const ftc=[
 
+        {
+            id: 12901,
+            pair: "FTCUSDT",
+            base: "USDT",
+            quote: "FTC"
+        }
+    ]
   
     return (
         <div>
@@ -77,7 +85,7 @@ export default function Retrait(props) {
                         <CurrencyInput
                             onAmountChange={handleFcoinChange}
                             onCurrencyChange={handleCurrencyFcoinChange}
-                            currencies={props.symboles}
+                            currencies={ftc}
                             amount={valueFcoin}
                             currency={currencyFcoin}
                             linkImage={'https://raw.githubusercontent.com/FcoinCrypto/Fcoin/main/logo/1024x1024fcoin.png'}
@@ -111,7 +119,7 @@ export default function Retrait(props) {
                             currencies={props.symboles}
                             amount={reçu}
                             currency={currencyUsdt}
-                            linkImage={'https://cdn-icons-png.flaticon.com/512/2150/2150062.png'}
+                            linkImage={'https://seeklogo.com/images/T/tether-usdt-logo-FA55C7F397-seeklogo.com.png'}
                             disabled={true}
                         /> 
                     }

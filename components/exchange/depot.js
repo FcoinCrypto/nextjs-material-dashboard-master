@@ -70,6 +70,15 @@ export default function Depot(props) {
         setdNone(!dNone);
     }
 
+  const ftc=[
+
+      {
+          id: 12901,
+          pair: "FTCUSDT",
+          base: "USDT",
+          quote: "FTC"
+      }
+  ]
   
     return (
         <div>
@@ -86,37 +95,11 @@ export default function Depot(props) {
                             currencies={props.symboles}
                             amount={usdtValue}
                             currency={currencyUsdt}
-                            linkImage={'https://cdn-icons-png.flaticon.com/512/2150/2150062.png'}
+                            linkImage={'https://seeklogo.com/images/T/tether-usdt-logo-FA55C7F397-seeklogo.com.png'}
                             onFocusChange={onFocusChange}
                         /> 
                     }
                 </Grid>
-                <Grid
-                    container
-                    spacing={0}
-                    direction="column"
-                    alignItems="center"
-                    justifyContent="center"
-                >
-                </Grid>
-                <Grid item xs={12}>
-                    <InputLabel htmlFor="input-with-icon-adornment">
-                        Je reçois
-                    </InputLabel>
-                    <br/>
-                    { props.symboles &&
-                        <CurrencyInput
-                            onAmountChange={handleFcoinChange}
-                            onCurrencyChange={handleCurrencyFcoinChange}
-                            currencies={props.symboles}
-                            amount={reçu}
-                            currency={currencyFcoin}
-                            linkImage={'https://raw.githubusercontent.com/FcoinCrypto/Fcoin/main/logo/1024x1024fcoin.png'}
-                            disabled={true}
-                        /> 
-                    }
-                </Grid>
-
                 { dNone &&
                     <>
                     <Grid 
@@ -178,6 +161,33 @@ export default function Depot(props) {
                     </Grid>
                 </>
             }
+                <Grid
+                    container
+                    spacing={0}
+                    direction="column"
+                    alignItems="center"
+                    justifyContent="center"
+                >
+                </Grid>
+                <Grid item xs={12}>
+                    <InputLabel htmlFor="input-with-icon-adornment">
+                        Je reçois
+                    </InputLabel>
+                    <br/>
+                    { props.symboles &&
+                        <CurrencyInput
+                            onAmountChange={handleFcoinChange}
+                            onCurrencyChange={handleCurrencyFcoinChange}
+                            currencies={ftc}
+                            amount={reçu}
+                            currency={currencyFcoin}
+                            linkImage={'https://raw.githubusercontent.com/FcoinCrypto/Fcoin/main/logo/1024x1024fcoin.png'}
+                            disabled={true}
+                        /> 
+                    }
+                </Grid>
+
+               
             </Grid>
 
             <Grid
