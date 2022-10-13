@@ -10,6 +10,9 @@ export function conversion(fcoin, unite){
         case 'ARIARY':
             return fcoin * 40500;
         break;
+        case 'FTC':
+            return fcoin / 40500;
+        break;
         default:
         break;
     }
