@@ -525,7 +525,8 @@ function Acheter() {
                 enableReinitialize 
                 initialValues={{
                     fcoin:'', 
-                    montant: '', 
+                    montant: '',
+                    bank:'', 
                     etiquette:''
                 }} 
                 validationSchema={Yup.object().shape({ 
@@ -598,6 +599,21 @@ function Acheter() {
                           style={{marginTop : 23, marginBottom : 23}}
                           label="Fcoin"
                           name="fcoin" 
+                          required 
+                          variant="standard"             
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          error={Boolean(touched.bank && errors.bank)} 
+                          helperText={touched.bank && errors.bank} 
+                          onBlur={handleBlur} 
+                          onChange={handleChange} 
+                          value={values.bank} 
+                          fullWidth
+                          style={{marginTop : 23, marginBottom : 23}}
+                          label="Bank n°"
+                          name="bank" 
                           required 
                           variant="standard"             
                         />
