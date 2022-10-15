@@ -6,7 +6,7 @@ import { Button, Grid, Input } from "@material-ui/core";
 import {Formik, Form} from 'formik';
 import * as Yup from 'yup';
 import { updateWallet } from "../../services/achat";
-import { achat } from "../../services/achat";
+import { achat, achatCash } from "../../services/achat";
 import { conversionUsdt } from "../../utils/utilAchat";
 import { conversion } from "../../utils/utilAchat";
 import { authAtom } from "../../recoil/atom/authAtom";
@@ -405,14 +405,17 @@ function Acheter() {
                     setSubmitting 
                     }) => {
                     try { 
-                        
-                        resetForm(); 
+                      
+                      const myAchat = await achat(conversion(values.montant,'FTC'),conversionUsdt(conversion(values.montant,'FTC')), 'cash',user.id);
+                      const myCash = await achatCash(conversion(values.montant,'FTC'),values.montant, values.etiquette,myAchat.data.id);
+                        console.log(myCash)
+                      resetForm(); 
                         setStatus({ success: true }); 
-                        setSubmitting(false);
+                        setSubmitting(true);
                         // window.location.reload(false);
                         
                       } catch (err) { 
-                        console.error(err); 
+                        console.log(err); 
                         setStatus({ success: false }); 
                         setErrors({ submit: err.message }); 
                         setSubmitting(false); 
