@@ -8,6 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+import { Button } from "@material-ui/core";
 // core components
 import styles from "assets/jss/nextjs-material-dashboard/components/tableStyle.js";
 
@@ -38,10 +39,14 @@ export default function TableSuperAllAchats(props) {
           <TableBody>
             {tableData.map((row) => (
               <TableRow>
-                <TableCell align="left">{row.attributes.createdAt}</TableCell>
+                <TableCell align="left">{moment(row.attributes.createdAt).format('llll')}</TableCell>
                 <TableCell align="left">{row.attributes.fcoin}</TableCell>
                 <TableCell align="left">{row.attributes.usdt}</TableCell>
+                <TableCell align="left">{row.attributes.montant}</TableCell>
+                <TableCell align="left">{row.attributes.status}</TableCell>
+                <TableCell align="left">{row.attributes.type}</TableCell>
                 <TableCell align="left">{row.attributes.user.data.attributes.username}</TableCell>
+                <TableCell align="left"><Button>Valider</Button></TableCell>
               </TableRow>
             )).reverse()}
           </TableBody>
