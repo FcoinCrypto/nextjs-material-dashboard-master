@@ -8,6 +8,7 @@ import { Grid, Input } from "@material-ui/core";
 import { Icon } from '@iconify/react';
 import { Card,CardContent,Typography, CardActions } from "@mui/material";
 import { NumericFormat } from 'react-number-format';
+import CurrencyFormat from 'react-currency-format';
 import {
   Button,
   NavItem,
@@ -66,10 +67,10 @@ function Tableau() {
                   <NumericFormat value={usdt} displayType={'text'} thousandSeparator={true} prefix={'Usdt : '} suffix={' $'} />
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                  <NumericFormat value={ariary} displayType={'text'} thousandSeparator={true} prefix={'Ariary : '} suffix={' Ar'} />
+                  <CurrencyFormat value={ariary} displayType={'text'} thousandSeparator={","} prefix={'Ariary : '} suffix={' Ar'}  />
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                  <NumericFormat value={euro.toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'Euro : '} suffix={' €'} />
+                  <NumericFormat value={euro} displayType={'text'} thousandSeparator={true} prefix={'Euro : '} suffix={' €'} />
                   
                 </Typography>
                 
