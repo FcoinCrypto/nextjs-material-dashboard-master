@@ -694,7 +694,7 @@ function Acheter() {
                             />
             </Grid>
         </Grid>
-        <div><b>ACHETER DES FCOINS</b></div>
+        <div><b>Rechargement Wallet</b></div>
         <center><p> Vous détenez actuellement : <strong> {wallet} Fcoin </strong><br/>  Entrez le montant de Fcoin que vous souhaitez acheter ou le montant en EUR que vous souhaitez dépenser</p></center>
         <Formik 
             enableReinitialize 

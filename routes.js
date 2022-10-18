@@ -17,7 +17,7 @@ const dashboardRoutes = [
   },
   {
     path: "/acheter",
-    name: "Acheter",
+    name: "Recharger Wallet",
     icon: Shop,
 
     layout: "/admin",

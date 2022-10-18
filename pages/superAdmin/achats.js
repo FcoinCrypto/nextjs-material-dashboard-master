@@ -100,7 +100,7 @@ function Achat() {
                 <CardBody>
                   <TableSuperAllAchats
                     tableHeaderColor="primary"
-                    tableHead={["date","fcoin","usdt", "utilisateur"]}
+                    tableHead={["date","fcoin","usdt", "utilisateur", "status"]}
                     tableData={dataAchats}
                   />
                   

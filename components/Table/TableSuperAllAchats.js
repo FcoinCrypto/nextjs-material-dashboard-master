@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import moment from 'moment';
 // @material-ui/core components
@@ -8,6 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+import SearchBar from "material-ui-search-bar";
 // core components
 import styles from "assets/jss/nextjs-material-dashboard/components/tableStyle.js";
 
@@ -16,8 +17,29 @@ export default function TableSuperAllAchats(props) {
   const classes = useStyles();
   moment.locale('fr')
   const  { tableHead, tableData, tableHeaderColor } = props;
+  const [searched, setSearched] = useState("");
+  const [rows, setRows] = useState(tableData);
+
+  const requestSearch = (searchedVal) => {
+    const filteredRows = tableData.filter((row) => {
+      return row.attributes.user.data.attributes.username.toLowerCase().includes(searchedVal.toLowerCase()) || 
+        row.attributes.status.toLowerCase().includes(searchedVal.toLowerCase());
+    });
+    setRows(filteredRows);
+  };
+
+  const cancelSearch = () => {
+    setSearched("");
+    requestSearch(searched);
+  };  
+
   return (
     <div className={classes.tableResponsive}>
+      <SearchBar
+            value={searched}
+            onChange={(searchVal) => requestSearch(searchVal)}
+            onCancelSearch={() => cancelSearch()}
+      />
       <Table className={classes.table}>
         {tableHead !== undefined ? (
           <TableHead className={classes[tableHeaderColor + "TableHeader"]}>
@@ -36,12 +58,13 @@ export default function TableSuperAllAchats(props) {
           </TableHead>
         ) : null}
           <TableBody>
-            {tableData.map((row) => (
+            {rows.map((row) => (
               <TableRow>
                 <TableCell align="left">{row.attributes.createdAt}</TableCell>
                 <TableCell align="left">{row.attributes.fcoin}</TableCell>
                 <TableCell align="left">{row.attributes.usdt}</TableCell>
                 <TableCell align="left">{row.attributes.user.data.attributes.username}</TableCell>
+                <TableCell align="left">{row.attributes.status}</TableCell>
               </TableRow>
             )).reverse()}
           </TableBody>
