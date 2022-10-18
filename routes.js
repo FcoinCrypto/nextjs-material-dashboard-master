@@ -10,28 +10,28 @@ const dashboardRoutes = [
   
   {
     path: "/tableau",
-    name: "Tableau de Bord",
+    name: "Acceuil",
     icon: Tableau,
 
     layout: "/admin",
   },
   {
     path: "/acheter",
-    name: "Acheter",
+    name: "Recharger Compte",
     icon: Shop,
 
     layout: "/admin",
   },
   {
     path: "/envoyer",
-    name: "Envoyer",
+    name: "Transferer de l'Argent",
     icon: Send,
 
     layout: "/admin",
   },
   {
     path: "/reception",
-    name: "Recevoir",
+    name: "Payer une commande",
     icon: Receipt,
 
     layout: "/admin",
@@ -45,7 +45,7 @@ const dashboardRoutes = [
   },
   {
     path: "/table-list",
-    name: "Voir mes transactions",
+    name: "Toutes les Transactions",
     // rtlName: "طباعة",
     icon: LibraryBooks,
 
