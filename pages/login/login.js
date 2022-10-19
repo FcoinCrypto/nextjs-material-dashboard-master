@@ -30,11 +30,23 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function Login() {
     const [width, setWidth] = useState();
+    const [rand, setRand] = useState();
+
     useEffect(() => {
        
         const el = document.getElementById('gl').offsetWidth
         setWidth(el)
         console.log(el)
+        function makeid() {
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+          
+            for (var i = 0; i < 34; i++)
+              text += possible.charAt(Math.floor(Math.random() * possible.length));
+          
+            return text;
+          }
+          setRand(makeid)
         
       }, []);
     const setAuth = useSetRecoilState(authAtom);
@@ -52,7 +64,7 @@ function Login() {
                  //console.log("registration mandeha",registre)
 
                 if(registre.jwt) {
-                    await createWallet(registre.user.id)
+                    await createWallet(registre.user.id,rand)
                     setAuth({ token: registre.jwt, user: registre.user  });
                     Router.push("/admin/tableau");
                 }

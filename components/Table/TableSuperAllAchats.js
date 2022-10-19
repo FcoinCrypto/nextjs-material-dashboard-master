@@ -8,6 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+import { Button } from "@material-ui/core";
 import SearchBar from "material-ui-search-bar";
 import {  DatePicker, Space } from "antd";
 import 'antd/dist/antd.css';
@@ -87,7 +88,11 @@ export default function TableSuperAllAchats(props) {
                 <TableCell align="left">{moment(row.attributes.createdAt).format("DD/MM/YY à HH:mm")}</TableCell>
                 <TableCell align="left">{row.attributes.fcoin}</TableCell>
                 <TableCell align="left">{row.attributes.usdt}</TableCell>
+                <TableCell align="left">{row.attributes.montant}</TableCell>
+                <TableCell align="left">{row.attributes.status}</TableCell>
+                <TableCell align="left">{row.attributes.type}</TableCell>
                 <TableCell align="left">{row.attributes.user.data.attributes.username}</TableCell>
+                <TableCell align="left"><Button>Valider</Button></TableCell>
                 <TableCell align="left">{row.attributes.status}</TableCell>
               </TableRow>
             )).reverse()}
