@@ -18,7 +18,7 @@ const dashboardRoutes = [
     },
     {
         path: "/achats",
-        name: "Toutes les achats",
+        name: "Toutes rechargements comptes",
         // rtlName: "طباعة",
         icon: Shop,
 
@@ -26,7 +26,7 @@ const dashboardRoutes = [
     },
     {
         path: "/envoyers",
-        name: "Toutes les transactions envoyées",
+        name: "Toutes les transferts d'argent",
         // rtlName: "طباعة",
         icon: Send,
 
@@ -34,7 +34,7 @@ const dashboardRoutes = [
     },
     {
         path: "/recevoirs",
-        name: "Toutes les transactions recues",
+        name: "Toutes les commandes passé",
         // rtlName: "طباعة",
         icon: Receipt,
 
