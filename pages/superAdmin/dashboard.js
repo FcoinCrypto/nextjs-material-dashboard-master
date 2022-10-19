@@ -103,8 +103,7 @@ function TableList() {
           <div style={{minWidth:'100%'}} className={cardstyles.width100} id="transaction_id">
             <GridItem xs={12} sm={12} md={12}>
               <Card>
-                <CardHeader color="info">
-                  <h4 className={classes.cardTitleWhite}>Title</h4>
+                <CardHeader color="info">                
                   <p className={classes.cardCategoryWhite}>
                     Transactions
                   </p>

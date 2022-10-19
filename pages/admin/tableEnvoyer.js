@@ -51,7 +51,7 @@ function TableEnvoyer(data) {
       <GridItem xs={12} sm={12} md={12}>
         <Card>
           <CardHeader color="info">
-            <h4 className={classes.cardTitleWhite}>Title</h4>
+            
             <p className={classes.cardCategoryWhite}>
               Transactions
             </p>

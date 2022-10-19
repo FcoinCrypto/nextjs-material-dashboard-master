@@ -162,7 +162,7 @@ function TableList() {
             <GridItem xs={12} sm={12} md={12}>
               <Card>
                 <CardHeader color="info">
-                  <h4 className={classes.cardTitleWhite}>Title</h4>
+                  
                   <p className={classes.cardCategoryWhite}>
                     Transactions
                   </p>
@@ -182,7 +182,7 @@ function TableList() {
             <GridItem xs={12} sm={12} md={12}>
               <Card>
                 <CardHeader color="info">
-                  <h4 className={classes.cardTitleWhite}>Title</h4>
+                  
                   <p className={classes.cardCategoryWhite}>
                     Achat
                   </p>
@@ -202,7 +202,7 @@ function TableList() {
             <GridItem xs={12} sm={12} md={12}>
               <Card>
                 <CardHeader color="info">
-                  <h4 className={classes.cardTitleWhite}>Title</h4>
+                  
                   <p className={classes.cardCategoryWhite}>
                     Envoie
                   </p>
@@ -222,7 +222,7 @@ function TableList() {
             <GridItem xs={12} sm={12} md={12}>
               <Card>
                 <CardHeader color="info">
-                  <h4 className={classes.cardTitleWhite}>Title</h4>
+                  
                   <p className={classes.cardCategoryWhite}>
                     Reçu
                   </p>
