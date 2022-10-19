@@ -36,13 +36,13 @@ const dashboardRoutes = [
 
     layout: "/admin",
   },
-  {
-    path: "/exchange",
-    name: "Exchange",
-    icon: Money,
+  // {
+  //   path: "/exchange",
+  //   name: "Exchange",
+  //   icon: Money,
 
-    layout: "/admin",
-  },
+  //   layout: "/admin",
+  // },
   {
     path: "/table-list",
     name: "Toutes les Transactions",

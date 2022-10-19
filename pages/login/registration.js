@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import axios from 'axios'
 import {
   MDBContainer,
@@ -24,6 +24,22 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function Registration() {
     const setAuth = useSetRecoilState(authAtom);
+    const [rand, setRand] = useState();
+    useEffect(() => {
+       
+    
+        function makeid() {
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+          
+            for (var i = 0; i < 34; i++)
+              text += possible.charAt(Math.floor(Math.random() * possible.length));
+          
+            return text;
+          }
+          setRand(makeid)
+        
+      }, []);
 
   return (
     <MDBContainer fluid className="p-3 my-5">
@@ -70,7 +86,7 @@ function Registration() {
                                 const userRecoil = await registration(values.username, values.email, values.password);
                                 if(userRecoil.jwt){
                                     console .log(userRecoil)
-                                    await createWallet(userRecoil.user.id)
+                                    await createWallet(userRecoil.user.id,rand)
                                     setAuth({ token: userRecoil.jwt, user: userRecoil.user  });
                                     resetForm();
                                     setStatus({ success: true }); 

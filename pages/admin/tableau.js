@@ -9,6 +9,7 @@ import { Icon } from '@iconify/react';
 import { Card,CardContent,Typography, CardActions } from "@mui/material";
 import { NumericFormat } from 'react-number-format';
 import CurrencyFormat from 'react-currency-format';
+import QRCode from "react-qr-code";
 import {
   Button,
   NavItem,
@@ -24,18 +25,20 @@ function Tableau() {
   const [usdt, setUsdt] = useState();
   const [ariary, setAriary] = useState();
   const [euro, setEuro] = useState();
+  const [etiquette, setEtiquette] = useState();
   const { user } = useRecoilValue(authAtom);
-
+  
   useEffect(async () => {
     if (!fcoin) {
-      const data = await getUser(user.id);
-      console.log(data)
+      const data = await getUser(user.id);  
       setFcoin(data.data.wallet.fcoin);
       setUsdt(data.data.wallet.usdt);
       setAriary(data.data.wallet.ariary);
       setEuro(data.data.wallet.euro);
+      setEtiquette(data.data.wallet.etiquette);
     }
   }, [fcoin])
+  
 
   return (
     <>
@@ -50,6 +53,13 @@ function Tableau() {
             </Grid>
             <Grid item xs={4}/>
       </Grid>
+      <Grid container>
+            <Grid item xs={1}/>
+            <Grid item xs={12}>
+              <center><p>FPay est le premier wallet qui permet de payer ses achats en crypto-monnaie, directement en caisse des magasins. Il permet également de stocker, envoyer et recevoir des crypto-monnaies.</p></center>
+            </Grid>
+            <Grid item xs={1}/>
+      </Grid>
 
       <Grid container>
         <Grid item xs={2}/>
@@ -61,16 +71,16 @@ function Tableau() {
                 </Typography>
                 
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                  <NumericFormat value={fcoin} displayType={'text'} thousandSeparator={true} prefix={'Fcoin : '} suffix={' Ftc'} />
+                  <NumericFormat value={fcoin} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale prefix={'Fcoin : '} suffix={' Ftc'} />
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                  <NumericFormat value={usdt} displayType={'text'} thousandSeparator={true} prefix={'Usdt : '} suffix={' $'} />
+                  <NumericFormat value={usdt} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale prefix={'Usdt : '} suffix={' $'} />
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                  <CurrencyFormat value={ariary} displayType={'text'} thousandSeparator={","} prefix={'Ariary : '} suffix={' Ar'}  />
+                  <CurrencyFormat value={ariary} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} prefix={'Ariary : '} suffix={' Ar'}  />
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                  <NumericFormat value={euro} displayType={'text'} thousandSeparator={true} prefix={'Euro : '} suffix={' €'} />
+                  <NumericFormat value={euro} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale prefix={'Euro : '} suffix={' €'} />
                   
                 </Typography>
                 
@@ -91,13 +101,13 @@ function Tableau() {
                   LE COURS ACTUEL
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                  1 Usdt =  5,999.07331443 Ftc 
+                  <CurrencyFormat value={'5,999.07331443'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} prefix={'1 Usdt =  '} suffix={' Ftc'}  />
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                  1 Ariary = 0,00002469135802469136 Ftc  
+                  <CurrencyFormat value={'0,00002469135802469136'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} prefix={'1 Ariary = '} suffix={' Ftc'}  />
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                  1 Euro = 5,899.09331044 Ftc 
+                  <CurrencyFormat value={'5,899.09331044'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} prefix={'1 Euro = '} suffix={' Ftc'}  />
                 </Typography>
               </CardContent>
               <CardActions>
@@ -114,29 +124,50 @@ function Tableau() {
               <CardContent>
 
                 <Typography variant="h5" align="center" component="div" sx={{ fontSize: 20,mb: 1.5}}>
-                  WALLET
+                  PORTEFEUILLE
                 </Typography>
-                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                  <NumericFormat value={fcoin} displayType={'text'} thousandSeparator={true} prefix={'FCOIN = '} suffix={' Ftc'} />
-                </Typography>
-                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                <NumericFormat value={usdt} displayType={'text'} thousandSeparator={true} prefix={'USDT = '} suffix={' $'} />
-
-
-                </Typography>
+                <Grid container>
+                  <Grid item xs={6}>
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                      <img src="https://raw.githubusercontent.com/FcoinCrypto/Fcoin/main/logo/1024x1024fcoin.png" width={40} className="mx-2"/>
+                      FCOIN
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                      <img src="https://seeklogo.com/images/T/tether-usdt-logo-FA55C7F397-seeklogo.com.png"  width={40} className="mx-2" />
+                      USDT
+                    </Typography>
+                  </Grid>
+                </Grid>
+                { etiquette &&
+                  <>
+                  <QRCode
+                    size={256}
+                    style={{ height: "auto", maxWidth: "10%", width: "10%" }}
+                    value={etiquette}
+                    viewBox={`0 0 256 256`}
+                    />
+                    <CardActions>
+                      Adresse =  {etiquette}
+                    </CardActions>
+                    
+                  </>
+                }
+                 
               </CardContent>
-              <CardActions>
-              </CardActions>
             </Card>
           </Grid>
         <Grid item xs={2}/>
       </Grid>
+
         <footer className=" footer">
           <Container>
             <Row className=" row-grid align-items-center mb-5">
               <Col lg="6">
-                
-                <h4 className=" mb-0 font-weight-light" style={{fontSize:15}} >
+              <h5><b>Mentions légales</b></h5>
+
+                <h4 className=" mb-0 font-weight-light" style={{fontSize:15,marginTop:-10}} >
                   Conditions Génerales d'utilisation
                 </h4>
                 <h4 className=" mb-0 font-weight-light" style={{fontSize:15}}>
@@ -146,7 +177,8 @@ function Tableau() {
                   Politique de confidentialité
                 </h4>
               </Col>
-              <Col className="text-lg-center btn-wrapper" lg="6">
+              <Col className="text-lg-center btn-wrapper" lg="6" style={{marginTop:-30}}>
+                <h5><b>Contacter nous</b></h5>
                 <Button
                   className="btn-icon-only rounded-circle"
                   color="twitter"
@@ -205,8 +237,8 @@ function Tableau() {
                 </UncontrolledTooltip>
               </Col>
             </Row>
-            <hr />
-            <Row className=" align-items-center justify-content-md-between">
+            <hr style={{marginTop:-30}}/>
+            <Row className=" align-items-center justify-content-md-between" style={{marginBottom:-30}}>
               <Col md="12">
                 <div className="copyright d-flex justify-content-center">
                 Copyright © {new Date().getFullYear()}{" "}
