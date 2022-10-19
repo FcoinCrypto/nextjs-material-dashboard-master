@@ -10,42 +10,42 @@ const dashboardRoutes = [
   
   {
     path: "/tableau",
-    name: "Tableau de Bord",
+    name: "Acceuil",
     icon: Tableau,
 
     layout: "/admin",
   },
   {
     path: "/acheter",
-    name: "Recharger Wallet",
+    name: "Recharger Compte",
     icon: Shop,
 
     layout: "/admin",
   },
   {
     path: "/envoyer",
-    name: "Envoyer",
+    name: "Transferer de l'Argent",
     icon: Send,
 
     layout: "/admin",
   },
   {
     path: "/reception",
-    name: "Recevoir",
+    name: "Payer une commande",
     icon: Receipt,
 
     layout: "/admin",
   },
-  {
-    path: "/exchange",
-    name: "Exchange",
-    icon: Money,
+  // {
+  //   path: "/exchange",
+  //   name: "Exchange",
+  //   icon: Money,
 
-    layout: "/admin",
-  },
+  //   layout: "/admin",
+  // },
   {
     path: "/table-list",
-    name: "Voir mes transactions",
+    name: "Toutes les Transactions",
     // rtlName: "طباعة",
     icon: LibraryBooks,
 

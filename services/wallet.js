@@ -7,10 +7,14 @@ export const wallet = async (etiquette, message, montant) =>{
     return response.data;
 }
 
-export const createWallet = async (user_id) =>{
+export const createWallet = async (user_id,etiquette) =>{
     const response = await api.post('/wallets', {
         data:{
           fcoin: 0,
+          ariary: 0,
+          usdt : 0,
+          euro : 0,
+          etiquette:etiquette,
           user: user_id
         }
       })
