@@ -182,7 +182,7 @@ function Tableau() {
                 <Button
                   className="btn-icon-only rounded-circle"
                   color="twitter"
-                  href="https://twitter.com/creativetim"
+                  href="https://twitter.com/CryptoFcoin"
                   id="tooltip475038074"
                   target="_blank"
                 >
@@ -196,7 +196,7 @@ function Tableau() {
                 <Button
                   className="btn-icon-only rounded-circle ml-1"
                   color="facebook"
-                  href="https://www.facebook.com/creativetim"
+                  href="https://www.facebook.com/fcoincrypto"
                   id="tooltip837440414"
                   target="_blank"
                 >
@@ -210,7 +210,7 @@ function Tableau() {
                 <Button
                   className="btn-icon-only rounded-circle ml-1"
                   color="dribbble"
-                  href="https://dribbble.com/creativetim"
+                  href="https://discord.com/invite/94trf6G2mQ"
                   id="tooltip829810202"
                   target="_blank"
                 >
@@ -224,7 +224,7 @@ function Tableau() {
                 <Button
                   className="btn-icon-only rounded-circle ml-1"
                   color="github"
-                  href="https://github.com/creativetimofficial"
+                  href="https://t.me/FCoin"
                   id="tooltip495507257"
                   target="_blank"
                 >
