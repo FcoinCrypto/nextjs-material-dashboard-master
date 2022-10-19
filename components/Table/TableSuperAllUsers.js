@@ -40,7 +40,7 @@ export default function TableSuperAllUsers(props) {
             onCancelSearch={() => cancelSearch()}
       />
       <Table className={classes.table}>
-        {/* {tableHead !== undefined ? (
+        {tableHead !== undefined ? (
           <TableHead className={classes[tableHeaderColor + "TableHeader"]}>
             <TableRow className={classes.tableHeadRow}>
               {tableHead.map((prop, key) => {
@@ -55,7 +55,7 @@ export default function TableSuperAllUsers(props) {
               })}
             </TableRow>
           </TableHead>
-        ) : null} */}
+        ) : null}
           <TableBody>
             {rows.map((row) => (
               <TableRow>

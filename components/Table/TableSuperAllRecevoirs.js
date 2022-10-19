@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import moment from 'moment';
 // @material-ui/core components
@@ -9,6 +9,8 @@ import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import SearchBar from "material-ui-search-bar";
+import {  DatePicker, Space } from "antd";
+import 'antd/dist/antd.css';
 // core components
 import styles from "assets/jss/nextjs-material-dashboard/components/tableStyle.js";
 
@@ -20,6 +22,7 @@ export default function TableSuperAllRecevoirs(props) {
   const [searched, setSearched] = useState("");
   const [rows, setRows] = useState(tableData);
 
+
   const requestSearch = (searchedVal) => {
     const filteredRows = tableData.filter((row) => {
       return row.attributes.user.data.attributes.username.toLowerCase().includes(searchedVal.toLowerCase()) || 
@@ -28,16 +31,38 @@ export default function TableSuperAllRecevoirs(props) {
     setRows(filteredRows);
   };
 
+  const handleSearchDate = (dateFilter) => {
+    const filteredRows = rows.filter((row) => {
+      return moment(row.attributes.createdAt).format("YYYY-MM-DD").includes(dateFilter)
+    });
+    setRows(filteredRows);
+    // setFilterDate(dateFilter);
+  };
+
+  const handleResetDate = () => {
+    setRows(tableData);
+  };
+
   const cancelSearch = () => {
+    setRows(tableData);
     setSearched("");
-    requestSearch(searched);
   };
 
   return (
     <div className={classes.tableResponsive}>
+      <div style={{ padding: 8 }}>
+        <Space direction="vertical">
+          <DatePicker
+            format={"DD/MM/YY"}
+            onChange={(e) => {
+              e ? handleSearchDate(e.format("YYYY-MM-DD")) : handleResetDate();
+            }}
+          />
+        </Space>
+      </div>
       <SearchBar
             value={searched}
-            onChange={(searchVal) => requestSearch(searchVal)}
+            onChange={(e) => requestSearch(e)}
             onCancelSearch={() => cancelSearch()}
       />
       <Table className={classes.table}>
@@ -60,7 +85,7 @@ export default function TableSuperAllRecevoirs(props) {
           <TableBody>
             {rows.map((row) => (
               <TableRow>
-                <TableCell align="left">{row.attributes.createdAt}</TableCell>
+                <TableCell align="left">{moment(row.attributes.createdAt).format("DD/MM/YY à HH:mm")}</TableCell>
                 <TableCell align="left">{row.attributes.etiquette}</TableCell>
                 <TableCell align="left">{row.attributes.montant}</TableCell>
                 <TableCell align="left">{row.attributes.message}</TableCell>

@@ -9,6 +9,8 @@ import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import SearchBar from "material-ui-search-bar";
+import {  DatePicker, Space } from "antd";
+import 'antd/dist/antd.css';
 // core components
 import styles from "assets/jss/nextjs-material-dashboard/components/tableStyle.js";
 
@@ -28,13 +30,35 @@ export default function TableSuperAllAchats(props) {
     setRows(filteredRows);
   };
 
+  const handleSearchDate = (dateFilter) => {
+    const filteredRows = rows.filter((row) => {
+      return moment(row.attributes.createdAt).format("YYYY-MM-DD").includes(dateFilter)
+    });
+    setRows(filteredRows);
+    // setFilterDate(dateFilter);
+  };
+
+  const handleResetDate = () => {
+    setRows(tableData);
+  };
+
   const cancelSearch = () => {
+    setRows(tableData);
     setSearched("");
-    requestSearch(searched);
-  };  
+  };   
 
   return (
     <div className={classes.tableResponsive}>
+      <div style={{ padding: 8 }}>
+        <Space direction="vertical">
+          <DatePicker
+            format={"DD/MM/YY"}
+            onChange={(e) => {
+              e ? handleSearchDate(e.format("YYYY-MM-DD")) : handleResetDate();
+            }}
+          />
+        </Space>
+      </div>
       <SearchBar
             value={searched}
             onChange={(searchVal) => requestSearch(searchVal)}
@@ -60,7 +84,7 @@ export default function TableSuperAllAchats(props) {
           <TableBody>
             {rows.map((row) => (
               <TableRow>
-                <TableCell align="left">{row.attributes.createdAt}</TableCell>
+                <TableCell align="left">{moment(row.attributes.createdAt).format("DD/MM/YY à HH:mm")}</TableCell>
                 <TableCell align="left">{row.attributes.fcoin}</TableCell>
                 <TableCell align="left">{row.attributes.usdt}</TableCell>
                 <TableCell align="left">{row.attributes.user.data.attributes.username}</TableCell>
