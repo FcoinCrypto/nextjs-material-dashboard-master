@@ -25,18 +25,22 @@ import ENV from '../../utils/env';
 import jwt_decode from "jwt-decode";
 import { createWallet } from '../../services/wallet';
 import TextField from '@mui/material/TextField';
+import { Grid } from "@material-ui/core";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import Checkbox from "@material-ui/core/Checkbox";
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Card from '@material-ui/core/Card';
 function Login() {
     const [width, setWidth] = useState();
     const [rand, setRand] = useState();
 
     useEffect(() => {
        
-        const el = document.getElementById('gl').offsetWidth
-        setWidth(el)
-        console.log(el)
+        // const el = document.getElementById('gl').offsetWidth
+        // setWidth(el)
+        // console.log(el)
         function makeid() {
             var text = "";
             var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -114,13 +118,16 @@ function Login() {
         }
     }
     return (
-        <>
-            <MDBContainer fluid className="p-3 my-5 d-flex justify-content-center">
-
-                <MDBRow className='w-50 d-flex justify-content-center'>
-
-                <MDBCol col='3' sm='6'>
-
+            <Grid 
+            container 
+            spacing={0}
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            // style={{ minWidth: '40vw' }}
+            minWidth={"10vw"}
+             >
+                <Grid item xs={6}>
                     <div className='d-flex flex-row mt-2'>
                         <img className="mx-2 " src="https://raw.githubusercontent.com/FcoinCrypto/Fcoin/main/logo/1024x1024fcoin.png" style={{width:60,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
                         <span className="h1 fw-bold mb-0">Fcoin</span>
@@ -147,7 +154,8 @@ function Login() {
                                         color:'white',
                                         marginBottom: 4,
                                         fontSize:'0.8rem',
-                                        minWidth: '50vh'
+                                        // minWidth: '10vh',
+                                        width: '100%'
                                     }}
                                 >
                                     <img className="mx-2" src={require('../../assets/img/logo-fb_full.png')} style={{width:30,backgroundColor:'white',borderRadius:50}} alt="Facebook image" layout='fixed' />
@@ -289,7 +297,7 @@ function Login() {
                                 label="Email"
                                 name="email" 
                                 required 
-                                style={{minWidth : '50vh'}}
+                                // style={{minWidth : '50vh'}}
                             />
                             <div></div>
                             <TextField 
@@ -300,7 +308,7 @@ function Login() {
                                 onChange={handleChange} 
                                 value={values.password} 
                                 fullWidth
-                                style={{marginTop : 23, marginBottom : 23, minWidth : '50vh'}}
+                                style={{marginTop : 23, marginBottom : 23}}
                                 label="Password" 
                                 name="password" 
                                 required 
@@ -308,9 +316,18 @@ function Login() {
                             />
 
 
-                            <div className="d-flex justify-content-between mx-4 mb-4" style={{minWidth:'45vh'}}>
-                                <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me' />
-                                <a href="!#">Forgot password?</a>
+                            <div className="d-flex justify-content-between mx-4 mb-4" >
+                                <FormGroup>
+                                    <Grid container style={{width:"120%"}}>
+                                        <Grid item xs={6} style={{marginTop:-10}}>                                          
+                                            <FormControlLabel control={<Checkbox/>} label="Remenber me" />
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <a href="!#">Forgot password?</a>
+                                        </Grid>
+                                    </Grid>
+                                </FormGroup>
+                                
                             </div>
 
                                 <div className='text-center'>
@@ -318,7 +335,7 @@ function Login() {
                                     style={{
                                         borderRadius: 35,
                                         backgroundColor: "#1f80b3",
-                                        minWidth: '50vh'
+                                        // minWidth: '50vh'
                                     }} 
                                     fullWidth 
                                     variant="contained" 
@@ -333,12 +350,9 @@ function Login() {
                         )}
                     </Formik> 
 
-
-                    </MDBCol>
-                </MDBRow>
-                <ToastContainer />
-            </MDBContainer>
-        </>
+                </Grid>
+            <ToastContainer />
+            </Grid>
     );
 }
 
