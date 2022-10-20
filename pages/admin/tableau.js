@@ -126,35 +126,161 @@ function Tableau() {
                 <Typography variant="h5" align="center" component="div" sx={{ fontSize: 20,mb: 1.5}}>
                   PORTEFEUILLE
                 </Typography>
-                <Grid container>
-                  <Grid item xs={6}>
+                <Grid container
+                      spacing={7}
+                >
+                  <Grid item xs={2} container>
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
                       <img src="https://raw.githubusercontent.com/FcoinCrypto/Fcoin/main/logo/1024x1024fcoin.png" width={40} className="mx-2"/>
                       FCOIN
                     </Typography>
                   </Grid>
-                  <Grid item xs={6}>
+                  { etiquette &&
+                    <>
+                      <Grid item xs={6} container>
+                        <p style={{
+                          overflowWrap: 'break-word',
+                          wordWrap: 'break-word',
+                          wordBreak: 'break-word',
+                          lineHeight: '2.2'
+                        }}>Adresse = {etiquette}</p>                   
+                      </Grid>
+                      <Grid item xs={4} container>
+                  
+                        <QRCode
+                          size={256}
+                          style={{ height: "auto", maxWidth: "100", width: "50" }}
+                          value={etiquette}
+                          viewBox={`0 0 256 256`}
+                          />            
+                      </Grid>
+                  </>
+                  }
+                </Grid>
+                <Grid container
+                      spacing={7}
+                >
+                  <Grid item xs={2} container>
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
                       <img src="https://seeklogo.com/images/T/tether-usdt-logo-FA55C7F397-seeklogo.com.png"  width={40} className="mx-2" />
                       USDT
                     </Typography>
                   </Grid>
-                </Grid>
-                { etiquette &&
-                  <>
-                  <QRCode
-                    size={256}
-                    style={{ height: "auto", maxWidth: "10%", width: "10%" }}
-                    value={etiquette}
-                    viewBox={`0 0 256 256`}
-                    />
-                    <CardActions>
-                      Adresse =  {etiquette}
-                    </CardActions>
-                    
+                  { etiquette &&
+                    <>
+                      <Grid item xs={6} container>
+                        <p style={{
+                          overflowWrap: 'break-word',
+                          wordWrap: 'break-word',
+                          wordBreak: 'break-word',
+                          lineHeight: '2.2'
+                        }}>Adresse = {etiquette}</p>                   
+                      </Grid>
+                      <Grid item xs={4} container>
+                  
+                        <QRCode
+                          size={256}
+                          style={{ height: "auto", maxWidth: "100", width: "50" }}
+                          value={etiquette}
+                          viewBox={`0 0 256 256`}
+                          />            
+                      </Grid>
                   </>
-                }
-                 
+                  }
+                </Grid>
+                <Grid container
+                      spacing={7}
+                >
+                  <Grid item xs={2} container>
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1024px-Bitcoin.svg.png" width={40} className="mx-2"/>
+                      BTC
+                    </Typography>
+                  </Grid>
+                  { etiquette &&
+                    <>
+                      <Grid item xs={6} container>
+                        <p style={{
+                          overflowWrap: 'break-word',
+                          wordWrap: 'break-word',
+                          wordBreak: 'break-word',
+                          lineHeight: '2.2'
+                        }}>Adresse = {etiquette}</p>                   
+                      </Grid>
+                      <Grid item xs={4} container>
+                  
+                        <QRCode
+                          size={256}
+                          style={{ height: "auto", maxWidth: "100", width: "50" }}
+                          value={etiquette}
+                          viewBox={`0 0 256 256`}
+                          />            
+                      </Grid>
+                  </>
+                  }
+                </Grid>
+                <Grid container
+                      spacing={7}
+                >
+                  <Grid item xs={2} container>
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                      <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png" width={40} className="mx-2"/>
+                      ETH
+                    </Typography>
+                  </Grid>
+                  { etiquette &&
+                    <>
+                      <Grid item xs={6} container>
+                        <p style={{
+                          overflowWrap: 'break-word',
+                          wordWrap: 'break-word',
+                          wordBreak: 'break-word',
+                          lineHeight: '2.2'
+                        }}>Adresse = {etiquette}</p>                   
+                      </Grid>
+                      <Grid item xs={4} container>
+                  
+                        <QRCode
+                          size={256}
+                          style={{ height: "auto", maxWidth: "100", width: "50" }}
+                          value={etiquette}
+                          viewBox={`0 0 256 256`}
+                          />            
+                      </Grid>
+                  </>
+                  }
+                </Grid>
+                <Grid container
+                      spacing={7}
+                >
+                  <Grid item xs={2} container>
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                      <img src="https://cdn-icons-png.flaticon.com/512/825/825487.png" width={40} className="mx-2"/>
+                      XMR
+                    </Typography>
+                  </Grid>
+                  { etiquette &&
+                    <>
+                      <Grid item xs={6} container>
+                        <p style={{
+                          overflowWrap: 'break-word',
+                          wordWrap: 'break-word',
+                          wordBreak: 'break-word',
+                          lineHeight: '2.2'
+                        }}>Adresse = {etiquette}</p>                   
+                      </Grid>
+                      <Grid item xs={4} container>
+                  
+                        <QRCode
+                          size={256}
+                          style={{ height: "auto", maxWidth: "100", width: "50" }}
+                          value={etiquette}
+                          viewBox={`0 0 256 256`}
+                          />            
+                      </Grid>
+                  </>
+                  }
+                </Grid>
               </CardContent>
             </Card>
           </Grid>
@@ -177,7 +303,7 @@ function Tableau() {
                   Politique de confidentialité
                 </h4>
               </Col>
-              <Col className="text-lg-center btn-wrapper" lg="6" style={{marginTop:-30}}>
+              <Col className="text-lg-center btn-wrapper" lg="6" style={{marginTop:0}}>
                 <h5><b>Contacter nous</b></h5>
                 <Button
                   className="btn-icon-only rounded-circle"

@@ -1,22 +1,23 @@
-import React, { useState,useEffect } from 'react';
-import axios from 'axios'
+import React, { useState,useEffect,useRef,useLayoutEffect } from 'react';
 import { Grid } from "@material-ui/core";
-
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
+import {  GoogleLogin } from '@react-oauth/google';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import {
   MDBContainer,
   MDBCol,
   MDBRow,
   MDBCheckbox
 }
-
 from 'mdb-react-ui-kit';
+import { confirmeUser, registration } from '../../services/auth';
+import jwt_decode from "jwt-decode";
 import {Formik, Form} from 'formik';
 import * as Yup from 'yup';
 import { 
     Button 
 } from '@material-ui/core';
 import TextField from '@mui/material/TextField';
-import { registration } from '../../services/auth';
 import { authAtom } from '../../recoil/atom/authAtom';
 import {useSetRecoilState } from 'recoil';
 import Router from 'next/router';
@@ -28,8 +29,18 @@ import 'react-toastify/dist/ReactToastify.css';
 function Registration() {
     const setAuth = useSetRecoilState(authAtom);
     const [rand, setRand] = useState();
+    const ref = useRef(null)
+            const [divWidth, setDivWidth] = useState('')
+            const handleResize = () => {
+                setDivWidth(ref.current.offsetWidth)
+            }
     useEffect(() => {
-       
+        if (ref.current) window.addEventListener('resize', 
+        handleResize)
+     
+             return () => {
+                 window.removeEventListener('resize', handleResize)
+             }
     
         function makeid() {
             var text = "";
@@ -42,26 +53,171 @@ function Registration() {
           }
           setRand(makeid)
         
-      }, []);
+      }, [ref]);
+      const  handleResponseLogin = async (response, type) => {
+        let input = null;
+        let registre = '';
 
-  return (<>
+        switch (type) {
+            case 'facebook':
+                registre = await registration(response.name+" ", response.email, response.id)
+                
+                // const registre = await registration(response.name, response.email, response.sub)  email
+                // console.log("registration",registre.response.data.error.message)
+                 //console.log("registration mandeha",registre)
+
+                if(registre.jwt) {
+                    await createWallet(registre.user.id,rand)
+                    setAuth({ token: registre.jwt, user: registre.user  });
+                    Router.push("/admin/tableau");
+                }
+                if (registre.message == "Request failed with status code 400"){
+                    const userConfirm = await confirmeUser(response.email, response.sub)
+                    if(userConfirm.data){
+                        setAuth({ token: userConfirm.data.jwt, user: userConfirm.data.user  });
+                        Router.push("/admin/tableau");
+                    }
+                    else{
+                        toast.error(userConfirm.response.data.error.message);
+                    }
+                }
+                else {
+                    toast.error(registre.message);
+                }
+                    
+                
+                
+            break;
+            case 'google':
+                registre = await registration(" "+ response.name, response.email, response.sub)
+                
+
+                if(registre.jwt) {
+                    const wallet = await createWallet(registre.user.id)
+                    setAuth({ token: registre.jwt, user: registre.user  });
+                    Router.push("/admin/tableau");
+                }
+                if (registre.message == "Request failed with status code 400"){
+                    const userConfirm = await confirmeUser(response.email, response.sub)
+                    if(userConfirm.data){
+                        setAuth({ token: userConfirm.data.jwt, user: userConfirm.data.user  });
+                        Router.push("/admin/tableau");
+                    }
+                    else{
+                        toast.error(userConfirm.response.data.error.message);
+                    }
+                }
+                else {
+                    toast.error(registre.message);
+                }
+                    
+            break;
+            default:
+            break;
+        }
+    }
+    useLayoutEffect(() => {
+        setDivWidth(ref.current.offsetWidth)
+    }, [])
+  return (
             <Grid 
-                container 
-                spacing={0}
-                direction="column"
-                alignItems="center"
-                justifyContent="center"
-                // style={{ minWidth: '40vw' }}
-                minWidth={"10vw"}
+            container 
+            spacing={0}
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            style={{padding:10}}
+            minWidth={"10vw"}
                 >
-                    <Grid item xs={6}>
-                        <div className='d-flex flex-row mt-2'>
+                    <Grid xs={12} sm={6}>
+                        <div className='d-flex flex-row mt-2 justify-content-center'>
                                 <img className="mx-2 " src="https://raw.githubusercontent.com/FcoinCrypto/Fcoin/main/logo/1024x1024fcoin.png" style={{width:60,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
                                 <span className="h1 fw-bold mb-0">Fcoin</span>
                         </div>
+                        <h5 className="fw-normal mt-4" style={{letterSpacing: '1px', marginBottom:-10}}>Créez votre Compte</h5>
 
-                        <h5 className="fw-normal my-4 pb-3" style={{letterSpacing: '1px'}}>Créez votre portefeuille Fcoin</h5>
-                    
+                        <FacebookLogin
+                            appId={'827782618658221'}
+                            callback={(response) =>
+                                handleResponseLogin(response, 'facebook')
+                            }
+                            fields="name,email,picture"
+                            render={(renderProps) => (
+                                <Button
+                                    
+                                    onClick={renderProps.onClick}
+                                    variant="contained"
+                                    size="big"
+                                    style={{
+                                        borderRadius: 5,
+                                        backgroundColor:"#1f80b3",
+                                        color:'white',
+                                        marginBottom: 0,
+                                        marginTop:40,
+                                        fontSize:'0.8rem',
+                                        width: '100%',
+                                        maxWidth:400
+                                    }}
+                                >
+                                    <img className="mx-2" src={require('../../assets/img/logo-fb_full.png')} style={{width:30,backgroundColor:'white',borderRadius:50}} alt="Facebook image" layout='fixed' />
+                                        Se connecter avec facebook
+
+                                </Button>
+                            )}
+                        >
+
+                        
+                        </FacebookLogin>
+                        
+                        <GoogleOAuthProvider 
+                        
+                         clientId={'66220988134-n1m5v05ri12up8gvv6ugnc4790ktatvt.apps.googleusercontent.com'}
+                        >
+                            <br/><br/>
+                            <div id="gl"  ref={ref} style={{ width: "100%", backgroundColor: "#eeeeee"}}>
+                                <GoogleLogin
+                                    borderRadius={'100vh'}
+                                    theme={'outline'}
+                                    type={'standard'}
+                                    size={'large'}
+                                    logo_alignment={'center'}
+                                    useOneTap
+                                    width={divWidth}
+                                    text="Se connecter"
+
+                                    onSuccess={(response) =>
+                                        handleResponseLogin(jwt_decode(response.credential), 'google')
+                                    }
+                                    onFailure={(response) =>
+                                        console.log(response)
+                                    }
+                                    scope={
+                                        "https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/dialogflow"
+                                    }
+                                    cookiePolicy={'single_host_origin'}
+                                    isSignedIn={true}
+                                    render={(renderProps) => (
+                                        <Button
+                                            onClick={renderProps.onClick}
+                                            variant="contained"
+                                            size="big"
+                                            style={{
+                                                width: '100%',
+                                                borderRadius: 35,
+                                                backgroundColor:"#00853d",
+                                                color:'white',
+                                                
+                                            }}
+                                        >
+                                            <Image className="mx-2" src="https://cdn-icons-png.flaticon.com/512/124/124010.png" style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" layout="fixed" />
+                                                Se connecter avec facebook
+
+                                        </Button>
+                                    )}
+                                > 
+                                </GoogleLogin>
+                            </div>
+                        </GoogleOAuthProvider>
                         <Formik 
                                 enableReinitialize 
                                 initialValues={{ 
@@ -87,9 +243,6 @@ function Registration() {
                                     setStatus, 
                                     setSubmitting 
                                 }) => { 
-                                    // try { 
-                                    //     // NOTE: Make API request 
-                                    //     // await wait(200);
                                         const userRecoil = await registration(values.username, values.email, values.password);
                                         if(userRecoil.jwt){
                                             console .log(userRecoil)
@@ -106,12 +259,6 @@ function Registration() {
                                             setErrors({ submit: err.message }); 
                                             setSubmitting(false); 
                                         }
-                                    // } catch (err) {
-                                    //     console.error(err); 
-                                    //     setStatus({ success: false }); 
-                                    //     setErrors({ submit: err.message }); 
-                                    //     setSubmitting(false); 
-                                    // } 
                                 }} 
                             > 
                                 {({ 
@@ -131,10 +278,14 @@ function Registration() {
                                         onChange={handleChange} 
                                         value={values.username} 
                                         fullWidth 
-                                        label="Username" 
+                                        label="Nom et Prénom(s)" 
                                         name="username" 
                                         required 
                                         variant="outlined"
+                                        sx={{
+                                            marginTop: 5,
+                                            maxWidth:400
+                                        }}
                                     />
                                     <br/>
                                     <TextField 
@@ -149,6 +300,10 @@ function Registration() {
                                         name="email" 
                                         required 
                                         variant="outlined"
+                                        sx={{
+                                            maxWidth:400
+                                        }}
+                                        
                                     />
                                     <div></div>
                                     <TextField 
@@ -163,7 +318,11 @@ function Registration() {
                                         label="Password" 
                                         name="password" 
                                         required 
-                                        variant="outlined"             
+                                        variant="outlined"
+                                        sx={{
+                                            maxWidth:400
+                                        }}
+                                                    
                                     />
                                     <TextField 
                                         error={Boolean(touched.changePassword && errors.changePassword)} 
@@ -177,7 +336,11 @@ function Registration() {
                                         label="confirm password" 
                                         name="changePassword" 
                                         required 
-                                        variant="outlined"             
+                                        variant="outlined"
+                                        sx={{
+                                            maxWidth:400
+                                        }}  
+                                                   
                                     />
                                 <div className="d-flex justify-content-between mx-4 mb-4">
                                     <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me' />
@@ -189,6 +352,7 @@ function Registration() {
                                         style={{
                                             borderRadius: 35,
                                             backgroundColor: "#1f80b3",
+                                            maxWidth:400
                                         }} 
                                         fullWidth 
                                         variant="contained" 
@@ -205,10 +369,11 @@ function Registration() {
                         </Formik> 
                         <ToastContainer />
                     </Grid>
+                    <ToastContainer />
                 </Grid>
    
     
-    </>);
+    );
 }
 
 export default Registration;
