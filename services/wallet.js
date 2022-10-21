@@ -6,6 +6,11 @@ export const wallet = async (etiquette, message, montant) =>{
     // console.log(response.data)
     return response.data;
 }
+export const getWallet = async () =>{
+    const response = await api.get('/wallets?populate=*')
+    // console.log(response.data)
+    return response.data;
+}
 
 export const createWallet = async (user_id,etiquette) =>{
     const response = await api.post('/wallets', {
