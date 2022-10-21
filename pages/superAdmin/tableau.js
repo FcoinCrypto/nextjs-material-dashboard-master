@@ -32,9 +32,15 @@ import { achats, transactions, envoyers, recevoirs } from "../../services/table"
 import { allTransaction, test } from "../../services/allTransaction";
 import {allAchats} from "../../services/allAchats"
 import { getUser } from "../../services/user";
+import { getWallet } from "../../services/wallet";
+
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { authAtom } from "../../recoil/atom/authAtom";
+
 import Shop from "@material-ui/icons/Shop";
+import Send from "@material-ui/icons/Send";
+import Receipt from "@material-ui/icons/Receipt";
+
 import CurrencyFormat from 'react-currency-format';
 import { NumericFormat } from 'react-number-format';
 import { Grid } from "@material-ui/core";
@@ -47,6 +53,7 @@ const cardstyles = {
       fontSize: "14px",
       marginTop: "0",
       marginBottom: "0",
+      align:"center"
     },
     "& a,& a:hover,& a:focus": {
       color: "#FFFFFF",
@@ -82,11 +89,11 @@ function TableList() {
   useEffect(async () => {
     if(!dataTransaction){
 
-      const res = await allAchats();
+      const res = await getWallet();
       
-      setDataTransaction(res.data.data);
-      console.log(res.data.data)
-     
+      setDataTransaction(res.data);
+      console.log(res)
+      
 
     } 
   }, [dataTransaction])
@@ -95,39 +102,152 @@ function TableList() {
     <>
       { dataTransaction &&
         <GridContainer>
-          <footer>
-            <div className={classes.container}>
-              <div className={classes.left}>
-                <List className={classes.list}>
-                  <ListItem className={classes.inlineBlock}>
-                    <a href="#" className={classes.block}>
-                      Tableau de Bord
-                    </a>
-                  </ListItem>
-
-                </List>
-              </div>
-            </div>
-          </footer>
+         
           <div style={{minWidth:'100%'}} className={cardstyles.width100} id="transaction_id">
             
-            <GridItem xs={12} sm={12} md={12}>
-              <Card>
+            <GridItem xs={6} sm={12} md={12}>
                 <CardHeader color="info">                
                   <p className={classes.cardCategoryWhite}>
                     Toutes les recharges
                   </p>
                 </CardHeader>
                 
-              </Card>
             </GridItem>
-            <GridItem xs={12} sm={8} md={12}>
+            <GridItem xs={6} sm={12} md={12}>
             <Card>
               <CardHeader color="success" stats icon>
                 <CardIcon color="success">
                   <Shop />
                 </CardIcon>
                 <p style={{color:'grey'}}>Toutes les recharges</p>
+                <CardBody>                
+                    <h3>
+                        <Grid container >
+                            <Grid item style={{display:"flex",justifyContent:"flex-start"}} xs={3}>
+                                FCOIN
+                            </Grid>
+                            <Grid item xs={3} style={{display:"flex",justifyContent:"flex-start"}}>
+                                USDT
+                            </Grid>
+                            <Grid item xs={3} style={{display:"flex",justifyContent:"flex-start"}}>
+                                FMA
+                            </Grid>
+                            <Grid item xs={3}style={{display:"flex",justifyContent:"flex-start"}}>
+                                EURO
+                            </Grid>
+                        </Grid>
+                        <br/>
+                        <Grid container>
+                            <Grid item xs={3} style={{display:"flex",justifyContent:"flex-start"}}>
+                                <NumericFormat value={'34,245'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' Ftc'} />
+                            </Grid>
+                            <Grid item xs={3} style={{display:"flex",justifyContent:"flex-start"}}>
+                                <NumericFormat value={'6'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale  suffix={' $'} />
+                            </Grid>
+                            <Grid item xs={3} style={{display:"flex",justifyContent:"flex-start"}}>
+                                <NumericFormat value={'40000'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' Ariary'} />
+                            </Grid>
+                            <Grid item xs={3} style={{display:"flex",justifyContent:"flex-start"}}>
+                                <NumericFormat value={'19'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' €'} />
+                            </Grid>
+                        </Grid>
+                        
+                    </h3> 
+                                     
+
+                </CardBody>
+              </CardHeader>
+              <CardFooter stats>
+                <div className={classes.stats}>
+                  <DateRange />
+                  Last 24 Hours
+                </div>
+              </CardFooter>
+            </Card>
+          </GridItem>
+          </div>
+          
+          <div style={{minWidth:'100%'}} className={cardstyles.width100} id="transaction_id">
+            
+            <GridItem xs={12} sm={12} md={12}>
+                <CardHeader color="info">                
+                  <p className={classes.cardCategoryWhite}>
+                    Toutes les transferts
+                  </p>
+                </CardHeader>
+                
+            </GridItem>
+            <GridItem xs={12} sm={12} md={12}>
+            <Card>
+              <CardHeader color="success" stats icon>
+                <CardIcon color="success">
+                  <Send />
+                </CardIcon>
+                <p style={{color:'grey'}}>Toutes les transferts</p>
+                <CardBody>                
+                    <h3>
+                        <Grid container >
+                            <Grid item style={{display:"flex",justifyContent:"flex-start"}} xs={3}>
+                                FCOIN
+                            </Grid>
+                            <Grid item xs={3} style={{display:"flex",justifyContent:"flex-start"}}>
+                                USDT
+                            </Grid>
+                            <Grid item xs={3} style={{display:"flex",justifyContent:"flex-start"}}>
+                                FMA
+                            </Grid>
+                            <Grid item xs={3}style={{display:"flex",justifyContent:"flex-start"}}>
+                                EURO
+                            </Grid>
+                        </Grid>
+                        <br/>
+                        <Grid container>
+                            <Grid item xs={3} style={{display:"flex",justifyContent:"flex-start"}}>
+                                <NumericFormat value={'34,245'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' Ftc'} />
+                            </Grid>
+                            <Grid item xs={3} style={{display:"flex",justifyContent:"flex-start"}}>
+                                <NumericFormat value={'6'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale  suffix={' $'} />
+                            </Grid>
+                            <Grid item xs={3} style={{display:"flex",justifyContent:"flex-start"}}>
+                                <NumericFormat value={'40000'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' Ariary'} />
+                            </Grid>
+                            <Grid item xs={3} style={{display:"flex",justifyContent:"flex-start"}}>
+                                <NumericFormat value={'19'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' €'} />
+                            </Grid>
+                        </Grid>
+                        
+                    </h3> 
+                                     
+
+                </CardBody>
+              </CardHeader>
+              <CardFooter stats>
+                <div className={classes.stats}>
+                  <DateRange />
+                  Last 24 Hours
+                </div>
+              </CardFooter>
+            </Card>
+          </GridItem>
+          </div>
+          
+          <div style={{minWidth:'100%'}} className={cardstyles.width100} id="transaction_id">
+            
+            <GridItem xs={12} sm={12} md={12}>
+                <CardHeader color="info">                
+                  <p className={classes.cardCategoryWhite}>
+                    Toutes les commandes
+                  </p>
+                </CardHeader>
+                
+            </GridItem>
+            <GridItem xs={12} sm={12} md={12}>
+            <Card>
+              <CardHeader color="success" stats icon>
+                <CardIcon color="success">
+                  <Receipt />
+                </CardIcon>
+                <p style={{color:'grey'}}>Toutes les commandes</p>
                 <CardBody>                
                     <h3>
                         <Grid container >

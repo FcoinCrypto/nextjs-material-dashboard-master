@@ -12,7 +12,6 @@ export default function Quote(props) {
   return (
     <blockquote className={classes.defaultFontStyle + " " + classes.quote}>
       <p className={classes.quoteText}>{text}</p>
-      <small className={classes.quoteAuthor}>{author}</small>
     </blockquote>
   );
 }
