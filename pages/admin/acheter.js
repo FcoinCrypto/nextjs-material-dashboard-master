@@ -19,6 +19,12 @@ import MuiPhoneNumber from "material-ui-phone-number";
 import { TextField } from "@mui/material";
 import Quote from "../../components/Typography/Quote";
 import { Icon } from '@iconify/react';
+import CardHeader from "components/Card/CardHeader.js";
+import Card from "components/Card/Card.js";
+import CardBody from "components/Card/CardBody.js";
+import CardFooter from "components/Card/CardFooter.js";
+
+
 
 import {
 
@@ -729,150 +735,207 @@ function Acheter() {
                 values 
               }) => (
               <form onSubmit={handleSubmit}>
-              <Grid container >
-                  <Grid item xs={12} lg={6} >
-                  {data.map((d, index) => (
-                    <div>
-                      <p align="center"><b>Mobile Banking</b></p>
-                      <Button
-                       onClick={() => {
-                          handleOpen(index);
-                        setUnite('ariary')
-                        setHideMobileMoney('')
-                        setHideBank('none')
+              <Grid container  spacing={2}>
+                  <Grid item xs={12} lg={6}>
+                    <Card>
 
-                      }}
-                      variant="contained"
-                      type="string"
-                      size="big"
-                      style={{
-                          width: '90%',
-                          borderRadius: 5,
-                          backgroundColor:"#6aaa70",
-                          color:'white',
-                          marginBottom: 4,
-                          height: '15vw',
-                      }}
-                    >
-                      <img className="mx-2" 
-                          src={require('../../assets/img/ico-mobile.svg')}
-                          style={{width: '10vw',backgroundColor:'none',borderRadius:5}} 
-                          alt="Mobile Money" 
-                      />
-                          
-                    </Button>
-                  </div>
-                ))}
-                </Grid>
-                <Grid item xs={12} lg={6} >
-                    <p align="center"><b>Online Payment</b></p>
-                    {bankdata.map((d, index) => (
-                    <Button
-                        onClick={() => { 
-                          handleOpenModalBank(index)
-                            setUnite('usdt')
-                            setHideMobileMoney('none')
-                            setHideBank('') 
- 
+                    <CardHeader color="info">
+                      
+                    <p align="center"><b>MOBILE BANKING</b></p>
+                    </CardHeader>
+                    <CardBody align="center">
+                    {data.map((d, index) => (
+                      <div>
+                        <Button
+                        onClick={() => {
+                            handleOpen(index);
+                          setUnite('ariary')
+                          setHideMobileMoney('')
+                          setHideBank('none')
+
                         }}
                         variant="contained"
+                        type="string"
                         size="big"
                         style={{
                             width: '90%',
                             borderRadius: 5,
-                            backgroundColor:"#5fbdbb",
+                            backgroundColor:"#e72f23",
                             color:'white',
                             marginBottom: 4,
-                            height: '15vw'
+                            height: '15vw',
                         }}
-                    >
+                      >
                         <img className="mx-2" 
-                            src={require('../../assets/img/ico-card.svg')}
-                            style={{width: '15vh',backgroundColor:'none',borderRadius:5}} 
-                            alt="Card image" 
+                            src="https://cdn-icons-png.flaticon.com/512/848/848382.png"
+                            style={{width: '10vw',backgroundColor:'none',borderRadius:5}} 
+                            alt="Mobile Money" 
                         />
                             
-
-                    </Button>
+                      </Button>
+                    </div>
                     ))}
+                    </CardBody>
+                    <CardFooter>
+                    Ariary
+                    </CardFooter>
+                    </Card>                  
                 </Grid>
                 <Grid item xs={12} lg={6} >
-                <p align="center"><b>Payer en cash</b></p>
-                {cashdata.map((d, index) => (
-                    <Button
-                        variant="contained"
-                        size="big"
-                        style={{
-                            width: '90%',
-                            borderRadius: 5,
-                            backgroundColor:"#1e90ff",
-                            color:'white',
-                            marginBottom: 4,
-                            height: '15vw'
-                        }}
-                        onClick = {()=>{
-                          handleOpenModalCash(index)
-                        }}
-                    >
-                        <img className="mx-2" 
-                            src={require('../../assets/img/ico-cash.svg')}                            
-                            style={{width:'15vh',backgroundColor:'none',borderRadius:5}} 
-                            alt="Fpay image" 
-                        />
-                    </Button>
-                ))}
+                  <Card>
+
+                    <CardHeader color="info">
+                      
+                    <p align="center"><b>ESPECES AU POINT MARCHAND</b></p>
+                    </CardHeader>
+                    <CardBody align="center">
+                      {cashdata.map((d, index) => (
+                          <Button
+                              variant="contained"
+                              size="big"
+                              style={{
+                                  width: '90%',
+                                  borderRadius: 5,
+                                  backgroundColor:"#ec926b",
+                                  color:'white',
+                                  marginBottom: 4,
+                                  height: '15vw'
+                              }}
+                              onClick = {()=>{
+                                handleOpenModalCash(index)
+                              }}
+                          >
+                              <img className="mx-2" 
+                                  src="https://cdn-icons-png.flaticon.com/512/438/438526.png"                            
+                                  style={{width:'10vw',backgroundColor:'none',borderRadius:5}} 
+                                  alt="Fpay image" 
+                              />
+                          </Button>
+                      ))}
+                    </CardBody>
+                    <CardFooter>
+                    Ariary
+                    </CardFooter>
+                  </Card>
                 </Grid>
                 <Grid item xs={12} lg={6} >
-                <p align="center"><b>Payer en cash</b></p>
-                {cashdata.map((d, index) => (
-                    <Button
-                        variant="contained"
-                        size="big"
-                        style={{
-                            width: '90%',
-                            borderRadius: 5,
-                            backgroundColor:"#1e90ff",
-                            color:'white',
-                            marginBottom: 4,
-                            height: '15vw'
-                        }}
-                        onClick = {()=>{
-                          handleOpenModalCash(index)
-                        }}
-                    >
-                        <img className="mx-2" 
-                            src={require('../../assets/img/ico-cash.svg')}                            
-                            style={{width:'15vh',backgroundColor:'none',borderRadius:5}} 
-                            alt="Fpay image" 
-                        />
-                    </Button>
-                ))}
+                  <Card>
+
+                      <CardHeader color="info">
+                        
+                      <p align="center"><b>VIREMENT BANCAIRE</b></p>
+                      </CardHeader>
+                      <CardBody align="center">
+                      {bankdata.map((d, index) => (
+                        <Button
+                            onClick={() => { 
+                              handleOpenModalBank(index)
+                                setUnite('usdt')
+                                setHideMobileMoney('none')
+                                setHideBank('') 
+    
+                            }}
+                            variant="contained"
+                            size="big"
+                            style={{
+                                width: '90%',
+                                borderRadius: 5,
+                                backgroundColor:"#5fbdbb",
+                                color:'white',
+                                marginBottom: 4,
+                                height: '15vw'
+                            }}
+                        >
+                            <img className="mx-2" 
+                                src="https://cdn-icons-png.flaticon.com/512/4313/4313033.png"
+                                style={{width: '10vw',backgroundColor:'none',borderRadius:5}} 
+                                alt="Card image" 
+                            />
+                                
+
+                        </Button>
+                      ))}
+                      </CardBody>
+                      <CardFooter>
+                      Euro
+                      </CardFooter>
+                  </Card>                  
+                </Grid>            
+                <Grid item xs={12} lg={6} >
+                  <Card>
+
+                    <CardHeader color="info">
+                      
+                    <p align="center"><b>CARTE BLEUE</b></p>
+
+                    </CardHeader>
+                    <CardBody align="center">
+                    {cashdata.map((d, index) => (
+                      <Button
+                          variant="contained"
+                          size="big"
+                          style={{
+                              width: '90%',
+                              borderRadius: 5,
+                              backgroundColor:"#1c80b3",
+                              color:'white',
+                              marginBottom: 4,
+                              height: '15vw'
+                          }}
+                          onClick = {()=>{
+                            handleOpenModalCash(index)
+                          }}
+                      >
+                          <img className="mx-2" 
+                              src="https://cdn-icons-png.flaticon.com/512/5701/5701574.png"                            
+                              style={{width:'10vw',backgroundColor:'none',borderRadius:5}} 
+                              alt="Fpay image" 
+                          />
+                      </Button>
+                    ))}                 
+                    </CardBody>
+                    <CardFooter>
+                    Euro
+                    </CardFooter>
+                  </Card>                
                 </Grid>
                 <Grid item xs={12} lg={6} >
-                <p align="center"><b>Payer en cash</b></p>
-                {cashdata.map((d, index) => (
-                    <Button
-                        variant="contained"
-                        size="big"
-                        style={{
-                            width: '90%',
-                            borderRadius: 5,
-                            backgroundColor:"#1e90ff",
-                            color:'white',
-                            marginBottom: 4,
-                            height: '15vw'
-                        }}
-                        onClick = {()=>{
-                          handleOpenModalCash(index)
-                        }}
-                    >
-                        <img className="mx-2" 
-                            src={require('../../assets/img/ico-cash.svg')}                            
-                            style={{width:'15vh',backgroundColor:'none',borderRadius:5}} 
-                            alt="Fpay image" 
-                        />
-                    </Button>
-                ))}
+                <Card>
+
+                    <CardHeader color="info">
+                      
+                    <p align="center"><b>CRYPTOMONAIE</b></p>
+
+                    </CardHeader>
+                    <CardBody align="center">
+                    {cashdata.map((d, index) => (
+                      <Button
+                          variant="contained"
+                          size="big"
+                          style={{
+                              width: '90%',
+                              borderRadius: 5,
+                              backgroundColor:"#b6605d",
+                              color:'white',
+                              marginBottom: 4,
+                              height: '15vw'
+                          }}
+                          onClick = {()=>{
+                            handleOpenModalCash(index)
+                          }}
+                      >
+                          <img className="mx-2" 
+                              src="https://cdn-icons-png.flaticon.com/512/1213/1213797.png"                            
+                              style={{width:'10vw',backgroundColor:'none',borderRadius:5}} 
+                              alt="Fpay image" 
+                          />
+                      </Button>
+                    ))}                 
+                    </CardBody>
+                    <CardFooter>
+                    Crypto
+                    </CardFooter>
+                  </Card> 
                 </Grid>
               </Grid>
 
