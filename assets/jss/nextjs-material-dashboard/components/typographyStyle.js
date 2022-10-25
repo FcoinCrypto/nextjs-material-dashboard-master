@@ -25,7 +25,7 @@ const typographyStyle = {
   },
   quoteText: {
     margin: "0 0 10px",
-    fontStyle: "italic",
+    fontStyle: "normal",
   },
   quoteAuthor: {
     display: "block",

@@ -9,6 +9,14 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 
 const dashboardRoutes = [
     {
+        path: "/tableau",
+        name: "Tableau de Bord",
+        // rtlName: "طباعة",
+        icon: Tableau,
+
+        layout: "/superAdmin",
+    },
+    {
         path: "/users",
         name: "Toutes les utilisateurs",
         // rtlName: "طباعة",

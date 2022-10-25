@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef, useLayoutEffect } from 'react';
 import Link from 'next/link';
 import Router from "next/router";
 
@@ -7,36 +7,40 @@ import {  GoogleLogin } from '@react-oauth/google';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import Image from 'next/image'
-import {
-    MDBContainer,
-    MDBCol,
-    MDBRow,
-    MDBCheckbox
-}
-from 'mdb-react-ui-kit';
+
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import { Button } from '@material-ui/core';
 import { confirmeUser, registration } from '../../services/auth';
 import { authAtom } from '../../recoil/atom/authAtom';
-import { getUser } from '../../services/user';
 import {useSetRecoilState } from 'recoil';
-import ENV from '../../utils/env';
 import jwt_decode from "jwt-decode";
 import { createWallet } from '../../services/wallet';
 import TextField from '@mui/material/TextField';
+import { Grid } from "@material-ui/core";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import Checkbox from "@material-ui/core/Checkbox";
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 function Login() {
-    const [width, setWidth] = useState();
     const [rand, setRand] = useState();
-
+    const ref = useRef(null)
+            const [divWidth, setDivWidth] = useState('')
+            const handleResize = () => {
+                setDivWidth(ref.current.offsetWidth)
+            }
     useEffect(() => {
        
-        const el = document.getElementById('gl').offsetWidth
-        setWidth(el)
-        console.log(el)
+         
+
+         if (ref.current) window.addEventListener('resize', 
+         handleResize)
+      
+              return () => {
+                  window.removeEventListener('resize', handleResize)
+              }
+
         function makeid() {
             var text = "";
             var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -48,13 +52,13 @@ function Login() {
           }
           setRand(makeid)
         
-      }, []);
+      }, [ref]);
     const setAuth = useSetRecoilState(authAtom);
 
     const  handleResponseLogin = async (response, type) => {
         let input = null;
         let registre = '';
-
+        console.log(response)
         switch (type) {
             case 'facebook':
                 registre = await registration(response.name+" ", response.email, response.id)
@@ -113,41 +117,44 @@ function Login() {
             break;
         }
     }
+    useLayoutEffect(() => {
+        setDivWidth(ref.current.offsetWidth)
+    }, [])
     return (
-        <>
-            <MDBContainer fluid className="p-3 my-5 d-flex justify-content-center">
-
-                <MDBRow className='w-50 d-flex justify-content-center'>
-
-                <MDBCol col='3' sm='6'>
-
-                    <div className='d-flex flex-row mt-2'>
+            <Grid 
+            container 
+            spacing={0}
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            minWidth={"10vw"}
+             >
+                <Grid item xs={12} sm={6}>
+                    <div className='d-flex flex-row mt-2 justify-content-center'>
                         <img className="mx-2 " src="https://raw.githubusercontent.com/FcoinCrypto/Fcoin/main/logo/1024x1024fcoin.png" style={{width:60,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
                         <span className="h1 fw-bold mb-0">Fcoin</span>
                     </div>
-                    <Link href="./registration">
-                        <h5 className="fw-normal my-4 pb-3" style={{letterSpacing: '1px', cursor:'pointer'}}>Inscrivez-vous</h5>
-                    </Link>
                     
                     <FacebookLogin
-                            appId={'827782618658221'}
+                            appId={'1518285375250811'}
                             callback={(response) =>
                                 handleResponseLogin(response, 'facebook')
                             }
                             fields="name,email,picture"
                             render={(renderProps) => (
                                 <Button
+                                    
                                     onClick={renderProps.onClick}
                                     variant="contained"
                                     size="big"
                                     style={{
-                                        
                                         borderRadius: 5,
                                         backgroundColor:"#1f80b3",
                                         color:'white',
-                                        marginBottom: 4,
+                                        marginBottom: 0,
+                                        marginTop:40,
                                         fontSize:'0.8rem',
-                                        minWidth: '50vh'
+                                        width: '100%'
                                     }}
                                 >
                                     <img className="mx-2" src={require('../../assets/img/logo-fb_full.png')} style={{width:30,backgroundColor:'white',borderRadius:50}} alt="Facebook image" layout='fixed' />
@@ -165,17 +172,16 @@ function Login() {
                         clientId={'66220988134-n1m5v05ri12up8gvv6ugnc4790ktatvt.apps.googleusercontent.com'}
                     >
                         <br/><br/>
-                    <div id="gl" style={{ width: "100%", backgroundColor: "#eeeeee"}}>
+                    <div id="gl"  ref={ref} style={{ width: "100%", backgroundColor: "#eeeeee"}}>
                         <GoogleLogin
-                            style={{minWidth : '100%'}}
                             borderRadius={'100vh'}
                             theme={'outline'}
                             type={'standard'}
                             size={'large'}
                             logo_alignment={'center'}
                             useOneTap
-                            width={width}
-                            text="Se connecter avec Google"
+                            width={divWidth}
+                            text="Se connecter"
 
                             onSuccess={(response) =>
                                 handleResponseLogin(jwt_decode(response.credential), 'google')
@@ -198,8 +204,7 @@ function Login() {
                                         borderRadius: 35,
                                         backgroundColor:"#00853d",
                                         color:'white',
-                                        marginBottom: 4,
-                                        minWidth: '50vh'
+                                        marginBottom: 0
                                     }}
                                 >
                                     <Image className="mx-2" src="https://cdn-icons-png.flaticon.com/512/124/124010.png" style={{width:20,backgroundColor:'white',borderRadius:50}} alt="Facebook image" layout="fixed" />
@@ -248,7 +253,7 @@ function Login() {
                                             resetForm();
                                             setStatus({ success: true }); 
                                             setSubmitting(false);
-                                            Router.push("/superAdmin/dashboard");
+                                            Router.push("/superAdmin/tableau");
                                         }
                                     }
                                     if(userRecoil.message == "Request failed with status code 400"){
@@ -289,7 +294,7 @@ function Login() {
                                 label="Email"
                                 name="email" 
                                 required 
-                                style={{minWidth : '50vh'}}
+                                style={{marginTop:-20}}
                             />
                             <div></div>
                             <TextField 
@@ -300,7 +305,7 @@ function Login() {
                                 onChange={handleChange} 
                                 value={values.password} 
                                 fullWidth
-                                style={{marginTop : 23, marginBottom : 23, minWidth : '50vh'}}
+                                style={{marginTop : 23, marginBottom : 23}}
                                 label="Password" 
                                 name="password" 
                                 required 
@@ -308,9 +313,18 @@ function Login() {
                             />
 
 
-                            <div className="d-flex justify-content-between mx-4 mb-4" style={{minWidth:'45vh'}}>
-                                <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me' />
-                                <a href="!#">Forgot password?</a>
+                            <div className="d-flex justify-content-between mx-4 mb-4" >
+                                <FormGroup>
+                                    <Grid container style={{width:"120%"}}>
+                                        <Grid item xs={6} style={{marginTop:-10}}>                                          
+                                            <FormControlLabel control={<Checkbox/>} label="Remenber me" />
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <a href="!#">Forgot password?</a>
+                                        </Grid>
+                                    </Grid>
+                                </FormGroup>
+                                
                             </div>
 
                                 <div className='text-center'>
@@ -318,7 +332,6 @@ function Login() {
                                     style={{
                                         borderRadius: 35,
                                         backgroundColor: "#1f80b3",
-                                        minWidth: '50vh'
                                     }} 
                                     fullWidth 
                                     variant="contained" 
@@ -332,13 +345,24 @@ function Login() {
                                 </form>
                         )}
                     </Formik> 
-
-
-                    </MDBCol>
-                </MDBRow>
-                <ToastContainer />
-            </MDBContainer>
-        </>
+                    <center><p style={{marginTop:5, marginBottom:0}}>--OU--</p></center>
+                    <Link href="./registration">
+                        <Button
+                                    style={{
+                                        borderRadius: 35,
+                                        backgroundColor: "#34a853",
+                                    }} 
+                                    fullWidth 
+                                    variant="contained" 
+                                    color="secondary" 
+                                    type="submit" 
+                                > 
+                                    Je m'inscris 
+                                </Button> 
+                    </Link>
+                </Grid>
+            <ToastContainer />
+            </Grid>
     );
 }
 
