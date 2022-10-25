@@ -14,7 +14,7 @@ import styles from "assets/jss/nextjs-material-dashboard/layouts/adminStyle.js";
 
 import bgImage from "assets/img/sidebar-2.jpg";
 import { authAtom } from "../recoil/atom/authAtom";
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 
 let ps;
@@ -28,6 +28,7 @@ export default function Admin({ children, ...rest }) {
   // ref to help us initialize PerfectScrollbar on windows devices
   const mainPanel = React.createRef();
   const { user, token } = useRecoilValue(authAtom)
+  const setAuth = useSetRecoilState(authAtom);
   // states and functions
   const [image, setImage] = React.useState(bgImage);
   const [color, setColor] = React.useState("white");
@@ -79,7 +80,8 @@ export default function Admin({ children, ...rest }) {
   // console.log(token)
 
   useEffect(async () => {
-    if (!token) {
+    if (!token || user.access != "user") {
+      setAuth({ token: null, user: null });
       router.push('/login/login')
     }
   }, [user, token])
@@ -113,7 +115,6 @@ export default function Admin({ children, ...rest }) {
           <div className={classes.map}>{children}</div>
         )}   
       </div>
-      <Footer/>
     </div>
     }
     </>

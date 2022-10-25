@@ -14,8 +14,8 @@ import styles from "assets/jss/nextjs-material-dashboard/layouts/adminStyle.js";
 
 import bgImage from "assets/img/sidebar-2.jpg";
 import { authAtom } from "../recoil/atom/authAtom";
-import { useRecoilValue } from 'recoil';
-import myFooter from "../components/Footer/myFooter";
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import Footer from "../components/Footer/myFooter";
 
 let ps;
 
@@ -24,6 +24,7 @@ export default function SuperAdmin({ children, ...rest }) {
   const router = useRouter();
   // styles
   const useStyles = makeStyles(styles);
+  const setAuth = useSetRecoilState(authAtom);
   const classes = useStyles();
   // ref to help us initialize PerfectScrollbar on windows devices
   const mainPanel = React.createRef();
@@ -80,6 +81,7 @@ export default function SuperAdmin({ children, ...rest }) {
 
   useEffect(() => {
     if (!token || user.access != "SuperAdmin") {
+      setAuth({ token: null, user: null });
       router.push('/login/login')
     }
   }, [])
@@ -104,15 +106,17 @@ export default function SuperAdmin({ children, ...rest }) {
           />
           {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
           {getRoute() ? (
-            <div className={classes.content}>
-              <div className={classes.container}>{children}</div>
-            </div>
+            <>
+              <div className={classes.content}>
+                <div className={classes.container}>{children}</div>
+              </div>
+              <Footer/>
+            </>
           ) : (
             <>
               <div className={classes.map}>{children}</div>
             </> 
-          )}
-          <myFooter/>   
+          )}  
         </div>
       </div>
     }
