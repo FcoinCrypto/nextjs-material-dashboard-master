@@ -63,7 +63,10 @@ function TableList() {
     if(!dataUser){
 
       const res = await allUSer();
-      setDataUSer(res.data);
+      const filteredRows = res.data.filter((row) => {
+        return row.access.toLowerCase().includes("user");
+      });
+      setDataUSer(filteredRows);
      
 
     } 
