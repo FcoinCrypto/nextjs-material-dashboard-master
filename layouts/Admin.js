@@ -79,7 +79,7 @@ export default function Admin({ children, ...rest }) {
 
   // console.log(token)
 
-  useEffect(async () => {
+  useEffect(() => {
     if (!token || user.access != "user") {
       setAuth({ token: null, user: null });
       router.push('/login/login')

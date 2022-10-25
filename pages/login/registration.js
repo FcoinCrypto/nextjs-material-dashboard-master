@@ -10,6 +10,9 @@ import {
   MDBCheckbox
 }
 from 'mdb-react-ui-kit';
+import Checkbox from "@material-ui/core/Checkbox";
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { confirmeUser, registration } from '../../services/auth';
 import jwt_decode from "jwt-decode";
 import {Formik, Form} from 'formik';
@@ -24,7 +27,15 @@ import Router from 'next/router';
 import { createWallet } from '../../services/wallet';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Icon } from '@iconify/react';
 
+import {
+
+    Container,
+    Row,
+    Col,
+    UncontrolledTooltip
+  } from "reactstrap";
 
 function Registration() {
     const setAuth = useSetRecoilState(authAtom);
@@ -119,7 +130,7 @@ function Registration() {
     useLayoutEffect(() => {
         setDivWidth(ref.current.offsetWidth)
     }, [])
-  return (
+  return (<>
             <Grid 
             container 
             spacing={0}
@@ -129,12 +140,20 @@ function Registration() {
             style={{padding:10}}
             minWidth={"10vw"}
                 >
-                    <Grid xs={12} sm={6}>
-                        <div className='d-flex flex-row mt-2 justify-content-center'>
-                                <img className="mx-2 " src="https://raw.githubusercontent.com/FcoinCrypto/Fcoin/main/logo/1024x1024fcoin.png" style={{width:60,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
-                                <span className="h1 fw-bold mb-0">Fcoin</span>
-                        </div>
-                        <h5 className="fw-normal mt-4" style={{letterSpacing: '1px', marginBottom:-10}}>Créez votre Compte</h5>
+                    <Grid xs={12} lg={6}>
+                        <Grid container>
+                            <Grid item xs={8}>
+                                <div className='d-flex flex-row mt-2 justify-content-center'>
+                                        <img className="mx-2 " src="https://raw.githubusercontent.com/FcoinCrypto/Fcoin/main/logo/1024x1024fcoin.png" style={{width:60,backgroundColor:'white',borderRadius:50}} alt="Facebook image" />
+                                        <span className="h1 fw-bold mb-0">Fcoin</span>
+                                </div>
+                            </Grid>
+                        </Grid>
+                        <Grid container>
+                            <Grid item xs={8}>
+                                <h5 align="center" className="fw-normal mt-4" style={{letterSpacing: '1px', marginBottom:-10}}>Inscrivez-vous gratuitement pour profiter de tous nos services</h5>
+                            </Grid>
+                        </Grid>
 
                         <FacebookLogin
                             appId={'827782618658221'}
@@ -342,38 +361,144 @@ function Registration() {
                                         }}  
                                                    
                                     />
-                                <div className="d-flex justify-content-between mx-4 mb-4">
-                                    <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me' />
-                                    <a href="!#">J&apos;ai déja un compte</a>
-                                </div>
 
-                                    <div className='text-center'>
-                                    <Button
-                                        style={{
-                                            borderRadius: 35,
-                                            backgroundColor: "#1f80b3",
-                                            maxWidth:400
-                                        }} 
-                                        fullWidth 
-                                        variant="contained" 
-                                        color="primary" 
-                                        // onClick={fetchapi}
-                                        disabled={isSubmitting} 
-                                        type="submit" 
-                                    > 
-                                        Je m&apos; inscris 
-                                    </Button> 
-                                    </div> 
+                                        <FormGroup>
+                                            <Grid container style={{maxWidth:400}}>
+                                                <Grid item xs={6} style={{marginTop:-10}}>                                          
+                                                    <FormControlLabel control={<Checkbox/>} label="Remenber me" />
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    <a href="!#">J'ai dejà un compte ?</a>
+                                                </Grid>
+                                            </Grid>
+                                        </FormGroup>
+                                
+
+                                                <Button
+                                                    style={{
+                                                        borderRadius: 35,
+                                                        backgroundColor: "#1f80b3",
+                                                        maxWidth:400,
+                                                        marginBottom:20,
+                                                        marginTop:20
+                                                    }} 
+                                                    fullWidth 
+                                                    variant="contained" 
+                                                    color="primary" 
+                                                    // onClick={fetchapi}
+                                                    disabled={isSubmitting} 
+                                                    type="submit" 
+                                                > 
+                                                    Je m&apos; inscris 
+                                                </Button> 
+                                    
                                     </form>
                             )}
                         </Formik> 
+                        
                         <ToastContainer />
                     </Grid>
                     <ToastContainer />
                 </Grid>
+                <hr></hr>
+                    <footer className=" footer">
+                            <Container>
+                                <Row className="row-grid align-items-center mb-5">
+                                <Col lg="6">
+                                <h5><b>Mentions légales</b></h5>
+
+                                    <h4 className=" mb-0 font-weight-light" style={{fontSize:15,marginTop:-10}} >
+                                    Conditions Génerales d'utilisation
+                                    </h4>
+                                    <h4 className=" mb-0 font-weight-light" style={{fontSize:15}}>
+                                    Conditions Génerales de vente
+                                    </h4>
+                                    <h4 className=" mb-0 font-weight-light" style={{fontSize:15}}>
+                                    Politique de confidentialité
+                                    </h4>
+                                </Col>
+                                <Col className="text-lg-center btn-wrapper" lg="6" style={{marginTop:0}}>
+                                    <h5><b>Contacter nous</b></h5>
+                                    <Button
+                                    className="btn-icon-only rounded-circle"
+                                    color="twitter"
+                                    href="https://twitter.com/CryptoFcoin"
+                                    id="tooltip475038074"
+                                    target="_blank"
+                                    >
+                                    <span className="btn-inner--icon">
+                                        <Icon icon="simple-icons:twitter" width="30" height="30"/>
+                                    </span>
+                                    </Button>
+                                    <UncontrolledTooltip delay={0} target="tooltip475038074">
+                                    Follow us
+                                    </UncontrolledTooltip>
+                                    <Button
+                                    className="btn-icon-only rounded-circle ml-1"
+                                    color="facebook"
+                                    href="https://www.facebook.com/fcoincrypto"
+                                    id="tooltip837440414"
+                                    target="_blank"
+                                    >
+                                    <span className="btn-inner--icon">
+                                        <Icon icon="simple-icons:facebook" width="25" height="25" />
+                                    </span>
+                                    </Button>
+                                    <UncontrolledTooltip delay={0} target="tooltip837440414">
+                                    Like us
+                                    </UncontrolledTooltip>
+                                    <Button
+                                    className="btn-icon-only rounded-circle ml-1"
+                                    color="dribbble"
+                                    href="https://discord.com/invite/94trf6G2mQ"
+                                    id="tooltip829810202"
+                                    target="_blank"
+                                    >
+                                    <span className="btn-inner--icon">
+                                        <Icon icon="simple-icons:discord" width="25" height="25"/>
+                                    </span>
+                                    </Button>
+                                    <UncontrolledTooltip delay={0} target="tooltip829810202">
+                                    Follow us
+                                    </UncontrolledTooltip>
+                                    <Button
+                                    className="btn-icon-only rounded-circle ml-1"
+                                    color="github"
+                                    href="https://t.me/FCoin"
+                                    id="tooltip495507257"
+                                    target="_blank"
+                                    >
+                                    <span className="btn-inner--icon">
+                                        <Icon icon="simple-icons:telegram" width="25" height="25" />
+                                    </span>
+                                    </Button>
+                                    <UncontrolledTooltip delay={0} target="tooltip495507257">
+                                    Follow us
+                                    </UncontrolledTooltip>
+                                </Col>
+                                </Row>
+                                <hr style={{marginTop:-30}}/>
+                                <Row className=" align-items-center justify-content-md-between" style={{marginBottom:-30}}>
+                                <Col md="12">
+                                    <div className="copyright d-flex justify-content-center">
+                                    Copyright © {new Date().getFullYear()}{" "}
+                                    <a
+                                        href="https://www.dev.fcoin.mg"
+                                        target="_blank"
+                                        style={{marginLeft:5}}
+                                    >
+                                        Fcoin
+                                    </a>
+                                    .
+                                    </div>
+                                </Col>
+
+                                </Row>
+                            </Container>
+                    </footer>
    
     
-    );
+</>);
 }
 
 export default Registration;

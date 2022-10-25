@@ -10,16 +10,26 @@ api
   })
   .then(response => {
   });
+  
+export const updateStatus = (achat_id) =>
+api
+  .post(`/achats/confirm/${achat_id}`,
+  {
+    data: {
+        status : 'Validé'
+    },
+  })
+  .then(response => {window.location.reload();return response;
+  });
     
 
-  export const achat = async (fcoin, usdt,montant, type,etiquette, user_id) =>{
+  export const achat = async (fcoin, usdt,montant, type, user_id) =>{
     const response = await api.post('/achats', {
         data:{
           fcoin: fcoin,
           usdt: usdt,
           montant: montant,
           type: type,
-          etiquette: etiquette,
           user: user_id,
           status:'En attente'
         }
@@ -47,15 +57,21 @@ api
     // console.log(response.data)
     return response.data;
 }
-  export const achatMobile = async (achat_id, phoneNumber,secret,type) =>{
+  export const achatMobile = async (achat_id, clientNumber,type,merchantNumber,description,transaction) =>{
     const response = await api.post('/achat-mobiles', {
         data:{
           achat: achat_id,
-          merchantNumber: phoneNumber,
-          secret:secret,
-          type:type
+          merchantNumber: merchantNumber,
+          clientNumber: clientNumber,
+          type: type,
+          description: description,
+          numeroTransaction: transaction
         }
       })
     // console.log(response.data)
     return response.data;
+}
+  export const getNumero = async () =>{
+    const res = await api.get('/numero-recharges').then(response => {return response})
+    return res.data;
 }
