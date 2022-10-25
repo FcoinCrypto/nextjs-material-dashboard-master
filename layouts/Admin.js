@@ -6,6 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Navbar from "components/Navbars/Navbar.js";
 // import Footer from "components/Footer/Footer.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
+import Footer from "../components/Footer/myFooter";
 
 import routes from "routes.js";
 
@@ -14,6 +15,7 @@ import styles from "assets/jss/nextjs-material-dashboard/layouts/adminStyle.js";
 import bgImage from "assets/img/sidebar-2.jpg";
 import { authAtom } from "../recoil/atom/authAtom";
 import { useRecoilValue } from 'recoil';
+
 
 let ps;
 
@@ -101,13 +103,17 @@ export default function Admin({ children, ...rest }) {
         />
         {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
         {getRoute() ? (
+          <>
           <div className={classes.content}>
-            <div className={classes.container}>{children}</div>
+            <div className={classes.container}>{children}</div>  
           </div>
+          <Footer/>
+          </>
         ) : (
           <div className={classes.map}>{children}</div>
         )}   
       </div>
+      <Footer/>
     </div>
     }
     </>

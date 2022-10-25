@@ -74,7 +74,7 @@ function Achat() {
     <>
       { dataAchats &&
         <GridContainer>
-          <footer>
+          {/* <footer>
             <div className={classes.container}>
               <div className={classes.left}>
                 <List className={classes.list}>
@@ -87,7 +87,7 @@ function Achat() {
                 </List>
               </div>
             </div>
-          </footer>
+          </footer> */}
           <div style={{minWidth:'100%'}} className={cardstyles.width100} id="transaction_id">
             <GridItem xs={12} sm={12} md={12}>
               <Card>
@@ -100,7 +100,7 @@ function Achat() {
                 <CardBody>
                   <TableSuperAllAchats
                     tableHeaderColor="primary"
-                    tableHead={["date","fcoin","usdt", "montant","status","type","utilisateur",""]}
+                    tableHead={["date", "numero transaction", "nom et prenom", "type de paiment", "montant", "devis", "Numero transaction mobile", "status"]}
                     tableData={dataAchats}
                   />
                   

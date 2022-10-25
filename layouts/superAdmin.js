@@ -13,10 +13,9 @@ import SuperAdminroutes from "../routeSuperAdmin"
 import styles from "assets/jss/nextjs-material-dashboard/layouts/adminStyle.js";
 
 import bgImage from "assets/img/sidebar-2.jpg";
-import logo from "assets/img/reactlogo.png";
 import { authAtom } from "../recoil/atom/authAtom";
-import Login from "../pages/login/login";
 import { useRecoilValue } from 'recoil';
+import myFooter from "../components/Footer/myFooter";
 
 let ps;
 
@@ -109,8 +108,11 @@ export default function SuperAdmin({ children, ...rest }) {
               <div className={classes.container}>{children}</div>
             </div>
           ) : (
-            <div className={classes.map}>{children}</div>
-          )}   
+            <>
+              <div className={classes.map}>{children}</div>
+            </> 
+          )}
+          <myFooter/>   
         </div>
       </div>
     }

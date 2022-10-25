@@ -76,7 +76,7 @@ function TableList() {
     <>
       { dataUser &&
         <GridContainer>
-          <footer>
+          {/* <footer>
             <div className={classes.container}>
               <div className={classes.left}>
                 <List className={classes.list}>
@@ -89,7 +89,7 @@ function TableList() {
                 </List>
               </div>
             </div>
-          </footer>
+          </footer> */}
           <div style={{minWidth:'100%'}} className={cardstyles.width100} id="transaction_id">
             <GridItem xs={12} sm={12} md={12}>
               <Card>
@@ -102,7 +102,7 @@ function TableList() {
                 <CardBody>
                   <TableSuperAllUsers
                     tableHeaderColor="primary"
-                    tableHead={["nom", "email", "wallet"]}
+                    tableHead={["date", "id", "nom", "email", "status"]}
                     tableData={dataUser}
                   />
                   

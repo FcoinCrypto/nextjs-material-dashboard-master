@@ -87,13 +87,13 @@ export default function TableSuperAllAchats(props) {
               <TableRow>
                 <TableCell align="left">{moment(row.attributes.createdAt).format("DD/MM/YY à HH:mm")}</TableCell>
                 <TableCell align="left">{row.attributes.fcoin}</TableCell>
-                <TableCell align="left">{row.attributes.usdt}</TableCell>
-                <TableCell align="left">{row.attributes.montant}</TableCell>
-                <TableCell align="left">{row.attributes.status}</TableCell>
-                <TableCell align="left">{row.attributes.type}</TableCell>
                 <TableCell align="left">{row.attributes.user.data.attributes.username}</TableCell>
-                <TableCell align="left"><Button>Valider</Button></TableCell>
+                <TableCell align="left">{row.attributes.type}</TableCell>
+                <TableCell align="left">{row.attributes.montant}</TableCell>
+                <TableCell align="left">{row.attributes.devis}</TableCell>
+                <TableCell align="left">{row.attributes.usdt}</TableCell>
                 <TableCell align="left">{row.attributes.status}</TableCell>
+                <TableCell align="left"><Button>Valider</Button></TableCell>
               </TableRow>
             )).reverse()}
           </TableBody>
