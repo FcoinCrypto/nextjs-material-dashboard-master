@@ -41,33 +41,38 @@ function Acheter() {
   const [infoMoney, setNoneInfoMoney] = useState('none');
   const [choixOperateur, setChoixOperateur] = useState('');
   const { user } = useRecoilValue(authAtom);
-  const [ numero, setNumero ] = useState();
+  const [ numeroOrange, setNumeroOrange ] = useState();
+  const [ numeroTelma, setNumeroTelma ] = useState();
+  const [ numeroAirtel, setNumeroAirtel ] = useState();
   const [checked, setChecked] = useState('???');
-  const [checkedNumero, setCheckedNumero] = useState('???');
+  const [checkedNumero, setCheckedNumero] = useState();
   const [moneyColor, SetMoneyColor] = useState();
-  const [test, setTest] = useState();
-  const [pageNumber, setPageNumber] = useState(0);
-  const [operateur, setOperateur] = useState();
+  const [montantMobile, setMontantMobile] = useState();
+  const [telClient, setTelClient] = useState();
+  const [numero, setNumero] = useState();
+
 
  
   const checkedRadio = async(e) =>{
+   
     switch (e) {
       case 'Orange Money':{
         SetMoneyColor('#f6ab32')
-        setOperateur("Orange")
+        setNumero(numeroOrange)
       }
         
         break;
       case 'MVola': {
         SetMoneyColor('#00703d')
-        setOperateur("Telma")
+        setNumero(numeroTelma)
 
       }
         
         break;
       case 'Airtel Money': {
         SetMoneyColor('#fb0405')
-        setOperateur("Airtel")
+        setNumero(numeroAirtel)
+
       }
         
         break;
@@ -80,9 +85,7 @@ function Acheter() {
 
     setNoneInfoMoney('')
   }
-  const onchangeCheckedNumero = async(e) =>{
-   setCheckedNumero(e)
-  }
+  
   //open modal
   const [open, setOpen] = useState(false);
   const [isChangeTransaction, setIsChangeTransaction] = useState(true);
@@ -94,12 +97,13 @@ function Acheter() {
     const [modalData, setData] = useState();
     const [cashModalData, setCashData] = useState();
     const [bankModalData, setBankData] = useState();
+    const [step1, setStep1] = useState('');
+    const [step2, setStep2] = useState('none');
   
     const data = [
       {
         title: "Payment Terms",
         Info: "Mobile Money",
-        numero:numero
       }
     ];
     const cashdata = [
@@ -127,6 +131,8 @@ function Acheter() {
       setChecked('')
       setChoixOperateur('')
       setIsChangeTransaction(true)
+      setCheckedNumero()
+      setStep2("none")
     };
 //Cash
     const handleCloseModalCash = () => {
@@ -157,7 +163,7 @@ function Acheter() {
       }
     }));
     const classes = useStyles();
-
+//Modal
     const CustomModal = () => {
       return modalData ? (
         <Modal
@@ -228,7 +234,7 @@ function Acheter() {
               </div>
               <p style={{display:infoMoney, marginBottom:0,marginTop:5, color:moneyColor}}>Recharger avec {checked}</p>
               <div style={{display:infoMoney}}>
-
+                
               <Formik
                 
                 enableReinitialize 
@@ -246,7 +252,8 @@ function Acheter() {
                         .required('require'),
                     description: Yup.string()
                         
-                        .required('require')
+                        .required('require'),
+                    tel: Yup.string().matches(/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/, 'Phone number is not valid')
         
                 })} 
                 onSubmit={async (values, { 
@@ -256,11 +263,7 @@ function Acheter() {
                     setSubmitting 
                     }) => {
                     try { 
-                        console.log('mob: ')
-                        console.log(values.description)
-                        // const myAchat = await achat(conversion(values.montant,'FTC'),conversionUsdt(conversion(values.montant,'FTC')),values.montant, 'mobile',etiquette,user.id);
-                        // const myMobile = await achatMobile(myAchat.data.id,values.tel,checked,checkedNumero);
-                        //   console.log(myMobile)
+                        
         
                         resetForm(); 
                         setStatus({ success: true }); 
@@ -285,24 +288,9 @@ function Acheter() {
                 values 
               }) => (
                 <form onSubmit={handleSubmit} >
-                  { isChangeTransaction &&
-                    <>
-                    <Radio.Group 
-                        orientation="horizontal" 
-                        label="1) Choisissez un numéro de recharge"
-                        value={checkedNumero}
-                        onChange={onchangeCheckedNumero} 
-                      >
-                        <Grid container>
-                          {numero && numero.data.filter(numdata => numdata.attributes.operateur == operateur).map((row) => (
-                        
-                            
-                              <Grid item lg={2} md={2} xs={12}><Radio value={row.attributes.numero} size="sm">{row.attributes.numero}</Radio></Grid>
-                          ))
-                          }
-                      </Grid>
-                    </Radio.Group>
-                    <p>2{')'} Entrer le montant ainsi que votre numéro de télephone</p>
+                <div style={{display:step1}}> 
+                    <p>1{')'} Voici votre numéro de recharge {numero}</p>
+                    <p>2{')'} Entrer le montant {'> 500 Ar'}ainsi que votre numéro de télephone 03......</p>
                     <Grid container spacing={2}>
                         <Grid item xs={12} lg={6} md={6}>
                           <TextField
@@ -335,49 +323,154 @@ function Acheter() {
                     </Grid>
                     <Grid container >
                         <Grid item xs={12}>
-                          <MuiPhoneNumber
-                            name="tel"
-                            label="N° Tel"
-                            data-cy="user-phone"
-                            defaultCountry={"mg"}
-                            autoFormat={false}
-                            onChange={(e)=>{
-                              values.tel = e
-                            }}
-                            value={values.tel}
-                          />
-                        </Grid>
-                        
-                    </Grid>
-
-                   
-                </>
-              }
-              { !isChangeTransaction &&
-                <>
-                  <p>Veuillez faire le transfe</p>
-                  <Grid container >
-                        <Grid item xs={12}>
                         <TextField
-                            error={Boolean(touched.description && errors.description)} 
-                            helperText={touched.description && errors.description} 
+                            error={Boolean(touched.tel && errors.tel)} 
+                            helperText={touched.tel && errors.tel} 
                             type="text" 
                             onBlur={handleBlur} 
                             onChange={handleChange} 
-                            value={values.description} 
+                            value={values.tel} 
+                            fullWidth
+                            style={{marginTop : 10, marginBottom : 10}}
+                            label="Votre numéro de télephone"
+                            placeholder="Votre numéro de télephone"
+                            name="tel" 
+                            required 
+                            variant="standard" 
+                          />   
+                        </Grid>
+                        
+                    </Grid>
+                    <Grid
+                    container
+                    spacing={0}
+                    direction="column"
+                    alignItems="center"
+                    justifyContent="center"
+                    >
+                        <Button
+                            variant="contained" 
+                            color="primary" 
+                            disabled={!values.tel || !values.montant} 
+                            type="button"
+                            style={{marginTop:10}}
+                            onClick={(event)=>{
+                              event.preventDefault()
+                              setStep1("none")
+                              setStep2("")
+                              
+                              setMontantMobile(values.montant)
+                              setTelClient(values.tel)
+                              
+                            }}
+                        > 
+                            valider
+                        </Button>
+                        
+        
+                  </Grid>
+                </div>
+                 
+
+                </form>
+              )}
+            </Formik>
+              </div>
+              <div style={{display:step2}}>
+              <Formik
+                
+                enableReinitialize 
+                initialValues={{
+                    raison:'', 
+                    transaction: '', 
+                }} 
+                validationSchema={Yup.object().shape({ 
+                    raison: Yup.string()
+                        
+                        .required('require'),
+                    
+                        transaction: Yup.string()
+                        .required("This field is Required")
+                })} 
+                onSubmit={async (values, { 
+                    resetForm, 
+                    setErrors, 
+                    setStatus, 
+                    setSubmitting 
+                    }) => {
+                    try { 
+                      
+                      console.log('mob: ')
+                        console.log(values.raison)
+                         const myAchat = await achat(conversion(montantMobile,'FTC'),conversionUsdt(conversion(montantMobile,'FTC')),montantMobile, 'mobile',etiquette,user.id);
+                         const numTrans = 'RMB'+myAchat.data.id
+                         const myTransaction = await addTransaction(montantMobile,'Achat',numTrans, myAchat.data.id,user.id)
+                         const myMobile = await achatMobile(myAchat.data.id,telClient,checked,checkedNumero,values.raison,values.transaction);
+                      resetForm(); 
+                        setStatus({ success: true }); 
+                        setSubmitting(true);
+                        // window.location.reload(false);
+                        
+                      } catch (err) { 
+                        console.log(err); 
+                        setStatus({ success: false }); 
+                        setErrors({ submit: err.message }); 
+                        setSubmitting(false); 
+                      } 
+                }} 
+              >
+                 {({ 
+                errors, 
+                handleBlur, 
+                handleChange, 
+                handleSubmit, 
+                isSubmitting, 
+                touched, 
+                values 
+              }) => (
+                <form onSubmit={handleSubmit}>
+                  <Grid container
+                  mobile={{ overflow: "auto" }}
+                  spacing={2} >
+                  <Grid item xs={12}>
+                    <TextField
+                            error={Boolean(touched.raison && errors.raison)} 
+                            helperText={touched.raison && errors.raison} 
+                            type="text" 
+                            onBlur={handleBlur} 
+                            onChange={handleChange} 
+                            value={values.raison} 
                             fullWidth
                             style={{marginTop : 10, marginBottom : 10}}
                             label="Votre raison de tranfert"
                             placeholder="Votre raison de tranfert"
-                            name="description" 
+                            name="raison" 
                             required 
                             variant="standard"             
                           />
-                        </Grid>
-                        
-                    </Grid>
-                </>
-              }
+                      </Grid>
+
+                      <Grid item xs={12}>
+                    <TextField
+                            error={Boolean(touched.transaction && errors.transaction)} 
+                            helperText={touched.raison && errors.raison} 
+                            type="text" 
+                            onBlur={handleBlur} 
+                            onChange={handleChange} 
+                            value={values.transaction} 
+                            fullWidth
+                            style={{marginTop : 10, marginBottom : 10}}
+                            label="Tapez ici votre numéro de transaction"
+                            placeholder="Tapez ici votre numéro de transaction"
+                            name="transaction" 
+                            required 
+                            variant="standard"             
+                          />
+                      </Grid>
+
+                  </Grid>
+
+                 
                   <Grid
                     container
                     spacing={0}
@@ -388,22 +481,16 @@ function Acheter() {
                         <Button
                             variant="contained" 
                             color="primary" 
-                            disabled={isSubmitting} 
+                            disabled={!values.raison || !values.transaction} 
                             type="submit"
-                            style={{marginTop:10}}
-                            onClick={() => setIsChangeTransaction(false)}
-                            
                         > 
                             valider
                         </Button>
-                        
-        
                   </Grid>
                 </form>
               )}
-            </Formik>
+              </Formik>
               </div>
-              
             </Typography>      
           </div>
         </Modal>
@@ -427,8 +514,7 @@ function Acheter() {
                 enableReinitialize 
                 initialValues={{
                     fcoin:'', 
-                    montant: '', 
-                    etiquette:''
+                    montant: ''
                 }} 
                 validationSchema={Yup.object().shape({ 
                     montant: Yup.number()
@@ -437,8 +523,7 @@ function Acheter() {
                         .min(500)
                         .required('require'),
                     
-                    etiquette: Yup.string()
-                        .required("This field is Required")
+                  
                 })} 
                 onSubmit={async (values, { 
                     resetForm, 
@@ -448,9 +533,10 @@ function Acheter() {
                     }) => {
                     try { 
                       
-                      const myAchat = await achat(conversion(values.montant,'FTC'),conversionUsdt(conversion(values.montant,'FTC')),values.montant, 'cash',values.etiquette,user.id);
+                      const myAchat = await achat(conversion(values.montant,'FTC'),conversionUsdt(conversion(values.montant,'FTC')),values.montant, 'cash',user.id);
+                      const numTrans = 'RPM'+myAchat.data.id
+                      const myTransaction = await addTransaction(values.montant,'Achat',numTrans, myAchat.data.id,user.id)
                       const myCash = await achatCash(myAchat.data.id);
-                        console.log(myCash)
                       resetForm(); 
                         setStatus({ success: true }); 
                         setSubmitting(true);
@@ -509,24 +595,7 @@ function Acheter() {
                       </Grid>
                   </Grid>
 
-                  <Grid container >
-                      <Grid item xs={12}>
-                        <TextField
-                          error={Boolean(touched.etiquette && errors.etiquette)} 
-                          helperText={touched.etiquette && errors.etiquette} 
-                          onBlur={handleBlur} 
-                          onChange={handleChange} 
-                          value={values.etiquette} 
-                          fullWidth
-                          style={{marginTop : 23, marginBottom : 23}}
-                          label="Votre etiquette" 
-                          placeholder="Etiquette" 
-                          name="etiquette" 
-                          required 
-                          variant="standard"             
-                        />
-                      </Grid>
-                  </Grid>
+                  
                   <Grid
                     container
                     spacing={0}
@@ -719,9 +788,30 @@ function Acheter() {
       setIdWallet(data.data.wallet.id);
       setEtiquette(data.data.wallet.etiquette);
       const num = await getNumero()
+      const numeroOp = num.data
         console.log(num.data)
-      setNumero(num)
-    }
+        numeroOp.map((row) => {
+        if(row.attributes.operateur == "Airtel"){     
+             setNumeroAirtel(row.attributes.numero)
+             console.log(row.attributes.numero)
+             console.log(row.attributes.operateur)
+            
+            }            
+        if(row.attributes.operateur == "Telma"){     
+             setNumeroTelma(row.attributes.numero) 
+             console.log(row.attributes.numero)
+             console.log(row.attributes.operateur)
+            }            
+        if(row.attributes.operateur == "Orange"){     
+             setNumeroOrange(row.attributes.numero)
+             console.log(row.attributes.numero)
+             console.log(row.attributes.operateur)
+            }            
+        }
+        
+        )
+        
+      }
   }, [wallet, idWallet,etiquette])
   
 

@@ -1,12 +1,13 @@
 import api from './API'
 
 
-export const addTransaction = async (type, etiquette, montant,user_id) =>{
+export const addTransaction = async (montant,type,numero, achat_id,user_id) =>{
     const response = await api.post('/transactions', {
         data:{
+          montant:montant,
           type: type,
-          etiquette: etiquette,
-          montant: montant,
+          numeroTransaction: numero,
+          achat: achat_id,
           user: user_id
         }
       })
