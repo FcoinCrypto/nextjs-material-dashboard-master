@@ -6,7 +6,7 @@ import { Button, Grid, Input } from "@material-ui/core";
 import {Formik, Form} from 'formik';
 import * as Yup from 'yup';
 import { achatMobile, updateWallet } from "../../services/achat";
-import { achat, achatCash, achatBank } from "../../services/achat";
+import { achat, achatCash, achatBank, getNumero } from "../../services/achat";
 import { conversionUsdt } from "../../utils/utilAchat";
 import { conversion } from "../../utils/utilAchat";
 import { authAtom } from "../../recoil/atom/authAtom";
@@ -18,14 +18,11 @@ import Modal from "@material-ui/core/Modal";
 import MuiPhoneNumber from "material-ui-phone-number";
 import { TextField } from "@mui/material";
 import Quote from "../../components/Typography/Quote";
-import { Icon } from '@iconify/react';
 import CardHeader from "components/Card/CardHeader.js";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
-
-
-
+import { Icon } from '@iconify/react';
 import {
 
   Container,
@@ -39,24 +36,39 @@ import {
 function Acheter() {
   const [wallet, setWallet] = useState();
   const [idWallet, setIdWallet] = useState();
-  const [unite, setUnite] = useState('USDT');
-  const [hideMobileMoney, setHideMobileMoney] = useState('none');
-  const [hideBank, setHideBank] = useState('');
+  const [etiquette, setEtiquette] = useState();
+ 
   const [infoMoney, setNoneInfoMoney] = useState('none');
+  const [choixOperateur, setChoixOperateur] = useState('');
   const { user } = useRecoilValue(authAtom);
+  const [ numero, setNumero ] = useState();
   const [checked, setChecked] = useState('???');
+  const [checkedNumero, setCheckedNumero] = useState('???');
   const [moneyColor, SetMoneyColor] = useState();
-  const [typeMobile, SetTypeMobile] = useState();
+  const [test, setTest] = useState();
+  const [pageNumber, setPageNumber] = useState(0);
+  const [operateur, setOperateur] = useState();
 
-  const checkedRadio = (e) =>{
+ 
+  const checkedRadio = async(e) =>{
     switch (e) {
-      case 'Orange Money': SetMoneyColor('#f6ab32')
+      case 'Orange Money':{
+        SetMoneyColor('#f6ab32')
+        setOperateur("Orange")
+      }
         
         break;
-      case 'MVola': SetMoneyColor('#00703d')
+      case 'MVola': {
+        SetMoneyColor('#00703d')
+        setOperateur("Telma")
+
+      }
         
         break;
-      case 'Airtel Money': SetMoneyColor('#fb0405')
+      case 'Airtel Money': {
+        SetMoneyColor('#fb0405')
+        setOperateur("Airtel")
+      }
         
         break;
     
@@ -64,14 +76,21 @@ function Acheter() {
         break;
     }
     setChecked(e)
+    setChoixOperateur('none');
+
     setNoneInfoMoney('')
   }
+  const onchangeCheckedNumero = async(e) =>{
+   setCheckedNumero(e)
+  }
+  //open modal
   const [open, setOpen] = useState(false);
+  const [isChangeTransaction, setIsChangeTransaction] = useState(true);
   const [openCash, setOpenCash] = useState(false);
   const [openBank, setOpenBank] = useState(false);
-    // getModalStyle is not a pure function, we roll the style only on the first render
+  // getModalStyle is not a pure function, we roll the style only on the first render
     const [modalStyle] = useState(getModalStyle);
-    
+ //modalData   
     const [modalData, setData] = useState();
     const [cashModalData, setCashData] = useState();
     const [bankModalData, setBankData] = useState();
@@ -79,7 +98,8 @@ function Acheter() {
     const data = [
       {
         title: "Payment Terms",
-        Info: "Mobile Money"
+        Info: "Mobile Money",
+        numero:numero
       }
     ];
     const cashdata = [
@@ -94,7 +114,8 @@ function Acheter() {
         Info: "Bank"
       }
     ];
-
+//handleOpen +handleClose (Modal)
+//Mobile
     const handleOpen = index => {
       setOpen(true);
       setData(data[index]);
@@ -104,7 +125,10 @@ function Acheter() {
       setOpen(false);
       setNoneInfoMoney('none')
       setChecked('')
+      setChoixOperateur('')
+      setIsChangeTransaction(true)
     };
+//Cash
     const handleCloseModalCash = () => {
       setOpenCash(false);
     };
@@ -112,6 +136,7 @@ function Acheter() {
       setOpenCash(true);
       setCashData(cashdata[index]);
     };
+  //Bank
     const handleCloseModalBank = () => {
       setOpenBank(false);
     };
@@ -120,7 +145,7 @@ function Acheter() {
       setBankData(cashdata[index]);
     };
 
- 
+ //Style
     const useStyles = makeStyles(theme => ({
       paper: {
         position: "absolute",
@@ -145,24 +170,65 @@ function Acheter() {
            
             <Typography variant="string" style={{width:'100%'}}>
               <h5>{modalData.Info.toUpperCase()}</h5>
-              <Radio.Group 
-                orientation="horizontal" 
-                label="Quel est votre opérateur ?"
-                 
-                value={checked}
-                onChange={checkedRadio} 
-               >
-                    <Radio value="Orange Money" color="#" labelColor="#" size="sm">
-                      <p style={{ color:'#f27f2c', fontSize:'80%'}}>Orange Money</p>
-                    </Radio>
-                    <Radio value="MVola" color="#" labelColor="#" size="sm">
-                      <p style={{ color:'#00703d', fontSize:'80%'}} >Mvola</p>
-                    </Radio>
-                    <Radio value="Airtel Money" labelColor="#" color="#" size="sm">
-                      <p style={{ color:'#fb0405', fontSize:'80%'}}>Airtel Money</p>
-                    </Radio>
-              </Radio.Group>
-              <p style={{display:infoMoney, marginBottom:-10,marginTop:5, color:moneyColor}}>Acheter avec {checked}</p>
+              <div style={{display:choixOperateur}}>
+
+                <Radio.Group 
+                  orientation="horizontal" 
+                  label="Quel est votre opérateur ?"
+                  value={checked}
+                  onChange={checkedRadio} 
+                >
+                  <Grid container>
+                    <Grid item lg={4} md={4} xs={12}>
+                      <Radio value="Orange Money" color="#" labelColor="#" size="sm">
+                        
+                        <Grid container direction="row" alignItems={'center'} justify={'center' }>
+                            <Grid item xs={12}>
+                            <Button style={{backgroundColor:"#f27f2c", width:200}}>
+                              <img src="https://www.solutions-numeriques.com/wp-content/uploads/2016/06/orange-money.jpg" width="100"/>
+                            </Button>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <p style={{ color:'#f27f2c', fontSize:20,marginLeft:40}}>Orange Money</p>
+                            </Grid>
+                        </Grid>
+                      </Radio>
+                    </Grid>
+                    <Grid item lg={4} md={4} xs={12}>
+                      <Radio value="MVola" color="#" labelColor="#" size="sm">
+                        <Grid container direction="row" alignItems={'center'} justify={'center' }>
+                            <Grid item xs={12}>
+                              <Button style={{backgroundColor:"#00703d", width:200}}>
+                                <img src="https://www.moov.mg/sites/default/files/MVOLA.jpg" width="100" height="80"/>
+                              </Button>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <p style={{ color:'#00703d', fontSize:20,marginLeft:65}} >Mvola</p>
+                            </Grid>
+                        </Grid>
+                      </Radio>
+                    </Grid>
+                    <Grid item lg={4} md={4} xs={12}>
+                      <Radio value="Airtel Money" labelColor="#" color="#" size="sm">
+                        <Grid container direction="row" alignItems={'center'} justify={'center' }>
+                            <Grid item xs={12}>
+                              <Button style={{backgroundColor:"#fb0405", width:200}}>
+                                <img src="https://images.squarespace-cdn.com/content/v1/5bc4882465019f632b2f8653/1620735164758-K5OSBIW343JMFMKNFEKR/Airtel+Money.png?format=300w" width="100" height="80"/>
+                              </Button>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <p style={{ color:'#fb0405', fontSize:20,marginLeft:40}}>Airtel Money</p>
+                             
+                            </Grid>
+                        </Grid>
+                      </Radio>
+                    </Grid>
+                  </Grid>                
+                </Radio.Group>
+              </div>
+              <p style={{display:infoMoney, marginBottom:0,marginTop:5, color:moneyColor}}>Recharger avec {checked}</p>
+              <div style={{display:infoMoney}}>
+
               <Formik
                 
                 enableReinitialize 
@@ -170,8 +236,7 @@ function Acheter() {
                     fcoin:'', 
                     montant: '', 
                     tel:'',
-                    secret:'',
-                    etiquette:''
+                    description:''
                 }} 
                 validationSchema={Yup.object().shape({ 
                     montant: Yup.number()
@@ -179,12 +244,10 @@ function Acheter() {
                         .positive("A number can't start with a minus")
                         .min(500)
                         .required('require'),
-                    secret: Yup.string()
-                        .typeError("type error")
-                        .matches(/\b\d{4}\b/, {message: 'Must be exactly 4 numbers', excludeEmptyString: true})
-                        .required('require'),
-                    etiquette: Yup.string()
-                        .required("This field is Required")
+                    description: Yup.string()
+                        
+                        .required('require')
+        
                 })} 
                 onSubmit={async (values, { 
                     resetForm, 
@@ -193,14 +256,15 @@ function Acheter() {
                     setSubmitting 
                     }) => {
                     try { 
-                       
-                        const myAchat = await achat(conversion(values.montant,'FTC'),conversionUsdt(conversion(values.montant,'FTC')),values.montant, 'mobile',values.etiquette,user.id);
-                        const myMobile = await achatMobile(myAchat.data.id,values.tel,values.secret,checked);
-                          console.log(myMobile)
-  
+                        console.log('mob: ')
+                        console.log(values.description)
+                        // const myAchat = await achat(conversion(values.montant,'FTC'),conversionUsdt(conversion(values.montant,'FTC')),values.montant, 'mobile',etiquette,user.id);
+                        // const myMobile = await achatMobile(myAchat.data.id,values.tel,checked,checkedNumero);
+                        //   console.log(myMobile)
+        
                         resetForm(); 
                         setStatus({ success: true }); 
-                        setSubmitting(false);
+                        setSubmitting(true);
                         // window.location.reload(false);
                         
                       } catch (err) { 
@@ -211,7 +275,7 @@ function Acheter() {
                       } 
                 }} 
               >
-                 {({ 
+                  {({ 
                 errors, 
                 handleBlur, 
                 handleChange, 
@@ -220,87 +284,100 @@ function Acheter() {
                 touched, 
                 values 
               }) => (
-                <form onSubmit={handleSubmit} style={{display:infoMoney}}>
-                  <Grid container >
-                      <Grid item xs={12}>
-                        <TextField
-                          error={Boolean(touched.montant && errors.montant)} 
-                          helperText={touched.montant && errors.montant} 
-                          type="number" 
-                          onBlur={handleBlur} 
-                          onChange={handleChange} 
-                          value={values.montant} 
-                          fullWidth
-                          style={{marginTop : 10, marginBottom : 10}}
-                          label="Montant en Ariary"
-                          placeholder="Montant en Ariary"
-                          name="montant" 
-                          required 
-                          variant="standard"             
-                        />
+                <form onSubmit={handleSubmit} >
+                  { isChangeTransaction &&
+                    <>
+                    <Radio.Group 
+                        orientation="horizontal" 
+                        label="1) Choisissez un numéro de recharge"
+                        value={checkedNumero}
+                        onChange={onchangeCheckedNumero} 
+                      >
+                        <Grid container>
+                          {numero && numero.data.filter(numdata => numdata.attributes.operateur == operateur).map((row) => (
+                        
+                            
+                              <Grid item lg={2} md={2} xs={12}><Radio value={row.attributes.numero} size="sm">{row.attributes.numero}</Radio></Grid>
+                          ))
+                          }
                       </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          value={conversion(values.montant,'FTC')} 
-                          fullWidth
-                          style={{marginTop : 0, marginBottom : 10, marginLeft: 0}}
-                          label="Fcoin"
-                          placeholder="Fcoin" 
-                          name="fcoin" 
-                          variant="standard"             
-                        />
-                      </Grid>
-                  </Grid>
-                  <Grid container >
-                      <Grid item xs={6}>
-                        <MuiPhoneNumber
-                          name="tel"
-                          label="N° Tel"
-                          data-cy="user-phone"
-                          defaultCountry={"mg"}
-                          autoFormat={false}
-                          onChange={(e)=>{
-                            values.tel = e
-                          }}
-                          value={values.tel}
-                        />
-                      </Grid>
-                      <Grid item xs={6}>          
-                        <TextField
-                            error={Boolean(touched.secret && errors.secret)} 
-                            helperText={touched.secret && errors.secret} 
-                            type="password" 
+                    </Radio.Group>
+                    <p>2{')'} Entrer le montant ainsi que votre numéro de télephone</p>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} lg={6} md={6}>
+                          <TextField
+                            error={Boolean(touched.montant && errors.montant)} 
+                            helperText={touched.montant && errors.montant} 
+                            type="number" 
                             onBlur={handleBlur} 
                             onChange={handleChange} 
-                            value={values.secret} 
+                            value={values.montant} 
                             fullWidth
-                            style={{marginLeft : 10}}
-                            label="Code secret"
-                            placeholder="Code secret" 
-                            name="secret" 
+                            style={{marginTop : 10, marginBottom : 10}}
+                            label="Montant en Ariary"
+                            placeholder="Montant en Ariary"
+                            name="montant" 
                             required 
                             variant="standard"             
                           />
                         </Grid>
-                  </Grid>
+                        <Grid item xs={12} lg={6} md={6}>
+                          <TextField
+                            value={conversion(values.montant,'FTC')} 
+                            fullWidth
+                            style={{marginTop : 10, marginBottom : 10, marginLeft: 0}}
+                            label="Fcoin"
+                            placeholder="Fcoin" 
+                            name="fcoin" 
+                            variant="standard"             
+                          />
+                        </Grid>
+                    </Grid>
+                    <Grid container >
+                        <Grid item xs={12}>
+                          <MuiPhoneNumber
+                            name="tel"
+                            label="N° Tel"
+                            data-cy="user-phone"
+                            defaultCountry={"mg"}
+                            autoFormat={false}
+                            onChange={(e)=>{
+                              values.tel = e
+                            }}
+                            value={values.tel}
+                          />
+                        </Grid>
+                        
+                    </Grid>
+
+                   
+                </>
+              }
+              { !isChangeTransaction &&
+                <>
+                  <p>Veuillez faire le transfe</p>
                   <Grid container >
-                      <Grid item xs={12}>
+                        <Grid item xs={12}>
                         <TextField
-                          error={Boolean(touched.etiquette && errors.etiquette)} 
-                          helperText={touched.etiquette && errors.etiquette} 
-                          onBlur={handleBlur} 
-                          onChange={handleChange} 
-                          value={values.description} 
-                          fullWidth
-                          style={{marginTop : 0, marginBottom : 23}}
-                          label="Etiquette" 
-                          placeholder="Etiquette" 
-                          name="etiquette" 
-                          required 
-                          variant="standard"             
-                        />
-                      </Grid>
-                  </Grid>
+                            error={Boolean(touched.description && errors.description)} 
+                            helperText={touched.description && errors.description} 
+                            type="text" 
+                            onBlur={handleBlur} 
+                            onChange={handleChange} 
+                            value={values.description} 
+                            fullWidth
+                            style={{marginTop : 10, marginBottom : 10}}
+                            label="Votre raison de tranfert"
+                            placeholder="Votre raison de tranfert"
+                            name="description" 
+                            required 
+                            variant="standard"             
+                          />
+                        </Grid>
+                        
+                    </Grid>
+                </>
+              }
                   <Grid
                     container
                     spacing={0}
@@ -313,13 +390,20 @@ function Acheter() {
                             color="primary" 
                             disabled={isSubmitting} 
                             type="submit"
+                            style={{marginTop:10}}
+                            onClick={() => setIsChangeTransaction(false)}
+                            
                         > 
                             valider
                         </Button>
+                        
+        
                   </Grid>
                 </form>
               )}
-              </Formik>
+            </Formik>
+              </div>
+              
             </Typography>      
           </div>
         </Modal>
@@ -632,17 +716,18 @@ function Acheter() {
       const data = await getUser(user.id);
       console.log(data);
       setWallet(data.data.wallet.fcoin);
-      setIdWallet(data.data.wallet.id)
+      setIdWallet(data.data.wallet.id);
+      setEtiquette(data.data.wallet.etiquette);
+      const num = await getNumero()
+        console.log(num.data)
+      setNumero(num)
     }
-  }, [wallet, idWallet])
-    const showAriary = () =>{
-        setUnite('Ariary')
-        setHideMobileMoney('')
-        setHideBank('none') 
-    }
+  }, [wallet, idWallet,etiquette])
+  
 
   return (
     <>
+        {/* header */}
         <Grid 
         container
         spacing={0}
@@ -658,295 +743,215 @@ function Acheter() {
               />
               </Grid>
         </Grid>
-        <div className="text-white" style={{borderRadius:25, background:'linear-gradient(145deg, rgba(51,155,158,1) 0%, rgba(104,204,152,1) 100%)'}} >
+        <div className="text-white" style={{borderRadius:25, background:'linear-gradient(145deg, rgba(51,155,158,1) 0%, rgba(104,204,152,1) 100%)',fontSize:"8vw"}} >
           <center>
             <Quote text="Recharger votre compte FPay pour faciliter vos transactions"/>
           </center>
         </div>
-        <Formik 
-            enableReinitialize 
-            initialValues={{ 
-                fcoin: '', 
-                 usdt: '',
-                 tel:'',
-                 bank:''
-            }} 
-            validationSchema={Yup.object().shape({ 
-                fcoin: Yup.number()
-                    .typeError("type error")
-                    .positive("A number can't start with a minus")
-                    .min(0.00000000000001)
-                    .required('require'),
-                tel: Yup.string()
-                    .required("This field is Required")
-                    .matches(
-                        /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
-                        "Phone number is not valid"
-                    )
-                    .min(10, 'Must be exactly 10 digits')
-                    .max(12, 'Must be exactly 12 digits')
-                    ,
-                bank: Yup.string()
-                    .required("This field is Required")
-                    .matches(
-                        /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
-                        "Bank n° is not valid"
-                    )
-                // usdt: Yup.number()
-                //     .typeError("That doesn't look like a number")
-                //     .positive("number can't start with a minus")
-                //     .min(1)
-                //     .required('require'), 
-            })} 
-            onSubmit={async (values, { 
-                resetForm, 
-                setErrors, 
-                setStatus, 
-                setSubmitting 
-                }) => {
-                try { 
-                    // NOTE: Make API request 
-                    // await wait(200);
-                    const newFcoin = values.fcoin + wallet;
-                    await updateWallet(newFcoin, idWallet);
-                    await achat(values.fcoin,conversionUsdt(values.fcoin), user.id);
-                    await addTransaction('Achat', conversionUsdt(values.fcoin).toString(), values.fcoin, user.id);
-                    setWallet(newFcoin);
-                    resetForm(); 
-                    setStatus({ success: true }); 
-                    setSubmitting(false);
-                    // window.location.reload(false);
-                    
-                  } catch (err) { 
-                    console.error(err); 
-                    setStatus({ success: false }); 
-                    setErrors({ submit: err.message }); 
-                    setSubmitting(false); 
-                  } 
-            }} 
-        > 
-            {({ 
-                errors, 
-                handleBlur, 
-                handleChange, 
-                handleSubmit, 
-                isSubmitting, 
-                touched, 
-                values 
-              }) => (
-              <form onSubmit={handleSubmit}>
-              <Grid container  spacing={2}>
-                  <Grid item xs={12} lg={6}>
-                    <Card>
+        {/* CardTypeRecharge */}
+        <Grid container  spacing={2}>
+            <Grid item xs={12} lg={6} md={6}>
+              <Card>
 
-                    <CardHeader color="info">
+              <CardHeader color="info">
+                
+              <p align="center"><b>MOBILE BANKING</b></p>
+              </CardHeader>
+              <CardBody align="center">
+              {data.map((d, index) => (
+                <div>
+                  <Button
+                  onClick={() => {
+                      handleOpen(index);
+
+                  }}
+                  variant="contained"
+                  type="string"
+                  size="big"
+                  style={{
+                      width: '90%',
+                      borderRadius: 5,
+                      backgroundColor:"#e72f23",
+                      color:'white',
+                      marginBottom: 4,
+                      height: '15vw',
+                  }}
+                >
+                  <img className="mx-2" 
+                      src="https://cdn-icons-png.flaticon.com/512/848/848382.png"
+                      style={{width: '10vw',backgroundColor:'none',borderRadius:5}} 
+                      alt="Mobile Money" 
+                  />
                       
-                    <p align="center"><b>MOBILE BANKING</b></p>
-                    </CardHeader>
-                    <CardBody align="center">
-                    {data.map((d, index) => (
-                      <div>
-                        <Button
-                        onClick={() => {
-                            handleOpen(index);
-                          setUnite('ariary')
-                          setHideMobileMoney('')
-                          setHideBank('none')
+                </Button>
+              </div>
+              ))}
+              </CardBody>
+              <CardFooter>
+              Ariary
+              </CardFooter>
+              </Card>                  
+          </Grid>
+          <Grid item xs={12} lg={6} md={6}>
+            <Card>
 
-                        }}
+              <CardHeader color="info">
+                
+              <p align="center"><b>ESPECES AU POINT MARCHAND</b></p>
+              </CardHeader>
+              <CardBody align="center">
+                {cashdata.map((d, index) => (
+                    <Button
                         variant="contained"
-                        type="string"
                         size="big"
                         style={{
                             width: '90%',
                             borderRadius: 5,
-                            backgroundColor:"#e72f23",
+                            backgroundColor:"#ec926b",
                             color:'white',
                             marginBottom: 4,
-                            height: '15vw',
+                            height: '15vw'
                         }}
-                      >
+                        onClick = {()=>{
+                          handleOpenModalCash(index)
+                        }}
+                    >
                         <img className="mx-2" 
-                            src="https://cdn-icons-png.flaticon.com/512/848/848382.png"
-                            style={{width: '10vw',backgroundColor:'none',borderRadius:5}} 
-                            alt="Mobile Money" 
+                            src="https://cdn-icons-png.flaticon.com/512/438/438526.png"                            
+                            style={{width:'10vw',backgroundColor:'none',borderRadius:5}} 
+                            alt="Fpay image" 
                         />
-                            
-                      </Button>
-                    </div>
-                    ))}
-                    </CardBody>
-                    <CardFooter>
-                    Ariary
-                    </CardFooter>
-                    </Card>                  
-                </Grid>
-                <Grid item xs={12} lg={6} >
-                  <Card>
+                    </Button>
+                ))}
+              </CardBody>
+              <CardFooter>
+              Ariary
+              </CardFooter>
+            </Card>
+          </Grid>
+          <Grid item xs={12} lg={6} md={6}>
+            <Card>
 
-                    <CardHeader color="info">
-                      
-                    <p align="center"><b>ESPECES AU POINT MARCHAND</b></p>
-                    </CardHeader>
-                    <CardBody align="center">
-                      {cashdata.map((d, index) => (
-                          <Button
-                              variant="contained"
-                              size="big"
-                              style={{
-                                  width: '90%',
-                                  borderRadius: 5,
-                                  backgroundColor:"#ec926b",
-                                  color:'white',
-                                  marginBottom: 4,
-                                  height: '15vw'
-                              }}
-                              onClick = {()=>{
-                                handleOpenModalCash(index)
-                              }}
-                          >
-                              <img className="mx-2" 
-                                  src="https://cdn-icons-png.flaticon.com/512/438/438526.png"                            
-                                  style={{width:'10vw',backgroundColor:'none',borderRadius:5}} 
-                                  alt="Fpay image" 
-                              />
-                          </Button>
-                      ))}
-                    </CardBody>
-                    <CardFooter>
-                    Ariary
-                    </CardFooter>
-                  </Card>
-                </Grid>
-                <Grid item xs={12} lg={6} >
-                  <Card>
-
-                      <CardHeader color="info">
+                <CardHeader color="info">
+                  
+                <p align="center"><b>VIREMENT BANCAIRE</b></p>
+                </CardHeader>
+                <CardBody align="center">
+                {bankdata.map((d, index) => (
+                  <Button
+                      onClick={() => { 
+                        handleOpenModalBank(index)
                         
-                      <p align="center"><b>VIREMENT BANCAIRE</b></p>
-                      </CardHeader>
-                      <CardBody align="center">
-                      {bankdata.map((d, index) => (
-                        <Button
-                            onClick={() => { 
-                              handleOpenModalBank(index)
-                                setUnite('usdt')
-                                setHideMobileMoney('none')
-                                setHideBank('') 
-    
-                            }}
-                            variant="contained"
-                            size="big"
-                            style={{
-                                width: '90%',
-                                borderRadius: 5,
-                                backgroundColor:"#5fbdbb",
-                                color:'white',
-                                marginBottom: 4,
-                                height: '15vw'
-                            }}
-                        >
-                            <img className="mx-2" 
-                                src="https://cdn-icons-png.flaticon.com/512/4313/4313033.png"
-                                style={{width: '10vw',backgroundColor:'none',borderRadius:5}} 
-                                alt="Card image" 
-                            />
-                                
 
-                        </Button>
-                      ))}
-                      </CardBody>
-                      <CardFooter>
-                      Euro
-                      </CardFooter>
-                  </Card>                  
-                </Grid>            
-                <Grid item xs={12} lg={6} >
-                  <Card>
+                      }}
+                      variant="contained"
+                      size="big"
+                      style={{
+                          width: '90%',
+                          borderRadius: 5,
+                          backgroundColor:"#5fbdbb",
+                          color:'white',
+                          marginBottom: 4,
+                          height: '15vw'
+                      }}
+                  >
+                      <img className="mx-2" 
+                          src="https://cdn-icons-png.flaticon.com/512/4313/4313033.png"
+                          style={{width: '10vw',backgroundColor:'none',borderRadius:5}} 
+                          alt="Card image" 
+                      />
+                          
 
-                    <CardHeader color="info">
-                      
-                    <p align="center"><b>CARTE BLEUE</b></p>
+                  </Button>
+                ))}
+                </CardBody>
+                <CardFooter>
+                Euro
+                </CardFooter>
+            </Card>                  
+          </Grid>            
+          <Grid item xs={12} lg={6} md={6}>
+            <Card>
 
-                    </CardHeader>
-                    <CardBody align="center">
-                    {cashdata.map((d, index) => (
-                      <Button
-                          variant="contained"
-                          size="big"
-                          style={{
-                              width: '90%',
-                              borderRadius: 5,
-                              backgroundColor:"#1c80b3",
-                              color:'white',
-                              marginBottom: 4,
-                              height: '15vw'
-                          }}
-                          onClick = {()=>{
-                            handleOpenModalCash(index)
-                          }}
-                      >
-                          <img className="mx-2" 
-                              src="https://cdn-icons-png.flaticon.com/512/5701/5701574.png"                            
-                              style={{width:'10vw',backgroundColor:'none',borderRadius:5}} 
-                              alt="Fpay image" 
-                          />
-                      </Button>
-                    ))}                 
-                    </CardBody>
-                    <CardFooter>
-                    Euro
-                    </CardFooter>
-                  </Card>                
-                </Grid>
-                <Grid item xs={12} lg={6} >
-                <Card>
+              <CardHeader color="info">
+                
+              <p align="center"><b>CARTE BLEUE</b></p>
 
-                    <CardHeader color="info">
-                      
-                    <p align="center"><b>CRYPTOMONAIE</b></p>
+              </CardHeader>
+              <CardBody align="center">
+              {cashdata.map((d, index) => (
+                <Button
+                    variant="contained"
+                    size="big"
+                    style={{
+                        width: '90%',
+                        borderRadius: 5,
+                        backgroundColor:"#1c80b3",
+                        color:'white',
+                        marginBottom: 4,
+                        height: '15vw'
+                    }}
+                    onClick = {()=>{
+                      handleOpenModalCash(index)
+                    }}
+                >
+                    <img className="mx-2" 
+                        src="https://cdn-icons-png.flaticon.com/512/5701/5701574.png"                            
+                        style={{width:'10vw',backgroundColor:'none',borderRadius:5}} 
+                        alt="Fpay image" 
+                    />
+                </Button>
+              ))}                 
+              </CardBody>
+              <CardFooter>
+              Euro
+              </CardFooter>
+            </Card>                
+          </Grid>
+          <Grid item xs={12} lg={6} md={6}>
+          <Card>
 
-                    </CardHeader>
-                    <CardBody align="center">
-                    {cashdata.map((d, index) => (
-                      <Button
-                          variant="contained"
-                          size="big"
-                          style={{
-                              width: '90%',
-                              borderRadius: 5,
-                              backgroundColor:"#b6605d",
-                              color:'white',
-                              marginBottom: 4,
-                              height: '15vw'
-                          }}
-                          onClick = {()=>{
-                            handleOpenModalCash(index)
-                          }}
-                      >
-                          <img className="mx-2" 
-                              src="https://cdn-icons-png.flaticon.com/512/1213/1213797.png"                            
-                              style={{width:'10vw',backgroundColor:'none',borderRadius:5}} 
-                              alt="Fpay image" 
-                          />
-                      </Button>
-                    ))}                 
-                    </CardBody>
-                    <CardFooter>
-                    Crypto
-                    </CardFooter>
-                  </Card> 
-                </Grid>
-              </Grid>
+              <CardHeader color="info">
+                
+              <p align="center"><b>CRYPTOMONAIE</b></p>
 
-            
+              </CardHeader>
+              <CardBody align="center">
+              {cashdata.map((d, index) => (
+                <Button
+                    variant="contained"
+                    size="big"
+                    style={{
+                        width: '90%',
+                        borderRadius: 5,
+                        backgroundColor:"#b6605d",
+                        color:'white',
+                        marginBottom: 4,
+                        height: '15vw'
+                    }}
+                    onClick = {()=>{
+                      handleOpenModalCash(index)
+                    }}
+                >
+                    <img className="mx-2" 
+                        src="https://cdn-icons-png.flaticon.com/512/1213/1213797.png"                            
+                        style={{width:'10vw',backgroundColor:'none',borderRadius:5}} 
+                        alt="Fpay image" 
+                    />
+                </Button>
+              ))}                 
+              </CardBody>
+              <CardFooter>
+              Crypto
+              </CardFooter>
+            </Card> 
+          </Grid>
+        </Grid>
+        {/* Modal           */}
             <CustomModal />
             <CashModal/>
             <BankModal/>
-            </form>
-                
-        )}
-        </Formik>
+            {/* Footer */}
         <footer className=" footer">
           <Container>
             <Row className="row-grid align-items-center mb-5">

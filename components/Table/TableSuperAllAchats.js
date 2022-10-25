@@ -12,6 +12,7 @@ import { Button } from "@material-ui/core";
 import SearchBar from "material-ui-search-bar";
 import {  DatePicker, Space } from "antd";
 import 'antd/dist/antd.css';
+import { updateStatus } from "../../services/achat";
 // core components
 import styles from "assets/jss/nextjs-material-dashboard/components/tableStyle.js";
 
@@ -89,11 +90,14 @@ export default function TableSuperAllAchats(props) {
                 <TableCell align="left">{row.attributes.fcoin}</TableCell>
                 <TableCell align="left">{row.attributes.usdt}</TableCell>
                 <TableCell align="left">{row.attributes.montant}</TableCell>
-                <TableCell align="left">{row.attributes.status}</TableCell>
                 <TableCell align="left">{row.attributes.type}</TableCell>
                 <TableCell align="left">{row.attributes.user.data.attributes.username}</TableCell>
-                <TableCell align="left"><Button>Valider</Button></TableCell>
                 <TableCell align="left">{row.attributes.status}</TableCell>
+                <TableCell align="left"><Button onClick={async()=>{
+                  console.log('test' + row.id)
+                  const status = await updateStatus(row.id)
+                  console.log(status.data.message)
+                }}>Valider</Button></TableCell>
               </TableRow>
             )).reverse()}
           </TableBody>

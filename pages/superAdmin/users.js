@@ -64,7 +64,6 @@ function TableList() {
 
       const res = await allUSer();
       setDataUSer(res.data);
-     
 
     } 
   }, [dataUser])
