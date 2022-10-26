@@ -10,6 +10,16 @@ api
   })
   .then(response => {
   });
+export const updateWalletAriary = (ariary, walletId) =>
+api
+  .put(`/wallets/${walletId}`,
+  {
+    data: {
+      ariary : ariary
+    },
+  })
+  .then(response => {
+  });
   
 export const updateStatus = (achat_id) =>
 api
@@ -23,15 +33,17 @@ api
   });
     
 
-  export const achat = async (fcoin, usdt,montant, type, user_id) =>{
+  export const achat = async (fcoin, usdt,montant, type,etiquette, user_id) =>{
     const response = await api.post('/achats', {
         data:{
           fcoin: fcoin,
           usdt: usdt,
           montant: montant,
+          etiquette: etiquette,
           type: type,
           user: user_id,
-          status:'En attente'
+          status:"En attente",
+          devis:"Ariary"
         }
       })
     // console.log(response.data)
