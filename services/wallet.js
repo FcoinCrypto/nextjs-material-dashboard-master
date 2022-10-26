@@ -6,12 +6,17 @@ export const wallet = async (etiquette, message, montant) =>{
     // console.log(response.data)
     return response.data;
 }
-export const getWallet = async () =>{
+
+export const getOneWallet = async () =>{
     const response = await api.get('/wallets?populate=*')
     // console.log(response.data)
     return response.data;
 }
-
+export const getWalletByUser = async (user) =>{
+    const response = await api.get('/wallets?populate=*')
+    // console.log(response.data)
+    return response.data;
+}
 export const createWallet = async (user_id,etiquette) =>{
     const response = await api.post('/wallets', {
         data:{
@@ -19,6 +24,9 @@ export const createWallet = async (user_id,etiquette) =>{
           ariary: 0,
           usdt : 0,
           euro : 0,
+          btc:0,
+          eth:0,
+          xmr:0,
           etiquette:etiquette,
           user: user_id
         }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import moment from 'moment';
 // @material-ui/core components
@@ -15,7 +15,8 @@ import 'antd/dist/antd.css';
 import { updateStatus } from "../../services/achat";
 // core components
 import styles from "assets/jss/nextjs-material-dashboard/components/tableStyle.js";
-
+import { getUser } from "../../services/user";
+import { updateWalletAriary } from "../../services/achat";
 export default function TableSuperAllAchats(props) {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
@@ -48,7 +49,12 @@ export default function TableSuperAllAchats(props) {
     setRows(tableData);
     setSearched("");
   };   
+  useEffect(async () => {
 
+      // const res = await allAchats();
+      // console.log(res)
+
+  }, [])
   return (
     <div className={classes.tableResponsive}>
       <div style={{ padding: 8 }}>
@@ -85,19 +91,26 @@ export default function TableSuperAllAchats(props) {
         ) : null}
           <TableBody>
             {rows.map((row) => (
+              
               <TableRow>
                 <TableCell align="left">{moment(row.attributes.createdAt).format("DD/MM/YY à HH:mm")}</TableCell>
-                <TableCell align="left">{row.attributes.fcoin}</TableCell>
-                <TableCell align="left">{row.attributes.usdt}</TableCell>
-                <TableCell align="left">{row.attributes.montant}</TableCell>
-                <TableCell align="left">{row.attributes.type}</TableCell>
+                <TableCell align="left">{row.attributes.transaction?.data?.attributes.numeroTransaction}</TableCell>
                 <TableCell align="left">{row.attributes.user.data.attributes.username}</TableCell>
-                <TableCell align="left">{row.attributes.status}</TableCell>
-                <TableCell align="left"><Button onClick={async()=>{
-                  console.log('test' + row.id)
+                <TableCell align="left">{row.attributes.type}</TableCell>
+                <TableCell align="left">{row.attributes.montant}</TableCell>
+                <TableCell align="left">{row.attributes.devis}</TableCell>
+                <TableCell align="left">{row.attributes?.achat_mobile?.data?.attributes?.numeroTransaction}</TableCell>
+                <TableCell align="left"><Button type="contained" style={{fontSize:'0.7rem'}} disabled={row.attributes.status ==="Validé"?true:false} onClick={async()=>{
+                  const id_user = row.attributes.user.data.id
+                  const user = await getUser(id_user)
+                  const id_wallet = user.data.wallet.id
+                  const old_ariary = user.data.wallet.ariary
+                  const ariary = row.attributes.montant + old_ariary;
+                  await updateWalletAriary(ariary,id_wallet)
                   const status = await updateStatus(row.id)
+
                   console.log(status.data.message)
-                }}>Valider</Button></TableCell>
+                }}>{row.attributes.status}</Button></TableCell>
               </TableRow>
             )).reverse()}
           </TableBody>

@@ -32,7 +32,7 @@ import { achats, transactions, envoyers, recevoirs } from "../../services/table"
 import { allTransaction, test } from "../../services/allTransaction";
 import {allAchats} from "../../services/allAchats"
 import { getUser } from "../../services/user";
-import { getWallet } from "../../services/wallet";
+import { getOneWallet } from "../../services/wallet";
 
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { authAtom } from "../../recoil/atom/authAtom";
@@ -89,7 +89,7 @@ function TableList() {
   useEffect(async () => {
     if(!dataTransaction){
 
-      const res = await getWallet();
+      const res = await getOneWallet();
       
       setDataTransaction(res.data);
       console.log(res)
@@ -121,7 +121,7 @@ function TableList() {
                 </CardIcon>
                 <p style={{color:'grey'}}>Toutes les recharges</p>
                 <CardBody>                
-                    <h3>
+                    <h3 style={{color:"black", fontWeight:"bold"}}>
                         <Grid container >
                             <Grid item style={{display:"flex",justifyContent:"flex-start"}} xs={3}>
                                 FCOIN
@@ -145,7 +145,7 @@ function TableList() {
                                 <NumericFormat value={'6'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale  suffix={' $'} />
                             </Grid>
                             <Grid item xs={3} style={{display:"flex",justifyContent:"flex-start"}}>
-                                <NumericFormat value={'40000'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' Ariary'} />
+                                <NumericFormat value={'40000'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} fixedDecimalScale suffix={' Ariary'} />
                             </Grid>
                             <Grid item xs={3} style={{display:"flex",justifyContent:"flex-start"}}>
                                 <NumericFormat value={'19'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' €'} />
@@ -185,7 +185,7 @@ function TableList() {
                 </CardIcon>
                 <p style={{color:'grey'}}>Toutes les transferts</p>
                 <CardBody>                
-                    <h3>
+                    <h3 style={{color:"black", fontWeight:"bold"}}>
                         <Grid container >
                             <Grid item style={{display:"flex",justifyContent:"flex-start"}} xs={3}>
                                 FCOIN
@@ -209,7 +209,7 @@ function TableList() {
                                 <NumericFormat value={'6'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale  suffix={' $'} />
                             </Grid>
                             <Grid item xs={3} style={{display:"flex",justifyContent:"flex-start"}}>
-                                <NumericFormat value={'40000'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' Ariary'} />
+                                <NumericFormat value={'40000'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} fixedDecimalScale suffix={' Ariary'} />
                             </Grid>
                             <Grid item xs={3} style={{display:"flex",justifyContent:"flex-start"}}>
                                 <NumericFormat value={'19'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' €'} />
@@ -249,7 +249,7 @@ function TableList() {
                 </CardIcon>
                 <p style={{color:'grey'}}>Toutes les commandes</p>
                 <CardBody>                
-                    <h3>
+                    <h3 style={{color:"black", fontWeight:"bold"}}>
                         <Grid container >
                             <Grid item style={{display:"flex",justifyContent:"flex-start"}} xs={3}>
                                 FCOIN
@@ -273,7 +273,7 @@ function TableList() {
                                 <NumericFormat value={'6'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale  suffix={' $'} />
                             </Grid>
                             <Grid item xs={3} style={{display:"flex",justifyContent:"flex-start"}}>
-                                <NumericFormat value={'40000'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' Ariary'} />
+                                <NumericFormat value={'40000'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','}  fixedDecimalScale suffix={' Ariary'} />
                             </Grid>
                             <Grid item xs={3} style={{display:"flex",justifyContent:"flex-start"}}>
                                 <NumericFormat value={'19'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' €'} />

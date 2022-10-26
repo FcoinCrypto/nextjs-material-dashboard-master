@@ -16,6 +16,10 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import { allAchats } from "../../services/allAchats";
+import { authAtom } from '../../recoil/atom/authAtom';
+
+import { getOneWallet } from "../../services/wallet";
+import { getUser } from "../../services/user";
 
 
 
@@ -63,9 +67,9 @@ function Achat() {
     if(!dataAchats){
 
       const res = await allAchats();
-      console.log(res)
+      
       setDataAchats(res.data.data);
-     
+      console.log(res.data.data)
 
     } 
   }, [dataAchats])
@@ -100,7 +104,7 @@ function Achat() {
                 <CardBody>
                   <TableSuperAllAchats
                     tableHeaderColor="primary"
-                    tableHead={["Date","FCOIN","USDT", "Montant","Type","Nom et prénom(s)","Status",""]}
+                    tableHead={["Date", "N° transaction", "Nom et prenom", "Type de paiment", "Montant", "Devis", "N° transaction mobile", "Status"]}
                     tableData={dataAchats}
                   />
                   

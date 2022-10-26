@@ -155,11 +155,12 @@ function Acheter() {
     const useStyles = makeStyles(theme => ({
       paper: {
         position: "absolute",
-        width: '90%',
+        width: '60%',
         backgroundColor: theme.palette.background.paper,
         boxShadow: theme.shadows[5],
         padding: theme.spacing(4),
-        outline: "none"
+        outline: "none",
+        minWidth:"300px"
       }
     }));
     const classes = useStyles();
@@ -185,13 +186,13 @@ function Acheter() {
                   onChange={checkedRadio} 
                 >
                   <Grid container>
-                    <Grid item lg={4} md={4} xs={12}>
+                    <Grid item lg={4} xs={12}>
                       <Radio value="Orange Money" color="#" labelColor="#" size="sm">
                         
                         <Grid container direction="row" alignItems={'center'} justify={'center' }>
                             <Grid item xs={12}>
-                            <Button style={{backgroundColor:"#f27f2c", width:200}}>
-                              <img src="https://www.solutions-numeriques.com/wp-content/uploads/2016/06/orange-money.jpg" width="100"/>
+                            <Button style={{backgroundColor:"#f27f2c", width:180}}>
+                              <img src="https://www.solutions-numeriques.com/wp-content/uploads/2016/06/orange-money.jpg" width="82"/>
                             </Button>
                             </Grid>
                             <Grid item xs={12}>
@@ -200,12 +201,12 @@ function Acheter() {
                         </Grid>
                       </Radio>
                     </Grid>
-                    <Grid item lg={4} md={4} xs={12}>
+                    <Grid item lg={4} xs={12}>
                       <Radio value="MVola" color="#" labelColor="#" size="sm">
                         <Grid container direction="row" alignItems={'center'} justify={'center' }>
                             <Grid item xs={12}>
-                              <Button style={{backgroundColor:"#00703d", width:200}}>
-                                <img src="https://www.moov.mg/sites/default/files/MVOLA.jpg" width="100" height="80"/>
+                              <Button style={{backgroundColor:"#00703d", width:180, height:80}}>
+                                <img src="https://www.moov.mg/sites/default/files/MVOLA.jpg" width="100" height="40"/>
                               </Button>
                             </Grid>
                             <Grid item xs={12}>
@@ -214,12 +215,12 @@ function Acheter() {
                         </Grid>
                       </Radio>
                     </Grid>
-                    <Grid item lg={4} md={4} xs={12}>
+                    <Grid item lg={4} xs={12}>
                       <Radio value="Airtel Money" labelColor="#" color="#" size="sm">
                         <Grid container direction="row" alignItems={'center'} justify={'center' }>
                             <Grid item xs={12}>
-                              <Button style={{backgroundColor:"#fb0405", width:200}}>
-                                <img src="https://images.squarespace-cdn.com/content/v1/5bc4882465019f632b2f8653/1620735164758-K5OSBIW343JMFMKNFEKR/Airtel+Money.png?format=300w" width="100" height="80"/>
+                              <Button style={{backgroundColor:"#fb0405", width:180}}>
+                                <img src="https://images.squarespace-cdn.com/content/v1/5bc4882465019f632b2f8653/1620735164758-K5OSBIW343JMFMKNFEKR/Airtel+Money.png?format=300w" width="100" height="68"/>
                               </Button>
                             </Grid>
                             <Grid item xs={12}>
@@ -290,7 +291,7 @@ function Acheter() {
                 <form onSubmit={handleSubmit} >
                 <div style={{display:step1}}> 
                     <p>1{')'} Voici votre numéro de recharge {numero}</p>
-                    <p>2{')'} Entrer le montant {'> 500 Ar'}ainsi que votre numéro de télephone 03......</p>
+                    <p>2{')'} Entrer le montant {'> 500 Ar '}ainsi que votre numéro de télephone 03......</p>
                     <Grid container spacing={2}>
                         <Grid item xs={12} lg={6} md={6}>
                           <TextField
@@ -400,9 +401,11 @@ function Acheter() {
                     }) => {
                     try { 
                       
-                      console.log('mob: ')
-                        console.log(values.raison)
-                         const myAchat = await achat(conversion(montantMobile,'FTC'),conversionUsdt(conversion(montantMobile,'FTC')),montantMobile, 'mobile',etiquette,user.id);
+                      console.log(montantMobile)
+                      console.log(etiquette)
+                      console.log(montantMobile)
+                      const myAchat = await achat(conversion(montantMobile,'FTC'),conversionUsdt(conversion(montantMobile,'FTC')),montantMobile, 'mobile',etiquette,user.id);
+                      console.log(myAchat)
                          const numTrans = 'RMB'+myAchat.data.id
                          const myTransaction = await addTransaction(montantMobile,'Achat',numTrans, myAchat.data.id,user.id)
                          const myMobile = await achatMobile(myAchat.data.id,telClient,checked,checkedNumero,values.raison,values.transaction);
@@ -508,7 +511,7 @@ function Acheter() {
           <div style={modalStyle} className={classes.paper}>
             
             <Typography variant="string" id="simple-modal-description" style={{width:'100%'}}>
-            <h5>PAYEMENT EN CASH</h5>
+            <h5>PAYEMENT EN ESPECES</h5>
               <Formik
                 
                 enableReinitialize 
@@ -533,7 +536,7 @@ function Acheter() {
                     }) => {
                     try { 
                       
-                      const myAchat = await achat(conversion(values.montant,'FTC'),conversionUsdt(conversion(values.montant,'FTC')),values.montant, 'cash',user.id);
+                      const myAchat = await achat(conversion(values.montant,'FTC'),conversionUsdt(conversion(values.montant,'FTC')),values.montant, 'cash',etiquette,user.id);
                       const numTrans = 'RPM'+myAchat.data.id
                       const myTransaction = await addTransaction(values.montant,'Achat',numTrans, myAchat.data.id,user.id)
                       const myCash = await achatCash(myAchat.data.id);
@@ -783,29 +786,21 @@ function Acheter() {
   useEffect(async () => {
     if (!wallet) {
       const data = await getUser(user.id);
-      console.log(data);
       setWallet(data.data.wallet.fcoin);
       setIdWallet(data.data.wallet.id);
       setEtiquette(data.data.wallet.etiquette);
       const num = await getNumero()
       const numeroOp = num.data
-        console.log(num.data)
         numeroOp.map((row) => {
         if(row.attributes.operateur == "Airtel"){     
              setNumeroAirtel(row.attributes.numero)
-             console.log(row.attributes.numero)
-             console.log(row.attributes.operateur)
             
             }            
         if(row.attributes.operateur == "Telma"){     
              setNumeroTelma(row.attributes.numero) 
-             console.log(row.attributes.numero)
-             console.log(row.attributes.operateur)
             }            
         if(row.attributes.operateur == "Orange"){     
              setNumeroOrange(row.attributes.numero)
-             console.log(row.attributes.numero)
-             console.log(row.attributes.operateur)
             }            
         }
         
@@ -833,9 +828,9 @@ function Acheter() {
               />
               </Grid>
         </Grid>
-        <div className="text-white" style={{borderRadius:25, background:'linear-gradient(145deg, rgba(51,155,158,1) 0%, rgba(104,204,152,1) 100%)',fontSize:"8vw"}} >
+        <div className="text-white" style={{borderRadius:25, background:'linear-gradient(145deg, rgba(51,155,158,1) 0%, rgba(104,204,152,1) 100%)',fontSize:"17.5px", padding:"10px 0px 1px 0px", verticalAlign:"middle"}} >
           <center>
-            <Quote text="Recharger votre compte FPay pour faciliter vos transactions"/>
+            <p>Recharger votre compte FPay pour faciliter vos transactions</p>
           </center>
         </div>
         {/* CardTypeRecharge */}
