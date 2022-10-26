@@ -73,7 +73,7 @@ function TableList() {
     <>
       { dataRecevoirs &&
         <GridContainer>
-          <footer>
+          {/* <footer>
             <div className={classes.container}>
               <div className={classes.left}>
                 <List className={classes.list}>
@@ -86,7 +86,7 @@ function TableList() {
                 </List>
               </div>
             </div>
-          </footer>
+          </footer> */}
           <div style={{minWidth:'100%'}} className={cardstyles.width100} id="transaction_id">
             <GridItem xs={12} sm={12} md={12}>
               <Card>
@@ -99,7 +99,7 @@ function TableList() {
                 <CardBody>
                   <TableSuperAllRecevoirs
                     tableHeaderColor="primary"
-                    tableHead={["date", "etiquette", "montant","message", "utilisateur"]}
+                    tableHead={["date", "numero transaction", "nom et prenom", "type", "marchand", "montant depart", "devis", "montant arrivee", "devis", "statut"]}
                     tableData={dataRecevoirs}
                   />
                   

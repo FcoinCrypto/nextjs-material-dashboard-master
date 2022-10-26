@@ -85,11 +85,14 @@ export default function TableSuperAllEnvoyers(props) {
           <TableBody>
             {rows.map((row) => (
               <TableRow>
+                <TableCell align="left">{row.attributes.id}</TableCell>
                 <TableCell align="left">{moment(row.attributes.createdAt).format("DD/MM/YY à HH:mm")}</TableCell>
-                <TableCell align="left">{row.attributes.destinataire}</TableCell>
-                <TableCell align="left">{row.attributes.etiquette}</TableCell>
-                <TableCell align="left">{row.attributes.montant}</TableCell>
                 <TableCell align="left">{row.attributes.user.data.attributes.username}</TableCell>
+                <TableCell align="left">{row.attributes.montantDepart}</TableCell>
+                <TableCell align="left">{row.attributes.devis}</TableCell>
+                <TableCell align="left">{row.attributes.montantArrive}</TableCell>
+                <TableCell align="left">{row.attributes.devis}</TableCell>
+                <TableCell align="left">{row.attributes.status}</TableCell>
               </TableRow>
             )).reverse()}
           </TableBody>

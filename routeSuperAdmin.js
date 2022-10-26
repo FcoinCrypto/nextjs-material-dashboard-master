@@ -3,7 +3,7 @@ import Send from "@material-ui/icons/Send";
 import Receipt from "@material-ui/icons/Receipt";
 import Shop from "@material-ui/icons/Shop";
 import Tableau from "@material-ui/icons/Dashboard";
-import Money from "@material-ui/icons/AddShoppingCart";
+import Settings from "@material-ui/icons/Settings";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 
 
@@ -11,7 +11,6 @@ const dashboardRoutes = [
     {
         path: "/tableau",
         name: "Tableau de Bord",
-        // rtlName: "طباعة",
         icon: Tableau,
 
         layout: "/superAdmin",
@@ -56,6 +55,13 @@ const dashboardRoutes = [
         icon: LibraryBooks,
 
         layout: "/superAdmin",
+    },
+    {
+        path: "/parametre",
+        name: "Paramètre",
+        icon: Settings,
+
+        layout: "/paramètre",
     },
     
 ];

@@ -11,32 +11,38 @@ import {
   Col,
   UncontrolledTooltip
 } from "reactstrap";
+import { Icon } from '@iconify/react';
 
-class myFooter extends React.Component {
-  render() {
+export default function myFooter() {
     return (
       <>
         <footer className=" footer">
           <Container>
             <Row className=" row-grid align-items-center mb-5">
               <Col lg="6">
-                <h3 className=" text-primary font-weight-light mb-2">
-                  Thank you for supporting us!
-                </h3>
-                <h4 className=" mb-0 font-weight-light">
-                  Let's get in touch on any of these platforms.
+              <h5><b>Mentions légales</b></h5>
+
+                <h4 className=" mb-0 font-weight-light" style={{fontSize:15,marginTop:-10}} >
+                  Conditions Génerales d'utilisation
+                </h4>
+                <h4 className=" mb-0 font-weight-light" style={{fontSize:15}}>
+                  Conditions Génerales de vente
+                </h4>
+                <h4 className=" mb-0 font-weight-light" style={{fontSize:15}}>
+                  Politique de confidentialité
                 </h4>
               </Col>
-              <Col className="text-lg-center btn-wrapper" lg="6">
+              <Col className="text-lg-center btn-wrapper" lg="6" style={{marginTop:0}}>
+                <h5><b>Contacter nous</b></h5>
                 <Button
                   className="btn-icon-only rounded-circle"
                   color="twitter"
-                  href="https://twitter.com/creativetim"
+                  href="https://twitter.com/CryptoFcoin"
                   id="tooltip475038074"
                   target="_blank"
                 >
                   <span className="btn-inner--icon">
-                    <i className="fa fa-twitter" />
+                    <Icon icon="simple-icons:twitter" width="30" height="30"/>
                   </span>
                 </Button>
                 <UncontrolledTooltip delay={0} target="tooltip475038074">
@@ -45,12 +51,12 @@ class myFooter extends React.Component {
                 <Button
                   className="btn-icon-only rounded-circle ml-1"
                   color="facebook"
-                  href="https://www.facebook.com/creativetim"
+                  href="https://www.facebook.com/fcoincrypto"
                   id="tooltip837440414"
                   target="_blank"
                 >
                   <span className="btn-inner--icon">
-                    <i className="fa fa-facebook-square" />
+                    <Icon icon="simple-icons:facebook" width="25" height="25" />
                   </span>
                 </Button>
                 <UncontrolledTooltip delay={0} target="tooltip837440414">
@@ -59,12 +65,12 @@ class myFooter extends React.Component {
                 <Button
                   className="btn-icon-only rounded-circle ml-1"
                   color="dribbble"
-                  href="https://dribbble.com/creativetim"
+                  href="https://discord.com/invite/94trf6G2mQ"
                   id="tooltip829810202"
                   target="_blank"
                 >
                   <span className="btn-inner--icon">
-                    <i className="fa fa-dribbble" />
+                    <Icon icon="simple-icons:discord" width="25" height="25"/>
                   </span>
                 </Button>
                 <UncontrolledTooltip delay={0} target="tooltip829810202">
@@ -73,75 +79,39 @@ class myFooter extends React.Component {
                 <Button
                   className="btn-icon-only rounded-circle ml-1"
                   color="github"
-                  href="https://github.com/creativetimofficial"
+                  href="https://t.me/FCoin"
                   id="tooltip495507257"
                   target="_blank"
                 >
                   <span className="btn-inner--icon">
-                    <i className="fa fa-github" />
+                    <Icon icon="simple-icons:telegram" width="25" height="25" />
                   </span>
                 </Button>
                 <UncontrolledTooltip delay={0} target="tooltip495507257">
-                  Star on Github
+                  Follow us
                 </UncontrolledTooltip>
               </Col>
             </Row>
-            <hr />
-            <Row className=" align-items-center justify-content-md-between">
-              <Col md="6">
-                <div className=" copyright">
-                  © {new Date().getFullYear()}{" "}
+            <hr style={{marginTop:-30}}/>
+            <Row className=" align-items-center justify-content-md-between" style={{marginBottom:-30}}>
+              <Col md="12">
+                <div className="copyright d-flex justify-content-center">
+                Copyright © {new Date().getFullYear()}{" "}
                   <a
-                    href="https://www.creative-tim.com?ref=adsr-footer"
+                    href="https://www.dev.fcoin.mg"
                     target="_blank"
+                    style={{marginLeft:5}}
                   >
-                    Creative Tim
+                     Fcoin
                   </a>
                   .
                 </div>
               </Col>
-              <Col md="6">
-                <Nav className=" nav-footer justify-content-end">
-                  <NavItem>
-                    <NavLink
-                      href="https://www.creative-tim.com?ref=adsr-footer"
-                      target="_blank"
-                    >
-                      Creative Tim
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      href="https://www.creative-tim.com/presentation?ref=adsr-footer"
-                      target="_blank"
-                    >
-                      About Us
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      href="http://blog.creative-tim.com?ref=adsr-footer"
-                      target="_blank"
-                    >
-                      Blog
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      href="https://github.com/creativetimofficial/argon-design-system-react/blob/master/LICENSE.md"
-                      target="_blank"
-                    >
-                      MIT License
-                    </NavLink>
-                  </NavItem>
-                </Nav>
-              </Col>
+
             </Row>
           </Container>
         </footer>
       </>
     );
-  }
 }
 
-export default myFooter;

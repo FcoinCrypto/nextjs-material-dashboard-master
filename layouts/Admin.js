@@ -6,6 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Navbar from "components/Navbars/Navbar.js";
 // import Footer from "components/Footer/Footer.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
+import Footer from "../components/Footer/myFooter";
 
 import routes from "routes.js";
 
@@ -13,7 +14,8 @@ import styles from "assets/jss/nextjs-material-dashboard/layouts/adminStyle.js";
 
 import bgImage from "assets/img/sidebar-2.jpg";
 import { authAtom } from "../recoil/atom/authAtom";
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+
 
 let ps;
 
@@ -26,6 +28,7 @@ export default function Admin({ children, ...rest }) {
   // ref to help us initialize PerfectScrollbar on windows devices
   const mainPanel = React.createRef();
   const { user, token } = useRecoilValue(authAtom)
+  const setAuth = useSetRecoilState(authAtom);
   // states and functions
   const [image, setImage] = React.useState(bgImage);
   const [color, setColor] = React.useState("white");
@@ -76,8 +79,9 @@ export default function Admin({ children, ...rest }) {
 
   // console.log(token)
 
-  useEffect(async () => {
-    if (!token) {
+  useEffect(() => {
+    if (!token || user.access != "user") {
+      setAuth({ token: null, user: null });
       router.push('/login/login')
     }
   }, [user, token])
@@ -101,9 +105,12 @@ export default function Admin({ children, ...rest }) {
         />
         {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
         {getRoute() ? (
+          <>
           <div className={classes.content}>
-            <div className={classes.container}>{children}</div>
+            <div className={classes.container}>{children}</div>  
           </div>
+          <Footer/>
+          </>
         ) : (
           <div className={classes.map}>{children}</div>
         )}   

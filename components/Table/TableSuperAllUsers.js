@@ -59,9 +59,11 @@ export default function TableSuperAllUsers(props) {
           <TableBody>
             {rows.map((row) => (
               <TableRow>
+                <TableCell align="left"> {moment(row.createdAt).format("DD/MM/YY à HH:mm")}</TableCell>
+                <TableCell align="left">{row.id}</TableCell>
                 <TableCell align="left">{row.username}</TableCell>
                 <TableCell align="left">{row.email}</TableCell>
-                <TableCell align="left">{row.wallet.fcoin}</TableCell>
+                <TableCell align="left">{row.status}</TableCell>
               </TableRow>
             )).reverse()}
           </TableBody>
