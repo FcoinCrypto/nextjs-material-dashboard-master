@@ -10,7 +10,8 @@ import { Card,CardContent,Typography, CardActions } from "@mui/material";
 import { NumericFormat } from 'react-number-format';
 import CurrencyFormat from 'react-currency-format';
 import QRCode from "react-qr-code";
-import Quote from "../../components/Typography/Quote"
+import Quote from "../../components/Typography/Quote";
+import { cours } from "../../services/cours";
 
 import {
   Button,
@@ -29,15 +30,24 @@ function Tableau() {
   const [euro, setEuro] = useState();
   const [etiquette, setEtiquette] = useState();
   const { user } = useRecoilValue(authAtom);
-  
+  const [cour, setCour] = useState({});
+  const [wallet, setWallet] = useState({});
+
   useEffect(async () => {
     if (!fcoin) {
-      const data = await getUser(user.id);  
+      const data = await getUser(user.id);
+      console.log(data.data.wallet)
+      setWallet(data.data.wallet)
+      
       setFcoin(data.data.wallet.fcoin);
       setUsdt(data.data.wallet.usdt);
       setAriary(data.data.wallet.ariary);
       setEuro(data.data.wallet.euro);
       setEtiquette(data.data.wallet.etiquette);
+
+      const allcour = await cours();
+      console.log(allcour.data.data.attributes)
+      setCour(allcour.data.data.attributes)
     }
   }, [fcoin])
   
@@ -101,12 +111,12 @@ function Tableau() {
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>
                     <Typography sx={{ mb: 1.5 }}  color="text.secondary">
-                        <NumericFormat value={ariary} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' Ar'} />
+                        <NumericFormat value={wallet.ariary} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} fixedDecimalScale suffix={' Ar'} />
                     </Typography>
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>
                     <Typography sx={{ mb: 1.5 }}  color="text.secondary">
-                      <CurrencyFormat value={'0,00002469135802469136'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} prefix={'1 Ar =  '} suffix={' Ftc'}  />
+                      <CurrencyFormat value={cour.ar} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} prefix={'1 Ar =  '} suffix={' Ftc'}  />
                     </Typography>
                   </Grid>
                 </Grid>
@@ -119,12 +129,12 @@ function Tableau() {
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>
                     <Typography sx={{ mb: 1.5 }}  color="text.secondary">
-                        <NumericFormat value={euro} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' €'} />
+                        <NumericFormat value={wallet.euro} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' €'} />
                     </Typography>
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>
                     <Typography sx={{ mb: 1.5 }}  color="text.secondary">
-                      <CurrencyFormat value={'5,89909331044'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} prefix={'1 € =  '} suffix={' Ftc'}  />
+                      <CurrencyFormat value={cour.euro} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} prefix={'1 € =  '} suffix={' Ftc'}  />
                     </Typography>
                   </Grid>
                 </Grid>   
@@ -137,12 +147,12 @@ function Tableau() {
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>
                     <Typography sx={{ mb: 1.5 }}  color="text.secondary">
-                        <NumericFormat value={fcoin} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' Ftc'} />
+                        <NumericFormat value={wallet.fcoin} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' Ftc'} />
                     </Typography>
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>
                     <Typography sx={{ mb: 1.5 }}  color="text.secondary">
-                      <CurrencyFormat value={1} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} prefix={'1 Ftc =  '} suffix={' Ftc'}  />
+                      <CurrencyFormat value={cour.ftc} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} prefix={'1 Ftc =  '} suffix={' Ftc'}  />
                     </Typography>
                   </Grid>
                 </Grid>
@@ -155,12 +165,12 @@ function Tableau() {
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>
                     <Typography sx={{ mb: 1.5 }}  color="text.secondary">
-                        <NumericFormat value={usdt} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' $'} />
+                        <NumericFormat value={wallet.usdt} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' $'} />
                     </Typography>
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>
                     <Typography sx={{ mb: 1.5 }}  color="text.secondary">
-                      <CurrencyFormat value={'5,999.07331443'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} prefix={'1 Usdt =  '} suffix={' Ftc'}  />
+                      <CurrencyFormat value={cour.usdt} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} prefix={'1 Usdt =  '} suffix={' Ftc'}  />
                     </Typography>
                   </Grid>
                 </Grid>  
@@ -173,12 +183,12 @@ function Tableau() {
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>
                     <Typography sx={{ mb: 1.5 }}  color="text.secondary">
-                        <NumericFormat value={usdt} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' Btc'} />
+                        <NumericFormat value={wallet.btc} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' Btc'} />
                     </Typography>
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>
                     <Typography sx={{ mb: 1.5 }}  color="text.secondary">
-                      <CurrencyFormat value={'5,999.07331443'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} prefix={'1 Btc =  '} suffix={' Ftc'}  />
+                      <CurrencyFormat value={cour.btc} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} prefix={'1 Btc =  '} suffix={' Ftc'}  />
                     </Typography>
                   </Grid>
                 </Grid>
@@ -191,12 +201,12 @@ function Tableau() {
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>
                     <Typography sx={{ mb: 1.5 }}  color="text.secondary">
-                        <NumericFormat value={usdt} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' Eth'} />
+                        <NumericFormat value={wallet.eth} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' Eth'} />
                     </Typography>
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>
                     <Typography sx={{ mb: 1.5 }}  color="text.secondary">
-                      <CurrencyFormat value={'5,999.07331443'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} prefix={'1 Eth =  '} suffix={' Ftc'}  />
+                      <CurrencyFormat value={cour.eth} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} prefix={'1 Eth =  '} suffix={' Ftc'}  />
                     </Typography>
                   </Grid>
                 </Grid>
@@ -209,12 +219,12 @@ function Tableau() {
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>
                     <Typography sx={{ mb: 1.5 }}  color="text.secondary">
-                        <NumericFormat value={usdt} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' Xmr'} />
+                        <NumericFormat value={wallet.xmr} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' Xmr'} />
                     </Typography>
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>
                     <Typography sx={{ mb: 1.5 }}  color="text.secondary">
-                      <CurrencyFormat value={'5,999.07331443'} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} prefix={'1 Xmr =  '} suffix={' Ftc'}  />
+                      <CurrencyFormat value={cour.monero} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} prefix={'1 Xmr =  '} suffix={' Ftc'}  />
                     </Typography>
                   </Grid>
                 </Grid>

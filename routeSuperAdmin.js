@@ -17,28 +17,31 @@ const dashboardRoutes = [
     },
     {
         path: "/users",
-        name: "Toutes les utilisateurs",
+        name: "Utilisateurs",
+        // rtlName: "طباعة",
         icon: AccountCircle,
 
         layout: "/superAdmin",
     },
     {
         path: "/achats",
-        name: "Toutes rechargements comptes",
+        name: "Recharger comptes",
+        // rtlName: "طباعة",
         icon: Shop,
 
         layout: "/superAdmin",
     },
     {
         path: "/envoyers",
-        name: "Toutes les transferts d'argent",
+        name: "Transferer de l'argent",
+        // rtlName: "طباعة",
         icon: Send,
 
         layout: "/superAdmin",
     },
     {
         path: "/recevoirs",
-        name: "Toutes les commandes passé",
+        name: "Payer commande",
         // rtlName: "طباعة",
         icon: Receipt,
 
