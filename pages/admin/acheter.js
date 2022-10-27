@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Radio } from "@nextui-org/react";
 import Admin from "layouts/Admin.js";
 import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { ToastContainer, toast } from 'react-toastify';
 import { Button, Grid, Input } from "@material-ui/core";
 import {Formik, Form} from 'formik';
 import * as Yup from 'yup';
@@ -187,11 +188,13 @@ function Acheter() {
                 >
                   <Grid container>
                     <Grid item lg={4} xs={12}>
-                      <Radio value="Orange Money" color="#" labelColor="#" size="sm">
                         
                         <Grid container direction="row" alignItems={'center'} justify={'center' }>
                             <Grid item xs={12}>
-                            <Button style={{backgroundColor:"#f27f2c", width:180}}>
+                            <Button style={{backgroundColor:"#f27f2c", width:180}} onClick={()=>{
+                              setChecked("Orange Money")
+                              checkedRadio("Orange Money")
+                            }}>
                               <img src="https://www.solutions-numeriques.com/wp-content/uploads/2016/06/orange-money.jpg" width="82"/>
                             </Button>
                             </Grid>
@@ -199,13 +202,14 @@ function Acheter() {
                               <p style={{ color:'#f27f2c', fontSize:20,marginLeft:40}}>Orange Money</p>
                             </Grid>
                         </Grid>
-                      </Radio>
                     </Grid>
                     <Grid item lg={4} xs={12}>
-                      <Radio value="MVola" color="#" labelColor="#" size="sm">
                         <Grid container direction="row" alignItems={'center'} justify={'center' }>
                             <Grid item xs={12}>
-                              <Button style={{backgroundColor:"#00703d", width:180, height:80}}>
+                              <Button style={{backgroundColor:"#00703d", width:180, height:80}} onClick={()=>{
+                                  setChecked("MVola")
+                                  checkedRadio("MVola")
+                                }}>
                                 <img src="https://www.moov.mg/sites/default/files/MVOLA.jpg" width="100" height="40"/>
                               </Button>
                             </Grid>
@@ -213,13 +217,14 @@ function Acheter() {
                               <p style={{ color:'#00703d', fontSize:20,marginLeft:65}} >Mvola</p>
                             </Grid>
                         </Grid>
-                      </Radio>
                     </Grid>
                     <Grid item lg={4} xs={12}>
-                      <Radio value="Airtel Money" labelColor="#" color="#" size="sm">
                         <Grid container direction="row" alignItems={'center'} justify={'center' }>
                             <Grid item xs={12}>
-                              <Button style={{backgroundColor:"#fb0405", width:180}}>
+                              <Button style={{backgroundColor:"#fb0405", width:180}} onClick={()=>{
+                                setChecked("Airtel Money")
+                                checkedRadio("Airtel Money")
+                              }}>
                                 <img src="https://images.squarespace-cdn.com/content/v1/5bc4882465019f632b2f8653/1620735164758-K5OSBIW343JMFMKNFEKR/Airtel+Money.png?format=300w" width="100" height="68"/>
                               </Button>
                             </Grid>
@@ -228,7 +233,6 @@ function Acheter() {
                              
                             </Grid>
                         </Grid>
-                      </Radio>
                     </Grid>
                   </Grid>                
                 </Radio.Group>
@@ -359,7 +363,6 @@ function Acheter() {
                               event.preventDefault()
                               setStep1("none")
                               setStep2("")
-                              
                               setMontantMobile(values.montant)
                               setTelClient(values.tel)
                               
@@ -409,9 +412,11 @@ function Acheter() {
                          const numTrans = 'RMB'+myAchat.data.id
                          const myTransaction = await addTransaction(montantMobile,'Achat',numTrans, myAchat.data.id,user.id)
                          const myMobile = await achatMobile(myAchat.data.id,telClient,checked,checkedNumero,values.raison,values.transaction);
-                      resetForm(); 
+                         toast.info("On va étudier votre transaction N° "+values.transaction+" et vous devez recevoir un mail en cas de validation");
+                         resetForm(); 
                         setStatus({ success: true }); 
                         setSubmitting(true);
+                        handleClose()
                         // window.location.reload(false);
                         
                       } catch (err) { 
@@ -432,6 +437,7 @@ function Acheter() {
                 values 
               }) => (
                 <form onSubmit={handleSubmit}>
+                  <p>Veuillez tapez votre raison de transfert ainsi que votre n° de transaction</p>
                   <Grid container
                   mobile={{ overflow: "auto" }}
                   spacing={2} >
@@ -536,7 +542,7 @@ function Acheter() {
                     }) => {
                     try { 
                       
-                      const myAchat = await achat(conversion(values.montant,'FTC'),conversionUsdt(conversion(values.montant,'FTC')),values.montant, 'cash',etiquette,user.id);
+                      const myAchat = await achat(conversion(values.montant,'FTC'),conversionUsdt(conversion(values.montant,'FTC')),values.montant, 'espèces',etiquette,user.id);
                       const numTrans = 'RPM'+myAchat.data.id
                       const myTransaction = await addTransaction(values.montant,'Achat',numTrans, myAchat.data.id,user.id)
                       const myCash = await achatCash(myAchat.data.id);
@@ -1032,106 +1038,13 @@ function Acheter() {
             </Card> 
           </Grid>
         </Grid>
-        {/* Modal           */}
+        {/* Modal    && Toast       */}
             <CustomModal />
             <CashModal/>
             <BankModal/>
-            {/* Footer */}
-        <footer className=" footer">
-          <Container>
-            <Row className="row-grid align-items-center mb-5">
-              <Col lg="6">
-              <h5><b>Mentions légales</b></h5>
+            <ToastContainer />
 
-                <h4 className=" mb-0 font-weight-light" style={{fontSize:15,marginTop:-10}} >
-                  Conditions Génerales d'utilisation
-                </h4>
-                <h4 className=" mb-0 font-weight-light" style={{fontSize:15}}>
-                  Conditions Génerales de vente
-                </h4>
-                <h4 className=" mb-0 font-weight-light" style={{fontSize:15}}>
-                  Politique de confidentialité
-                </h4>
-              </Col>
-              <Col className="text-lg-center btn-wrapper" lg="6" style={{marginTop:0}}>
-                <h5><b>Contacter nous</b></h5>
-                <Button
-                  className="btn-icon-only rounded-circle"
-                  color="twitter"
-                  href="https://twitter.com/CryptoFcoin"
-                  id="tooltip475038074"
-                  target="_blank"
-                >
-                  <span className="btn-inner--icon">
-                    <Icon icon="simple-icons:twitter" width="30" height="30"/>
-                  </span>
-                </Button>
-                <UncontrolledTooltip delay={0} target="tooltip475038074">
-                  Follow us
-                </UncontrolledTooltip>
-                <Button
-                  className="btn-icon-only rounded-circle ml-1"
-                  color="facebook"
-                  href="https://www.facebook.com/fcoincrypto"
-                  id="tooltip837440414"
-                  target="_blank"
-                >
-                  <span className="btn-inner--icon">
-                    <Icon icon="simple-icons:facebook" width="25" height="25" />
-                  </span>
-                </Button>
-                <UncontrolledTooltip delay={0} target="tooltip837440414">
-                  Like us
-                </UncontrolledTooltip>
-                <Button
-                  className="btn-icon-only rounded-circle ml-1"
-                  color="dribbble"
-                  href="https://discord.com/invite/94trf6G2mQ"
-                  id="tooltip829810202"
-                  target="_blank"
-                >
-                  <span className="btn-inner--icon">
-                    <Icon icon="simple-icons:discord" width="25" height="25"/>
-                  </span>
-                </Button>
-                <UncontrolledTooltip delay={0} target="tooltip829810202">
-                  Follow us
-                </UncontrolledTooltip>
-                <Button
-                  className="btn-icon-only rounded-circle ml-1"
-                  color="github"
-                  href="https://t.me/FCoin"
-                  id="tooltip495507257"
-                  target="_blank"
-                >
-                  <span className="btn-inner--icon">
-                    <Icon icon="simple-icons:telegram" width="25" height="25" />
-                  </span>
-                </Button>
-                <UncontrolledTooltip delay={0} target="tooltip495507257">
-                  Follow us
-                </UncontrolledTooltip>
-              </Col>
-            </Row>
-            <hr style={{marginTop:-30}}/>
-            <Row className=" align-items-center justify-content-md-between" style={{marginBottom:-30}}>
-              <Col md="12">
-                <div className="copyright d-flex justify-content-center">
-                Copyright © {new Date().getFullYear()}{" "}
-                  <a
-                    href="https://www.dev.fcoin.mg"
-                    target="_blank"
-                    style={{marginLeft:5}}
-                  >
-                     Fcoin
-                  </a>
-                  .
-                </div>
-              </Col>
-
-            </Row>
-          </Container>
-        </footer>
+       
         
         
     </>
