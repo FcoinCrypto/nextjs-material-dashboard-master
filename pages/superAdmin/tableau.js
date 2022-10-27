@@ -88,7 +88,7 @@ function TableList() {
             
             <GridItem xs={6} sm={12} md={12}>
                 <CardHeader color="info">                
-                  <p className={classes.cardCategoryWhite}>
+                  <p align="center" className={classes.cardCategoryWhite}>
                     Toutes les recharges
                   </p>
                 </CardHeader>
@@ -151,7 +151,7 @@ function TableList() {
             
             <GridItem xs={12} sm={12} md={12}>
                 <CardHeader color="info">                
-                  <p className={classes.cardCategoryWhite}>
+                  <p align="center" className={classes.cardCategoryWhite}>
                     Toutes les transferts
                   </p>
                 </CardHeader>
@@ -214,7 +214,7 @@ function TableList() {
             
             <GridItem xs={12} sm={12} md={12}>
                 <CardHeader color="info">                
-                  <p className={classes.cardCategoryWhite}>
+                  <p align="center" className={classes.cardCategoryWhite}>
                     Toutes les commandes
                   </p>
                 </CardHeader>
