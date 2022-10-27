@@ -39,9 +39,9 @@ function Tableau() {
       console.log(data.data.wallet)
       setWallet(data.data.wallet)
       
-      setFcoin(data.data.wallet.fcoin);
+      setFcoin(data.data.wallet.ftc);
       setUsdt(data.data.wallet.usdt);
-      setAriary(data.data.wallet.ariary);
+      setAriary(data.data.wallet.ar);
       setEuro(data.data.wallet.euro);
       setEtiquette(data.data.wallet.etiquette);
 
@@ -111,7 +111,7 @@ function Tableau() {
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>
                     <Typography sx={{ mb: 1.5 }}  color="text.secondary">
-                        <NumericFormat value={wallet.ariary} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} fixedDecimalScale suffix={' Ar'} />
+                        <NumericFormat value={wallet.ar} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} fixedDecimalScale suffix={' Ar'} />
                     </Typography>
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>
@@ -147,7 +147,7 @@ function Tableau() {
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>
                     <Typography sx={{ mb: 1.5 }}  color="text.secondary">
-                        <NumericFormat value={wallet.fcoin} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' Ftc'} />
+                        <NumericFormat value={wallet.ftc} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} decimalScale={2} fixedDecimalScale suffix={' Ftc'} />
                     </Typography>
                   </Grid>
                   <Grid item lg={4} md={4} xs={12}>

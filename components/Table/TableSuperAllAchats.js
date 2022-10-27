@@ -12,7 +12,7 @@ import { Button } from "@material-ui/core";
 import SearchBar from "material-ui-search-bar";
 import {  DatePicker, Space } from "antd";
 import 'antd/dist/antd.css';
-import { updateStatus } from "../../services/achat";
+import { confirmAchat } from "../../services/achat";
 // core components
 import styles from "assets/jss/nextjs-material-dashboard/components/tableStyle.js";
 import { getUser } from "../../services/user";
@@ -109,10 +109,11 @@ export default function TableSuperAllAchats(props) {
                   const id_wallet = user.data.wallet.id
                   const old_ariary = user.data.wallet.ariary
                   const ariary = row.attributes.montant + old_ariary;
-                  await updateWalletAriary(ariary,id_wallet)
-                  const status = await updateStatus(row.id)
+                 // await updateWalletAriary(ariary,id_wallet)
+                  await confirmAchat("ar",ariary,row.id)
+                 // const status = await updateStatus(row.id)
 
-                  console.log(status.data.message)
+                  //console.log(status.data.message)
                 }}>{row.attributes.status}</Button></TableCell>
               </TableRow>
             )).reverse()}

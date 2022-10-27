@@ -77,7 +77,6 @@ function Reception() {
                 try { 
                     // NOTE: Make API request 
                     await recevoirs(values.message, values.etiquette, values.montant, user.id);
-                    await addTransaction('Reçu', values.etiquette, values.montant, user.id);
                     resetForm(); 
                     setStatus({ success: true }); 
                     setSubmitting(false);

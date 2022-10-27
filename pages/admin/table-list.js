@@ -121,7 +121,7 @@ function TableList() {
       const res_rec = await recevoirs(user.id);
       const res_env = await envoyers(user.id);
       const res_ach = await achats(user.id);
-
+      console.log(res)
       setDataTransaction(res.data.data);
       setDataRecevoir(res_rec.data.data);
       setDataEnvoie(res_env.data.data);
@@ -150,7 +150,7 @@ function TableList() {
         
       { dataEnvoie && dataAchat && dataRecevoir && dataTransaction &&
         <GridContainer>
-          <footer>
+          {/* <footer>
             <div className={classes.container}>
               <div className={classes.left}>
                 <List className={classes.list}>
@@ -172,7 +172,7 @@ function TableList() {
                 </List>
               </div>
             </div>
-          </footer>
+          </footer> */}
           <div style={{display: dNone, minWidth:'100%'}} className={cardstyles.width100} id="transaction_id">
             <GridItem xs={12} sm={12} md={12}>
               <Card>
@@ -185,7 +185,7 @@ function TableList() {
                 <CardBody>
                   <Table
                     tableHeaderColor="primary"
-                    tableHead={["date", "type", "etiquette", "montant"]}
+                    tableHead={["Date", "Montant", "N° Transaction", "Detail"]}
                     tableData={dataTransaction}
                   />
                   
