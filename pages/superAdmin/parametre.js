@@ -8,6 +8,7 @@ import { Typography } from "antd";
 import CurrencyFormat from 'react-currency-format';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { NumericFormat } from "react-number-format";
 
 const useStyles = makeStyles({
     root: {
@@ -23,9 +24,10 @@ const useStyles = makeStyles({
     group:{
         background: 'linear-gradient(145deg, rgba(51,155,158,1) 0%, rgba(104,204,152,1) 100%)',
         width: '100%',
-        margin: '0 auto 20px',
+        margin: '5px',
         display: 'grid',
-        gridTemplateColumns: '65vw 10vw 100vw',
+        // gridTemplateColumns: 'fit-content(50%)',
+        gridTemplateColumns: '75% 20% ',
         borderRadius: '15px'
     },
     
@@ -41,21 +43,28 @@ const useStyles = makeStyles({
         padding: '15px',
         background: 'none',
         border:0,
+        /*align-self:flex-end;*/
         color:'#fff'
     },
     option:{
-      background: '#335',
-      borderRadius: '15px'
-    }
-    ,
-    option:{
-      background: '#335',
-      borderRadius: '15px'
+        paddingBottom: '15px',
+        background: '#335',
+        borderRadius: '15px'
     }
   });
 
 
 export default function parametre() {
+
+    const imageList = [
+        "https://seeklogo.com/images/T/tether-usdt-logo-FA55C7F397-seeklogo.com.png",
+        "https://cdn-icons-png.flaticon.com/512/20/20932.png",
+        "https://cdn-icons-png.flaticon.com/512/102/102983.png?w=360",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1024px-Bitcoin.svg.png",
+        "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+        "https://cdn-icons-png.flaticon.com/512/825/825487.png",
+
+    ]
 
     const classes = useStyles();
     const [cours, setCours] = useState();
@@ -88,7 +97,7 @@ export default function parametre() {
         if (!cours) {
             const data = await getCours();
             const cours = Object.entries(data.data[0].attributes).filter(row => {
-                return  row.includes("ar") || row.includes("eth") || row.includes("monero") || row.includes("usdt") || row.includes("btc") || row.includes("euro");
+                return  row.includes("ar") || row.includes("eth") || row.includes("xmr") || row.includes("usdt") || row.includes("btc") || row.includes("euro");
             }
             );
             setCours(cours);
@@ -101,18 +110,25 @@ export default function parametre() {
             { cours &&
             <>
                 <Card>
-                { cours.map((cour => (
-                    <Grid item lg={4} md={4} xs={12}>
-                    <Typography sx={{ mb: 1.5 }}  color="text.secondary">
-                        <CurrencyFormat value={cour[1]} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} prefix={'1 FTC =  '} suffix={' ' +cour[0]}  />
-                    </Typography>
-                </Grid>
-                )))}    
+                    <InputLabel htmlFor="input-with-icon-adornment" style={{padding:10}}>
+                        Cours actuel :
+                    </InputLabel>
+                    <Grid container style={{padding:10}}>
+                        <Grid item lg={6} md={6} xs={12}>
+                        { cours.map(((cour, index) => (
+                            <Typography sx={{ mb: 1.5 }} style={{margin: 25, marginTop: 0}} color="text.secondary">
+                                <img src={imageList[index]} width={40} className="mx-2"/>
+                                <CurrencyFormat value={cour[1]} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} prefix={'1 FTC=  '} suffix={' ' + cour[0]}  />
+                            </Typography>
+                        )))}
+                    </Grid>
+                    </Grid>
+                        
                 </Card>
                 <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     <Grid item xs={12}>
-                        <InputLabel htmlFor="input-with-icon-adornment">
-                            Changer les cours
+                        <InputLabel htmlFor="input-with-icon-adornment" style={{padding:10}}>
+                            Changer les cours :
                         </InputLabel>
                         <br/>
                         <div className={classes.group}>
