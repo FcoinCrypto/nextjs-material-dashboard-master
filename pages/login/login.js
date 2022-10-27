@@ -239,7 +239,7 @@ function Login() {
                                 //     // NOTE: Make API request 
                                 //     // await wait(200);
                                     const userRecoil = await confirmeUser(values.email, values.password);
-                                    // console.log(userRecoil)
+                                    console.log(userRecoil)
                                     if(userRecoil.data){
                                         if(userRecoil.data.user.access == "user"){
                                             setAuth({ token: userRecoil.data.jwt, user: userRecoil.data.user  });

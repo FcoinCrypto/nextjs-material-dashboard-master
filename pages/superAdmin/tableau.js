@@ -1,10 +1,6 @@
 import React,{useState, useEffect} from "react";
 // @material-ui/core components
-import PropTypes from "prop-types";
-// @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-import ListItem from "@material-ui/core/ListItem";
-import List from "@material-ui/core/List";
 // core components
 import styles from "assets/jss/nextjs-material-dashboard/components/footerStyle.js";
 import Link from 'next/link';
@@ -13,35 +9,17 @@ import superAdmin from "layouts/superAdmin.js";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
-import TableSuperTransaction from "../../components/Table/TableSuperTransaction";
-import TableAchat from "../../components/Table/TableAchat";
-import TableEnvoyer from "../../components/Table/TableEnvoyer";
-import TableRecevoir from "../../components/Table/TableRecevoir";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CardIcon from "components/Card/CardIcon.js";
 import CardFooter from "components/Card/CardFooter.js";
-import Store from "@material-ui/icons/Store";
 import DateRange from "@material-ui/icons/DateRange";
-
-import axios from "axios"
-import Footer from "../../components/Footer/Footer";
-import { achats, transactions, envoyers, recevoirs } from "../../services/table";
-import { allTransaction, test } from "../../services/allTransaction";
-import {allAchats} from "../../services/allAchats"
-import { getUser } from "../../services/user";
+import {  transactions, envoyers, recevoirs } from "../../services/table";
 import { getOneWallet } from "../../services/wallet";
-
-import { useSetRecoilState, useRecoilValue } from 'recoil';
-import { authAtom } from "../../recoil/atom/authAtom";
-
 import Shop from "@material-ui/icons/Shop";
 import Send from "@material-ui/icons/Send";
 import Receipt from "@material-ui/icons/Receipt";
-
-import CurrencyFormat from 'react-currency-format';
 import { NumericFormat } from 'react-number-format';
 import { Grid } from "@material-ui/core";
 
@@ -53,7 +31,10 @@ const cardstyles = {
       fontSize: "14px",
       marginTop: "0",
       marginBottom: "0",
-      align:"center"
+      // align:"center",
+      textAlign: "center",
+      justifyContent: 'center',
+      alignItems: 'center'
     },
     "& a,& a:hover,& a:focus": {
       color: "#FFFFFF",
@@ -119,7 +100,6 @@ function TableList() {
                 <CardIcon color="success">
                   <Shop />
                 </CardIcon>
-                <p style={{color:'grey'}}>Toutes les recharges</p>
                 <CardBody>                
                     <h3 style={{color:"black", fontWeight:"bold"}}>
                         <Grid container >
@@ -183,7 +163,6 @@ function TableList() {
                 <CardIcon color="success">
                   <Send />
                 </CardIcon>
-                <p style={{color:'grey'}}>Toutes les transferts</p>
                 <CardBody>                
                     <h3 style={{color:"black", fontWeight:"bold"}}>
                         <Grid container >
@@ -247,7 +226,6 @@ function TableList() {
                 <CardIcon color="success">
                   <Receipt />
                 </CardIcon>
-                <p style={{color:'grey'}}>Toutes les commandes</p>
                 <CardBody>                
                     <h3 style={{color:"black", fontWeight:"bold"}}>
                         <Grid container >
