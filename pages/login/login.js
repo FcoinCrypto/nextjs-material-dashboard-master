@@ -255,6 +255,14 @@ function Login() {
                                             setSubmitting(false);
                                             Router.push("/superAdmin/tableau");
                                         }
+                                        if(userRecoil.data.user.access == "Marchand"){
+                                            console.log(userRecoil.data.user.access)
+                                            setAuth({ token: userRecoil.data.jwt, user: userRecoil.data.user  });
+                                            resetForm();
+                                            setStatus({ success: true }); 
+                                            setSubmitting(false);
+                                            Router.push("/marchand/tableau");
+                                        }
                                     }
                                     if(userRecoil.message == "Request failed with status code 400"){
                                         toast.error(userRecoil.response.data.error.message);

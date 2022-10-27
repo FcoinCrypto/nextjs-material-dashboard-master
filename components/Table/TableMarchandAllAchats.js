@@ -18,7 +18,7 @@ import styles from "assets/jss/nextjs-material-dashboard/components/tableStyle.j
 import { getUser } from "../../services/user";
 import { updateWalletAriary } from "../../services/achat";
 import { NumericFormat } from 'react-number-format';
-export default function TableSuperAllAchats(props) {
+export default function TableMarchandAllAchats(props) {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   moment.locale('fr')
@@ -91,7 +91,7 @@ export default function TableSuperAllAchats(props) {
           </TableHead>
         ) : null}
           <TableBody>
-            {rows.map((row) => (
+            {rows.filter(row => row.attributes.type == "espèce").map((row) => (
               
               <TableRow>
                 <TableCell align="left">{moment(row.attributes.createdAt).format("DD/MM/YY à HH:mm")}</TableCell>
@@ -122,11 +122,11 @@ export default function TableSuperAllAchats(props) {
   );
 }
 
-TableSuperAllAchats.defaultProps = {
+TableMarchandAllAchats.defaultProps = {
   tableHeaderColor: "gray",
 };
 
-TableSuperAllAchats.propTypes = {
+TableMarchandAllAchats.propTypes = {
   tableHeaderColor: PropTypes.oneOf([
     "warning",
     "primary",
