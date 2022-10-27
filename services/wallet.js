@@ -17,6 +17,79 @@ export const getWalletByUser = async (user) =>{
     // console.log(response.data)
     return response.data;
 }
+
+export const getCours = async () =>{
+  const response = await api.get('/cours')
+  // console.log(response.data)
+  return response.data;
+}
+
+export const updateCours = async (devis, amount) =>{
+  if (devis == "ftc"){
+    const response = api.put(`/cours/1`,
+    {
+      data: {
+        ftc : amount
+      },
+    });
+    return response;
+  }
+  if (devis == "ar"){
+    const response = api.put(`/cours/1`,
+    {
+      data: {
+        ar : amount
+      },
+    });
+    return response;
+  }
+  if (devis.toLowerCase() == "usdt"){
+    const response = api.put(`/cours/1`,
+    {
+      data: {
+        usdt : amount
+      },
+    });
+    return response;
+  }
+  if (devis == "euro"){
+    const response = api.put(`/cours/1`,
+    {
+      data: {
+        euro : amount
+      },
+    });
+    return response;
+  }
+  if (devis == "btc"){
+    const response = api.put(`/cours/1`,
+    {
+      data: {
+        btc : amount
+      },
+    });
+    return response;
+  }
+  if (devis == "etc"){
+    const response = api.put(`/cours/1`,
+    {
+      data: {
+        etc : amount
+      },
+    });
+    return response;
+  }
+  if (devis == "monero"){
+    const response = api.put(`/cours/1`,
+    {
+      data: {
+        monero : amount
+      },
+    });
+    return response;
+  }
+}
+
 export const createWallet = async (user_id,etiquette) =>{
     const response = await api.post('/wallets', {
         data:{

@@ -61,7 +61,7 @@ const dashboardRoutes = [
         name: "Paramètre",
         icon: Settings,
 
-        layout: "/paramètre",
+        layout: "/superAdmin",
     },
     
 ];

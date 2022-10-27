@@ -10,6 +10,7 @@ api
   })
   .then(response => {
   });
+
 export const updateWalletAriary = (ariary, walletId) =>
 api
   .put(`/wallets/${walletId}`,
