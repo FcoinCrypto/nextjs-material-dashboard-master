@@ -3,6 +3,7 @@ import Admin from "layouts/Admin.js";
 import { Button, Grid, Input } from "@material-ui/core";
 import TextField from '@mui/material/TextField';
 import {Formik, Form} from 'formik';
+import { ToastContainer, toast } from 'react-toastify';
 import * as Yup from 'yup';
 import axios from "axios";
 import SearchBar from "material-ui-search-bar";
@@ -34,7 +35,7 @@ function Envoyer(fcoin) {
     useEffect(async () => {
         if (!wallet) {
         const data = await getUser(user.id);
-        setWallet(data.data.wallet.fcoin);
+        setWallet(data.data.wallet.ftc);
         setIdWallet(data.data.wallet.id)
         const users = await allUSer();
         console.log(users.data)
@@ -62,7 +63,6 @@ function Envoyer(fcoin) {
         <Formik 
             enableReinitialize 
             initialValues={{ 
-                destinataire: '', 
                 etiquette: '',
                 montant: '',
             }} 
@@ -72,7 +72,6 @@ function Envoyer(fcoin) {
                     .positive("A phone number can't start with a minus")
                     .min(0.00000000000001)
                     .required('require'),
-                destinataire: Yup.string().required('Merci de renseigner le destinataire'),
                 etiquette: Yup.string().required('Merci de renseigner l etiquette')
             })} 
             onSubmit={async (values, { 
@@ -90,18 +89,20 @@ function Envoyer(fcoin) {
 
                     const newFcoin  = wallet - values.montant;
                     if(newFcoin > 0){
-                        setInsuffisant('');
-                        setWallet(newFcoin);
-                        await envoyer(values.destinataire, values.etiquette, values.montant, user.id);
-                        await updateWalletOnSend(newFcoin,idWallet);
-                        await addTransaction('Envoie', values.etiquette, values.montant, user.id);
+                      console.log(values.montant)
+                      console.log(values.etiquette)
+                      console.log(val)
+                      console.log(user.id)
+                       await envoyer(val, values.etiquette, values.montant, user.id);
+                        toast.info("On va étudier votre transaction N° +values.transaction+ et vous devez recevoir un mail en cas de validation");
+
                     }else{
-                        setInsuffisant('Votre fcoin est insuffisant');
+                        toast.error("Votre fcoin est insuffisant");
                         setdNone('');
                     }
                     resetForm(); 
                     setStatus({ success: true }); 
-                    setSubmitting(false);
+                    setSubmitting(true);
                     
                 } catch (err) { 
                     console.error(err); 
@@ -202,10 +203,10 @@ function Envoyer(fcoin) {
                 <p style={{ fontSize : 15}}>Avertissement : Tout achat de cryptomonnaie est un investissement risqué. Le cours du Fcoin dépend de l’offre et de la demande sur les marchés de cryptomonnaies et celui-ci peut significativement monter ou baisser, voire même devenir nul.</p>
             </Grid> 
             </form>
-                
+
         )}
         </Formik> 
-       
+       <ToastContainer />
     </>
   )
 }

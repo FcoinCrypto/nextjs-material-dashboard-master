@@ -88,3 +88,14 @@ api
     const res = await api.get('/numero-recharges').then(response => {return response})
     return res.data;
 }
+
+export const confirmAchat = (devis, montant,transctionId) =>
+api
+  .post(`/achats/confirmAchat/${transctionId}`,
+  {
+      devis: devis,
+      montant : montant
+    
+  })
+  .then(response => {window.location.reload();return response;
+  });

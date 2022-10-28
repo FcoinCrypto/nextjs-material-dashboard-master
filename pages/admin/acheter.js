@@ -3,6 +3,7 @@ import { Radio } from "@nextui-org/react";
 import Admin from "layouts/Admin.js";
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Button, Grid, Input } from "@material-ui/core";
 import {Formik, Form} from 'formik';
 import * as Yup from 'yup';
@@ -412,6 +413,7 @@ function Acheter() {
                          const numTrans = 'RMB'+myAchat.data.id
                          const myTransaction = await addTransaction(montantMobile,'Achat',numTrans, myAchat.data.id,user.id)
                          const myMobile = await achatMobile(myAchat.data.id,telClient,checked,checkedNumero,values.raison,values.transaction);
+                         console.log(myMobile)
                          toast.info("On va étudier votre transaction N° "+values.transaction+" et vous devez recevoir un mail en cas de validation");
                          resetForm(); 
                         setStatus({ success: true }); 
@@ -546,11 +548,13 @@ function Acheter() {
                       const numTrans = 'RPM'+myAchat.data.id
                       const myTransaction = await addTransaction(values.montant,'Achat',numTrans, myAchat.data.id,user.id)
                       const myCash = await achatCash(myAchat.data.id);
+                      toast.info("On va étudier votre transaction N° "+numTrans+" et veuillez la valider au point cash");
+
                       resetForm(); 
                         setStatus({ success: true }); 
                         setSubmitting(true);
                         // window.location.reload(false);
-                        
+                        handleCloseModalCash()
                       } catch (err) { 
                         console.log(err); 
                         setStatus({ success: false }); 

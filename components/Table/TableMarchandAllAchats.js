@@ -16,8 +16,11 @@ import { updateStatus } from "../../services/achat";
 // core components
 import styles from "assets/jss/nextjs-material-dashboard/components/tableStyle.js";
 import { getUser } from "../../services/user";
-import { updateWalletAriary } from "../../services/achat";
+import { confirmAchat } from "../../services/achat";
 import { NumericFormat } from 'react-number-format';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { authAtom } from "../../recoil/atom/authAtom";
+
 export default function TableMarchandAllAchats(props) {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
@@ -25,6 +28,11 @@ export default function TableMarchandAllAchats(props) {
   const  { tableHead, tableData, tableHeaderColor } = props;
   const [searched, setSearched] = useState("");
   const [rows, setRows] = useState(tableData);
+  const [marchandId, setMarchandId] = useState();
+  const [numTransaction, setNumTransaction] = useState();
+
+  const { user } = useRecoilValue(authAtom);
+
 
   const requestSearch = (searchedVal) => {
     const filteredRows = tableData.filter((row) => {
@@ -51,7 +59,7 @@ export default function TableMarchandAllAchats(props) {
     setSearched("");
   };   
   useEffect(async () => {
-
+    console.log(user)
       // const res = await allAchats();
       // console.log(res)
 
@@ -105,14 +113,11 @@ export default function TableMarchandAllAchats(props) {
                 <TableCell align="left">{row.attributes?.achat_mobile?.data?.attributes?.numeroTransaction}</TableCell>
                 <TableCell align="left"><Button variant="contained" color="primary" style={{fontSize:'0.7rem', backgroundColor:row.attributes.status ==="Validé"?"green":"purple", color:"white", width:100}} disabled={row.attributes.status ==="Validé"?true:false} onClick={async()=>{
                   const id_user = row.attributes.user.data.id
-                  const user = await getUser(id_user)
-                  const id_wallet = user.data.wallet.id
-                  const old_ariary = user.data.wallet.ariary
+                  const clientUser = await getUser(id_user)
+                  const old_ariary = clientUser.data.wallet.ar
                   const ariary = row.attributes.montant + old_ariary;
-                  await updateWalletAriary(ariary,id_wallet)
-                  const status = await updateStatus(row.id)
-
-                  console.log(status.data.message)
+                 await confirmAchat("ar",ariary,row.id)
+                        
                 }}>{row.attributes.status}</Button></TableCell>
               </TableRow>
             )).reverse()}

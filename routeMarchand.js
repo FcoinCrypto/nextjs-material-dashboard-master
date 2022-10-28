@@ -15,14 +15,7 @@ const dashboardRoutes = [
 
         layout: "/marchand",
     },
-    {
-        path: "/users",
-        name: "Utilisateurs",
-        // rtlName: "طباعة",
-        icon: AccountCircle,
-
-        layout: "/marchand",
-    },
+   
     {
         path: "/achat",
         name: "Recharger comptes",

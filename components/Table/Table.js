@@ -39,9 +39,9 @@ export default function CustomTable(props) {
             {tableData.map((row) => (
               <TableRow key={row.attributes.createdAt}>
                 <TableCell align="left">{moment(row.attributes.createdAt).format('llll')}</TableCell>
-                <TableCell align="left">{row.attributes.type}</TableCell>
-                <TableCell align="left">{row.attributes.etiquette}</TableCell>
                 <TableCell align="left">{row.attributes.montant}</TableCell>
+                <TableCell align="left">{row.attributes.numeroTransaction}</TableCell>
+                <TableCell align="left">{row.attributes.type}</TableCell>
               </TableRow>
             )).reverse()}
           </TableBody>
