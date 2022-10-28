@@ -46,13 +46,15 @@ function Registration() {
                 setDivWidth(ref.current.offsetWidth)
             }
     useEffect(() => {
+
+        setRand(makeid)
+        
         if (ref.current) window.addEventListener('resize', 
         handleResize)
      
              return () => {
                  window.removeEventListener('resize', handleResize)
-             }
-    
+        }
         function makeid() {
             var text = "";
             var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -62,7 +64,6 @@ function Registration() {
           
             return text;
           }
-          setRand(makeid)
         
       }, [ref]);
       const  handleResponseLogin = async (response, type) => {
@@ -264,7 +265,7 @@ function Registration() {
                                 }) => { 
                                         const userRecoil = await registration(values.username, values.email, values.password);
                                         if(userRecoil.jwt){
-                                            console .log(userRecoil)
+                                            console.log(rand)
                                             await createWallet(userRecoil.user.id,rand)
                                             setAuth({ token: userRecoil.jwt, user: userRecoil.user  });
                                             resetForm();

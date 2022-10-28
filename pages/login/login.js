@@ -31,16 +31,13 @@ function Login() {
                 setDivWidth(ref.current.offsetWidth)
             }
     useEffect(() => {
-       
-         
-
+        setRand(makeid)
          if (ref.current) window.addEventListener('resize', 
          handleResize)
       
               return () => {
                   window.removeEventListener('resize', handleResize)
               }
-
         function makeid() {
             var text = "";
             var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -50,7 +47,6 @@ function Login() {
           
             return text;
           }
-          setRand(makeid)
         
       }, [ref]);
     const setAuth = useSetRecoilState(authAtom);
