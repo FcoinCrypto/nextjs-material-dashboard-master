@@ -169,7 +169,7 @@ function TableList() {
                 <CardBody>
                   <Table
                     tableHeaderColor="primary"
-                    tableHead={["Date", "Montant", "N° Transaction", "Detail"]}
+                    tableHead={["Date", "Montant","Devise", "N° Transaction", "Detail"]}
                     tableData={dataTransaction}
                   />
                   
