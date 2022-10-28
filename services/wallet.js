@@ -90,21 +90,21 @@ export const updateCours = async (devis, amount) =>{
   }
 }
 
-export const createWallet = async (user_id,etiquette) =>{
+export const createWallet = async (user_id, etiquette) =>{
     const response = await api.post('/wallets', {
         data:{
-          fcoin: 0,
+          ftc: 0,
           ariary: 0,
           usdt : 0,
           euro : 0,
           btc:0,
           eth:0,
           xmr:0,
-          etiquette:etiquette,
+          etiquette: etiquette,
           user: user_id
         }
       })
-    // console.log(response.data)
+    console.log(response.data)
     return response.data;
     
 }
