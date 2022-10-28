@@ -100,7 +100,7 @@ function TableList() {
                 <CardBody>
                   <TableSuperAllEnvoyers
                     tableHeaderColor="primary"
-                    tableHead={["Date", "Nom et prenom", "Destinataire", "Montant de depart", "Devise", "Montant arrivée", "devise", "Status" ]}
+                    tableHead={["Date", "Nom et prenom", "Destinataire", "Montant de depart", "Devise", "Montant arrivée", "Devise", "Status" ]}
                     tableData={dataEnvoyer}
                   />
                   

@@ -34,7 +34,8 @@ function Envoyer(fcoin) {
     const [dNone, setdNone] = useState('none');
     const [destinataire, setDestinataire] = useState([]);
     const [etiquette, setEtiquette] = useState();
-
+    const [val,setVal]=useState('???');
+    const [destID,setDestID]=useState();
       
     useEffect(async () => {
         if (!wallet) {
@@ -42,15 +43,16 @@ function Envoyer(fcoin) {
         setWallet(data.data.wallet.ftc);
         setIdWallet(data.data.wallet.id)
         const users = await allUSer();
+        console.log(users)
         setEtiquette(data.data.wallet.etiquette)
-        const allUS = users.data.map((row)=>{
-          return row.username
+        const allUS = users.data.filter(row=>row.access=="user"&&row.id!=user.id).map((key)=>{
+          return {"label":key.username,"destinataire_id":key.id}
         })
+        
         setDestinataire(allUS)
         console.log(allUS)
         }
     }, [wallet, idWallet])
-    const [val,setVal]=useState('???');
     
   return (
     <>
@@ -102,12 +104,13 @@ function Envoyer(fcoin) {
                       console.log(etiquette)
                       console.log(val)
                       console.log(user.id)
-                       const myEnv = await envoyer(val, etiquette, values.montant, user.id);
+                      console.log(destID)
+                       const myEnv = await envoyer(val, etiquette, values.montant, destID,user.id);
                         console.log(myEnv.data.id)
                        const numTrans = 'TRN'+myEnv.data.id
                        const myTransaction = await addTransfertTransaction(values.montant,'Transfert',numTrans, myEnv.data.id,user.id)
 
-                        toast.info("On va étudier votre transaction N° +values.transaction+ et vous devez recevoir un mail en cas de validation");
+                        toast.info("On va étudier votre transaction N° "+numTrans+" et vous devez recevoir un mail en cas de validation");
 
                     }else{
                         toast.error("Votre fcoin est insuffisant");
@@ -143,7 +146,7 @@ function Envoyer(fcoin) {
                 <Autocomplete
                   disablePortal
                   id="combo-box-demo"
-                  onChange={(e,values)=>{setVal(values)}}
+                  onChange={(e,values)=>{setVal(values.label); setDestID(values.destinataire_id)}}
                   options={destinataire}
                   sx={{ width: 300 }}
                   renderInput={(params) => <TextField 
