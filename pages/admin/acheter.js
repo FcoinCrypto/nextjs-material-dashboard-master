@@ -935,8 +935,8 @@ function Acheter() {
                 {bankdata.map((d, index) => (
                   <Button
                       onClick={() => { 
-                        handleOpenModalBank(index)
-                        
+                        //handleOpenModalBank(index)
+                        toast.info("En cours de déveleppement")
 
                       }}
                       variant="contained"
@@ -987,7 +987,8 @@ function Acheter() {
                         height: '15vw'
                     }}
                     onClick = {()=>{
-                      handleOpenModalCash(index)
+                      //handleOpenModalBank(index)
+                      toast.info("En cours de déveleppement")
                     }}
                 >
                     <img className="mx-2" 
@@ -1025,7 +1026,8 @@ function Acheter() {
                         height: '15vw'
                     }}
                     onClick = {()=>{
-                      handleOpenModalCash(index)
+                     //handleOpenModalBank(index)
+                     toast.info("En cours de déveleppement")
                     }}
                 >
                     <img className="mx-2" 

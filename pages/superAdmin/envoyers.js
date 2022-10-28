@@ -63,6 +63,7 @@ function TableList() {
     if(!dataEnvoyer){
 
       const res = await allEnvoyers();
+      console.log(res)
       setDataEnvoyer(res.data.data);
      
 
@@ -99,7 +100,7 @@ function TableList() {
                 <CardBody>
                   <TableSuperAllEnvoyers
                     tableHeaderColor="primary"
-                    tableHead={["id", "date", "nom et prenom", "nom destinataire", "montant de depart", "devis", "montant arrivée", "devis", "status" ]}
+                    tableHead={["Date", "Nom et prenom", "Destinataire", "Montant de depart", "Devise", "Montant arrivée", "devise", "Status" ]}
                     tableData={dataEnvoyer}
                   />
                   

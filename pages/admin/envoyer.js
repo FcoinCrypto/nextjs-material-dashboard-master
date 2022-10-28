@@ -8,11 +8,13 @@ import * as Yup from 'yup';
 import axios from "axios";
 import SearchBar from "material-ui-search-bar";
 import { envoyer, updateWalletOnSend } from "../../services/envoyer.js";
-import { addTransaction } from "../../services/transaction";
+import { addTransfertTransaction } from "../../services/transaction";
 import { getUser } from "../../services/user";
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { authAtom } from "../../recoil/atom/authAtom";
 import { allUSer } from "../../services/allUser.js";
+import Autocomplete from '@mui/material/Autocomplete';
+
 import { Icon } from '@iconify/react';
 import {
 
@@ -31,6 +33,8 @@ function Envoyer(fcoin) {
     const [insuffisant, setInsuffisant] = useState();
     const [dNone, setdNone] = useState('none');
     const [destinataire, setDestinataire] = useState([]);
+    const [etiquette, setEtiquette] = useState();
+
       
     useEffect(async () => {
         if (!wallet) {
@@ -38,7 +42,7 @@ function Envoyer(fcoin) {
         setWallet(data.data.wallet.ftc);
         setIdWallet(data.data.wallet.id)
         const users = await allUSer();
-        console.log(users.data)
+        setEtiquette(data.data.wallet.etiquette)
         const allUS = users.data.map((row)=>{
           return row.username
         })
@@ -46,15 +50,7 @@ function Envoyer(fcoin) {
         console.log(allUS)
         }
     }, [wallet, idWallet])
-    const [val,setVal]=useState('')
-    const data=[
-        "Java",
-        "JavaScript",
-        "React js",
-        "Python",
-        "C",
-        "C++",
-    ]
+    const [val,setVal]=useState('???');
     
   return (
     <>
@@ -78,7 +74,6 @@ function Envoyer(fcoin) {
         <Formik 
             enableReinitialize 
             initialValues={{ 
-                etiquette: '',
                 montant: '',
             }} 
             validationSchema={Yup.object().shape({ 
@@ -87,7 +82,6 @@ function Envoyer(fcoin) {
                     .positive("A phone number can't start with a minus")
                     .min(0.00000000000001)
                     .required('require'),
-                etiquette: Yup.string().required('Merci de renseigner l etiquette')
             })} 
             onSubmit={async (values, { 
                 resetForm, 
@@ -105,10 +99,14 @@ function Envoyer(fcoin) {
                     const newFcoin  = wallet - values.montant;
                     if(newFcoin > 0){
                       console.log(values.montant)
-                      console.log(values.etiquette)
+                      console.log(etiquette)
                       console.log(val)
                       console.log(user.id)
-                       await envoyer(val, values.etiquette, values.montant, user.id);
+                       const myEnv = await envoyer(val, etiquette, values.montant, user.id);
+                        console.log(myEnv.data.id)
+                       const numTrans = 'TRN'+myEnv.data.id
+                       const myTransaction = await addTransfertTransaction(values.montant,'Transfert',numTrans, myEnv.data.id,user.id)
+
                         toast.info("On va étudier votre transaction N° +values.transaction+ et vous devez recevoir un mail en cas de validation");
 
                     }else{
@@ -137,35 +135,40 @@ function Envoyer(fcoin) {
                 values 
             }) => (
             <form onSubmit={handleSubmit}>
-            <Grid container spacing={2} columns={16}>
-                <Grid item xs={6}>
-                
-                  <div className="main">
-                    <input list="data" onChange={(e)=>setVal(e.target.value)} placeholder="Destinataire" />
-                    
+            <Grid spacing={0}
+                container
+                alignItems="center"
+                justifyContent="center">
+              <Grid item xs={6}>
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  onChange={(e,values)=>{setVal(values)}}
+                  options={destinataire}
+                  sx={{ width: 300 }}
+                  renderInput={(params) => <TextField 
+                    variant="outlined"
+                    style={{marginTop : 23, marginBottom : 23}}
 
-                    <h1>{val}</h1>
-                   
-                    <datalist id="data">
-                        {destinataire.map((op)=><option>{op}</option>)}
-                    </datalist>
-                </div>
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField
-                        error={Boolean(touched.etiquette && errors.etiquette)} 
-                        helperText={touched.etiquette && errors.etiquette} 
-                        type="text" 
-                        onBlur={handleBlur} 
-                        onChange={handleChange} 
-                        value={values.etiquette} 
-                        fullWidth
-                        style={{marginTop : 23, marginBottom : 23}}
-                        label="Etiquette" 
-                        name="etiquette" 
-                        required 
-                        variant="outlined"             
-                    />
+                  {...params} label="Destinataire" />}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                  <TextField
+                      error={Boolean(touched.montant && errors.montant)} 
+                      helperText={touched.montant && errors.montant} 
+                      type="number" 
+                      onBlur={handleBlur} 
+                      onChange={handleChange} 
+                      value={values.montant} 
+                      style={{marginTop : 23, marginBottom : 23}}
+                      label="Montant en Fcoin" 
+                      name="montant"
+                      sx={{ width: 300 }}
+                      InputLabelProps={{ shrink: true }}
+                      // disabled='true'             
+                  />
+                 
                 </Grid>
             </Grid>
             <Grid 
@@ -175,30 +178,15 @@ function Envoyer(fcoin) {
                 alignItems="center"
                 justifyContent="center"
             >
-                <TextField
-                    error={Boolean(touched.montant && errors.montant)} 
-                    helperText={touched.montant && errors.montant} 
-                    type="number" 
-                    onBlur={handleBlur} 
-                    onChange={handleChange} 
-                    value={values.montant} 
-                    style={{marginTop : 23, marginBottom : 23}}
-                    label="Montant en Fcoin" 
-                    name="montant"
-                    variant="outlined"
-                    InputLabelProps={{ shrink: true }}
-                    // disabled='true'             
-                />
+                
+               
             </Grid>
             <center>
                 <p style={{ color : "red", display: dNone}}>{insuffisant}</p>
-                <p> Frais de traitement 
-                <strong> (0%)	:	0 Fcoin </strong>
-                <br/>  Montant total à envoyer	
-                <strong> 0 Fcoin </strong> 
+                <p>  
                 <br/> Vous allez envoyer 
                 <strong> {values.montant} Fcoin </strong> à
-                <strong> {values.destinataire} </strong></p></center>
+                <strong> {val} </strong></p></center>
             <Grid
                 container
                 spacing={0}
