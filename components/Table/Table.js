@@ -8,6 +8,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+import { NumericFormat } from 'react-number-format';
+
 // core components
 import styles from "assets/jss/nextjs-material-dashboard/components/tableStyle.js";
 
@@ -38,8 +40,10 @@ export default function CustomTable(props) {
           <TableBody>
             {tableData.map((row) => (
               <TableRow key={row.attributes.createdAt}>
-                <TableCell align="left">{moment(row.attributes.createdAt).format('llll')}</TableCell>
-                <TableCell align="left">{row.attributes.montant}</TableCell>
+                <TableCell align="left">{moment(row.attributes.createdAt).format("DD/MM/YY à HH:mm")}</TableCell>
+                <TableCell align="left">
+                  <NumericFormat value={row.attributes.montant} displayType={'text'} thousandSeparator={'.'} decimalSeparator={','} fixedDecimalScale />
+                </TableCell>                <TableCell align="left">{row.attributes.type == "Transfert"?"Ftc":"Ariary"}</TableCell>
                 <TableCell align="left">{row.attributes.numeroTransaction}</TableCell>
                 <TableCell align="left">{row.attributes.type}</TableCell>
               </TableRow>
