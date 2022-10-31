@@ -13,6 +13,23 @@ import SearchBar from "material-ui-search-bar";
 import {  DatePicker, Space } from "antd";
 import 'antd/dist/antd.css';
 import { confirmAchat } from "../../services/achat";
+import emailjs from '@emailjs/browser';
+const sendEmail = (email, to_name,montant,type,devise) => {
+  var templateParams = {
+    to_name: to_name,
+    to_email:email,
+    from_name:'',
+    message: `Votre achat de ${montant} ${devise} via ${type} a été validé`
+};
+ 
+emailjs.send('service_883ufak', 'template_iv1qybh', templateParams,'u3RsthIZmk1OZF-jd')
+    .then(function(response) {
+       console.log('SUCCESS!', response.status, response.text);
+       window.location.reload();
+    }, function(error) {
+       console.log('FAILED...', error);
+    });
+};
 // core components
 import styles from "assets/jss/nextjs-material-dashboard/components/tableStyle.js";
 import { getUser } from "../../services/user";
@@ -107,10 +124,12 @@ export default function TableSuperAllAchats(props) {
                   const id_user = row.attributes.user.data.id
                   const user = await getUser(id_user)
                   const id_wallet = user.data.wallet.id
-                  const old_ariary = user.data.wallet.ariary
+                  const old_ariary = user.data.wallet.ar
+                  console.log()
                   const ariary = row.attributes.montant + old_ariary;
-                 // await updateWalletAriary(ariary,id_wallet)
+                //  await updateWalletAriary(ariary,id_wallet)
                   await confirmAchat("ar",ariary,row.id)
+                  sendEmail(row.attributes.user.data.attributes.email, row.attributes.user.data.attributes.username,row.attributes.montant,row.attributes.type,'Ar')
                  // const status = await updateStatus(row.id)
 
                   //console.log(status.data.message)

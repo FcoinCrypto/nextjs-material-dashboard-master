@@ -30,16 +30,18 @@ export default function TableSuperAllEnvoyers(props) {
 
 
 
-  const sendEmail = () => {
+  const sendEmail = (email, to_name,fcoin,destinataire) => {
     var templateParams = {
-      name: 'James',
-      to_email:'atomixtrias01@gmail.com',
-      notes: 'Check this out!'
+      to_name: to_name,
+      to_email:email,
+      from_name:'',
+      message: `Votre transfert de ${fcoin} ftc vers ${destinataire} a été validé`
   };
    
   emailjs.send('service_883ufak', 'template_iv1qybh', templateParams,'u3RsthIZmk1OZF-jd')
       .then(function(response) {
          console.log('SUCCESS!', response.status, response.text);
+         window.location.reload();
       }, function(error) {
          console.log('FAILED...', error);
       });
@@ -116,22 +118,24 @@ export default function TableSuperAllEnvoyers(props) {
                 <TableCell align="left">{row.attributes.montantArrive}</TableCell>
                 <TableCell align="left">{row.attributes.devise}</TableCell>
                 <TableCell align="left"><Button variant="contained" color="primary" style={{fontSize:'0.7rem', backgroundColor:row.attributes.status ==="Validé"?"green":"purple", color:"white", width:100}} disabled={row.attributes.status ==="Validé"?true:false} onClick={async()=>{
-                  // const id_user = row.attributes.user.data.id
-                  // const id_dest = row.attributes.users_destinataire.data.id
-                  // const user = await getUser(id_user)
-                  // const dest = await getUser(id_dest)
-                  // const id_wallet_user = user.data.wallet.id
-                  // const id_wallet_dest = dest.data.wallet.id
-                  // const user_old_ftc = user.data.wallet.ftc
-                  // const dest_old_ftc = dest.data.wallet.ftc
-                  // console.log(user_old_ftc)
-                  // console.log(dest_old_ftc)
-                  // const wallet_user = user_old_ftc - row.attributes.montantDepart
-                  // const wallet_dest = dest_old_ftc + row.attributes.montantArrive
+                  const id_user = row.attributes.user.data.id
+                  const id_dest = row.attributes.users_destinataire.data.id
+                  const user = await getUser(id_user)
+                  const mail = user.data.email
+                  const dest = await getUser(id_dest)
+                  const id_wallet_user = user.data.wallet.id
+                  const id_wallet_dest = dest.data.wallet.id
+                  const user_old_ftc = user.data.wallet.ftc
+                  const dest_old_ftc = dest.data.wallet.ftc
+                  await updateStatus(row.id,row.attributes.montantDepart)
+                  console.log(user_old_ftc)
+                  console.log(dest_old_ftc)
+                  const wallet_user = user_old_ftc - row.attributes.montantDepart
+                  const wallet_dest = dest_old_ftc + row.attributes.montantArrive
                   
-                  // await updateWallet(wallet_user,id_wallet_user)
-                  // await updateWallet(wallet_dest,id_wallet_dest)
-                  sendEmail()
+                  await updateWallet(wallet_user,id_wallet_user)
+                  await updateWallet(wallet_dest,id_wallet_dest)
+                  sendEmail(mail,row.attributes.user.data.attributes.username,row.attributes.montantDepart,row.attributes.destinataire)
                 }}>{row.attributes.status}</Button></TableCell>
               </TableRow>
             )).reverse()}

@@ -99,5 +99,5 @@ api
       montant : montant
     
   })
-  .then(response => {window.location.reload();return response;
+  .then(response => {return response;
   });
