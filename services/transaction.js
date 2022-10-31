@@ -22,7 +22,21 @@ export const addTransfertTransaction = async (montant,type,numero, tran_id,user_
           montant:montant,
           type: type,
           numeroTransaction: numero,
-          transfert: tran_id,
+          envoyer: tran_id,
+          user: user_id
+        }
+      })
+    
+    return response.data;
+    
+}
+export const addDemandeTransaction = async (montant,type,numero, tran_id,user_id) =>{
+    const response = await api.post('/transactions', {
+        data:{
+          montant:montant,
+          type: type,
+          numeroTransaction: numero,
+          recevoir: tran_id,
           user: user_id
         }
       })

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Admin from "layouts/Admin.js";
 import { Button, Grid, Input } from "@material-ui/core";
 import TextField from '@mui/material/TextField';
@@ -10,10 +10,12 @@ import { addTransaction } from "../../services/transaction.js";
 import { updateWallet } from "../../services/achat";
 import { conversionUsdt } from "../../utils/utilAchat";
 import { getUser } from "../../services/user";
-import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { authAtom } from "../../recoil/atom/authAtom";
+import { useSetRecoilState, useRecoilValue } from 'recoil';
 import Quote from "../../components/Typography/Quote";
 import { Icon } from '@iconify/react';
+import { addDemandeTransaction } from "../../services/transaction";
+
 import {
 
   Container,
@@ -22,13 +24,26 @@ import {
   UncontrolledTooltip
 } from "reactstrap";
 
-
 function Reception() {
-    const { user } = useRecoilValue(authAtom);
+
+        const [wallet, setWallet] = useState();
+        const [idWallet, setIdWallet] = useState();
+        const { user } = useRecoilValue(authAtom);
+        const [etiquette, setEtiquette] = useState();
 
     function handleChangeCustom(event){
 
     }
+    useEffect(async () => {
+      if (!wallet)
+      
+      {
+        const data = await getUser(user.id);
+      setEtiquette(data.data.wallet.etiquette)
+      }
+
+  }, [wallet, idWallet])
+  
   return (
     <>
         <div className="text-white" style={{borderRadius:25, background:'linear-gradient(145deg, rgba(51,155,158,1) 0%, rgba(104,204,152,1) 100%)',fontSize:"8vw"}} >
@@ -40,7 +55,6 @@ function Reception() {
         <Formik 
             enableReinitialize 
             initialValues={{ 
-                etiquette: '', 
                 message: '',
                 montant: '',
             }} 
@@ -51,7 +65,6 @@ function Reception() {
                     .min(0.00000000000001)
                     .required('require'),
                 message: Yup.string().required('Merci de renseigner le destinataire'),
-                etiquette: Yup.string().required('Merci de renseigner l etiquette'),
             })} 
             onSubmit={async (values, { 
                 resetForm, 
@@ -61,7 +74,10 @@ function Reception() {
             }) => {
                 try { 
                     // NOTE: Make API request 
-                    await recevoirs(values.message, values.etiquette, values.montant, user.id);
+                    const recevoir = await recevoirs(etiquette,values.message, values.montant, user.id);
+                    const numTrans = 'DPM'+recevoir.data.id
+                    const myTransaction = await addDemandeTransaction(values.montant,'Demande de paiement',numTrans, recevoir.data.id,user.id)
+
                     resetForm(); 
                     setStatus({ success: true }); 
                     setSubmitting(false);
@@ -87,22 +103,6 @@ function Reception() {
             <Grid container spacing={2} columns={16}>
                 <Grid item xs={6}>
                     <TextField
-                        error={Boolean(touched.etiquette && errors.etiquette)} 
-                        helperText={touched.etiquette && errors.etiquette} 
-                        type="text" 
-                        onBlur={handleBlur} 
-                        onChange={handleChange} 
-                        value={values.etiquette} 
-                        fullWidth
-                        style={{marginTop : 23, marginBottom : 23}}
-                        label="Etiquette" 
-                        name="etiquette" 
-                        required 
-                        variant="outlined"             
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField
                         error={Boolean(touched.message && errors.message)} 
                         helperText={touched.message && errors.message} 
                         type="text" 
@@ -114,7 +114,22 @@ function Reception() {
                         label="Message" 
                         name="message" 
                         required 
-                        variant="outlined"             
+                        variant="outlined"        
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                         error={Boolean(touched.montant && errors.montant)} 
+                         helperText={touched.montant && errors.montant} 
+                         type="number" 
+                         onBlur={handleBlur} 
+                         onChange={handleChange} 
+                         value={values.montant} 
+                         style={{marginTop : 23, marginBottom : 23, width:"100%"}}
+                         label="Montant en Fcoin" 
+                         name="montant"
+                         variant="outlined"
+                         // disabled='true'        
                     />
                 </Grid>
             </Grid>
@@ -125,27 +140,10 @@ function Reception() {
                 alignItems="center"
                 justifyContent="center"
             >
-                <TextField
-                    error={Boolean(touched.montant && errors.montant)} 
-                    helperText={touched.montant && errors.montant} 
-                    type="number" 
-                    onBlur={handleBlur} 
-                    onChange={handleChange} 
-                    value={values.montant} 
-                    style={{marginTop : 23, marginBottom : 23}}
-                    label="Montant en Fcoin" 
-                    name="montant"
-                    variant="outlined"
-                    // disabled='true'             
-                />
+                         
+        
             </Grid>
-            <center><p> Frais de traitement 
-                <strong> (0%)	:	0 Fcoin </strong>
-                <br/>  Montant total à demander	
-                <strong> 0 Fcoin </strong> 
-                <br/> Vous allez demander 
-                <strong> {values.montant} Fcoin </strong> à
-                <strong> {values.etiquette} </strong></p></center>
+            
             <Grid
                 container
                 spacing={0}
