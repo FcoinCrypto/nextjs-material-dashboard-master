@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import PropTypes from "prop-types";
 import moment from 'moment';
+import emailjs from '@emailjs/browser';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -26,6 +27,23 @@ export default function TableSuperAllEnvoyers(props) {
   const  { tableHead, tableData, tableHeaderColor } = props;
   const [searched, setSearched] = useState("");
   const [rows, setRows] = useState(tableData);
+
+
+
+  const sendEmail = () => {
+    var templateParams = {
+      name: 'James',
+      to_email:'atomixtrias01@gmail.com',
+      notes: 'Check this out!'
+  };
+   
+  emailjs.send('service_883ufak', 'template_iv1qybh', templateParams,'u3RsthIZmk1OZF-jd')
+      .then(function(response) {
+         console.log('SUCCESS!', response.status, response.text);
+      }, function(error) {
+         console.log('FAILED...', error);
+      });
+  };
 
   const requestSearch = (searchedVal) => {
     const filteredRows = tableData.filter((row) => {
@@ -98,27 +116,22 @@ export default function TableSuperAllEnvoyers(props) {
                 <TableCell align="left">{row.attributes.montantArrive}</TableCell>
                 <TableCell align="left">{row.attributes.devise}</TableCell>
                 <TableCell align="left"><Button variant="contained" color="primary" style={{fontSize:'0.7rem', backgroundColor:row.attributes.status ==="Validé"?"green":"purple", color:"white", width:100}} disabled={row.attributes.status ==="Validé"?true:false} onClick={async()=>{
-                  const id_user = row.attributes.user.data.id
-                  const id_dest = row.attributes.users_destinataire.data.id
-                  const user = await getUser(id_user)
-                  const dest = await getUser(id_dest)
-                  const id_wallet_user = user.data.wallet.id
-                  const id_wallet_dest = dest.data.wallet.id
-                  const user_old_ftc = user.data.wallet.ftc
-                  const dest_old_ftc = dest.data.wallet.ftc
-                  console.log(user_old_ftc)
-                  console.log(dest_old_ftc)
-                  const wallet_user = user_old_ftc - row.attributes.montantDepart
-                  const wallet_dest = dest_old_ftc + row.attributes.montantArrive
+                  // const id_user = row.attributes.user.data.id
+                  // const id_dest = row.attributes.users_destinataire.data.id
+                  // const user = await getUser(id_user)
+                  // const dest = await getUser(id_dest)
+                  // const id_wallet_user = user.data.wallet.id
+                  // const id_wallet_dest = dest.data.wallet.id
+                  // const user_old_ftc = user.data.wallet.ftc
+                  // const dest_old_ftc = dest.data.wallet.ftc
+                  // console.log(user_old_ftc)
+                  // console.log(dest_old_ftc)
+                  // const wallet_user = user_old_ftc - row.attributes.montantDepart
+                  // const wallet_dest = dest_old_ftc + row.attributes.montantArrive
                   
-                  await updateWallet(wallet_user,id_wallet_user)
-                  await updateWallet(wallet_dest,id_wallet_dest)
-                  // const ariary = row.attributes.montant + old_ariary;
-                 // await updateWalletAriary(ariary,id_wallet)
-                  // await confirmAchat("ar",ariary,row.id)
-                 //const status = await updateStatus(row.id,row.attributes.montantDepart)
-
-                  //console.log(status.data.message)
+                  // await updateWallet(wallet_user,id_wallet_user)
+                  // await updateWallet(wallet_dest,id_wallet_dest)
+                  sendEmail()
                 }}>{row.attributes.status}</Button></TableCell>
               </TableRow>
             )).reverse()}

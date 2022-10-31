@@ -31,13 +31,17 @@ function Login() {
                 setDivWidth(ref.current.offsetWidth)
             }
     useEffect(() => {
+       
         setRand(makeid)
+
+
          if (ref.current) window.addEventListener('resize', 
          handleResize)
       
               return () => {
                   window.removeEventListener('resize', handleResize)
               }
+
         function makeid() {
             var text = "";
             var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -90,7 +94,8 @@ function Login() {
                 
 
                 if(registre.jwt) {
-                    const wallet = await createWallet(registre.user.id)
+                    await createWallet(registre.user.id,rand)
+
                     setAuth({ token: registre.jwt, user: registre.user  });
                     Router.push("/admin/tableau");
                 }
@@ -235,7 +240,7 @@ function Login() {
                                 //     // NOTE: Make API request 
                                 //     // await wait(200);
                                     const userRecoil = await confirmeUser(values.email, values.password);
-                                    console.log(userRecoil)
+                                    // console.log(userRecoil)
                                     if(userRecoil.data){
                                         if(userRecoil.data.user.access == "user"){
                                             setAuth({ token: userRecoil.data.jwt, user: userRecoil.data.user  });
