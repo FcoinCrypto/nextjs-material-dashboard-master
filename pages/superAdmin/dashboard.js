@@ -77,7 +77,7 @@ function TableList() {
       const res = await allTransaction();
       
       setDataTransaction(res.data.data);
-     
+     console.log(res.data.data)
 
     } 
   }, [dataTransaction])
@@ -104,14 +104,14 @@ function TableList() {
             <GridItem xs={12} sm={12} md={12}>
               <Card>
                 <CardHeader color="info">                
-                  <p align="center" className={classes.cardCategoryWhite}>
+                  <p className={classes.cardCategoryWhite}>
                     Transactions
                   </p>
                 </CardHeader>
                 <CardBody>
                   <TableSuperTransaction
                     tableHeaderColor="primary"
-                    tableHead={["date", "type", "etiquette", "montant","utilisateur"]}
+                    tableHead={["Date", "IDClient","Nom et prénom","Type","Montant", "Devise", "N° Transaction"]}
                     tableData={dataTransaction}
                   />
                   

@@ -102,7 +102,7 @@ function TableList() {
                 <CardBody>
                   <TableSuperAllUsers
                     tableHeaderColor="primary"
-                    tableHead={["date", "id", "nom", "email", "status"]}
+                    tableHead={["Date", "IDUser", "Nom et prénom", "Email"]}
                     tableData={dataUser}
                   />
                   
