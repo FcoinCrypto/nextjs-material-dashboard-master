@@ -91,7 +91,7 @@ function Envoyer(fcoin) {
                       console.log(user.id)
                       console.log(destID)
                        const myEnv = await envoyer(val, etiquette, values.montant, destID,user.id);
-                        console.log(myEnv.data.id)
+                        console.log(myEnv)
                        const numTrans = 'TRN'+myEnv.data.id
                        const myTransaction = await addTransfertTransaction(values.montant,'Transfert',numTrans, myEnv.data.id,user.id)
 
