@@ -50,9 +50,13 @@ function Acheter() {
   const [checkedNumero, setCheckedNumero] = useState();
   const [moneyColor, SetMoneyColor] = useState();
   const [montantMobile, setMontantMobile] = useState();
+  const [montantBank, setMontantBank] = useState();
   const [telClient, setTelClient] = useState();
   const [numero, setNumero] = useState();
-
+  //bank
+  const[bankstep1, setBankStep1] = useState('');
+  const[bankstep2, setBankStep2] = useState('none');
+  const rib = "000812849650406459604569504";
 
  
   const checkedRadio = async(e) =>{
@@ -519,7 +523,7 @@ function Acheter() {
           <div style={modalStyle} className={classes.paper}>
             
             <Typography variant="string" id="simple-modal-description" style={{width:'100%'}}>
-            <h5>PAYEMENT EN ESPECES</h5>
+            <h5>PAIEMENT EN ESPECES</h5>
               <Formik
                 
                 enableReinitialize 
@@ -645,145 +649,232 @@ function Acheter() {
           <div style={modalStyle} className={classes.paper}>
             <Typography variant="string" id="simple-modal-description" style={{width:'100%'}}>
               <h5>ONLINE PAYEMENT</h5>
-              <Formik
-                
-                enableReinitialize 
-                initialValues={{
-                    fcoin:'', 
-                    montant: '',
-                    bank:'', 
-                    etiquette:''
-                }} 
-                validationSchema={Yup.object().shape({ 
-                    montant: Yup.number()
-                        .typeError("type error")
-                        .positive("A number can't start with a minus")
-                        .min(500)
-                        .required('require'),
-                    
-                    etiquette: Yup.string()
-                        .required("This field is Required")
-                })} 
-                onSubmit={async (values, { 
-                    resetForm, 
-                    setErrors, 
-                    setStatus, 
-                    setSubmitting 
-                    }) => {
-                    try { 
-                      const myAchat = await achat(conversion(values.montant,'FTC'),conversionUsdt(conversion(values.montant,'FTC')),values.montant, 'bank',values.etiquette,user.id);
-                      const myBank = await achatBank(myAchat.data.id, values.bank);
-                      console.log(myBank)
-                        resetForm(); 
-                        setStatus({ success: true }); 
-                        setSubmitting(false);
-                        // window.location.reload(false);
+              <div style={{display: bankstep1}}>
+                <Formik
+                  
+                  enableReinitialize 
+                  initialValues={{
+                      fcoin:'', 
+                      montant: ''
+                  }} 
+                  validationSchema={Yup.object().shape({ 
+                      montant: Yup.number()
+                          .typeError("type error")
+                          .positive("A number can't start with a minus")
+                          .min(500)
+                          .required('require'),
+                      
+                  })} 
+                  onSubmit={async (values, { 
+                      resetForm, 
+                      setErrors, 
+                      setStatus, 
+                      setSubmitting 
+                      }) => {
+                      try { 
+                        const myAchat = await achat(conversion(values.montant,'FTC'),conversionUsdt(conversion(values.montant,'FTC')),values.montant, 'bank',etiquette,user.id);
+                        const myBank = await achatBank(myAchat.data.id, values.bank);
+                        console.log(myBank)
+                          resetForm(); 
+                          setStatus({ success: true }); 
+                          setSubmitting(false);
+                          // window.location.reload(false);
+                          
+                        } catch (err) { 
+                          console.error(err); 
+                          setStatus({ success: false }); 
+                          setErrors({ submit: err.message }); 
+                          setSubmitting(false); 
+                        } 
+                  }} 
+                >
+                  {({ 
+                  errors, 
+                  handleBlur, 
+                  handleChange, 
+                  handleSubmit, 
+                  isSubmitting, 
+                  touched, 
+                  values 
+                }) => (
+                  <form onSubmit={handleSubmit}>
+                    <Grid container
+                    mobile={{ overflow: "auto" }}
+                    spacing={2} >
+                    <Grid item xs={12}>
+                          <TextField
+                          error={Boolean(touched.montant && errors.montant)} 
+                            helperText={touched.montant && errors.montant} 
+                            onBlur={handleBlur} 
+                            onChange={handleChange} 
+                            type="number"
+                            value={values.montant} 
+                            fullWidth
+                            style={{marginTop : 23, marginBottom : 23,marginRight:10}}
+                            label="Montant en Ariary"
+                            placeholder="Montant en Ariary" 
+                            name="montant" 
+                            variant="standard"             
+                          />
+                        </Grid>
+
+                        <Grid item xs={12}>
+                          <TextField
+                            
+                            
+                            value={conversion(values.montant,'FTC')} 
+                            fullWidth
+                            style={{marginTop : 23, marginBottom : 23}}
+                            label="Fcoin"
+                            name="fcoin" 
+                            required 
+                            variant="standard"             
+                          />
+                        </Grid>
                         
-                      } catch (err) { 
-                        console.error(err); 
-                        setStatus({ success: false }); 
-                        setErrors({ submit: err.message }); 
-                        setSubmitting(false); 
-                      } 
-                }} 
-              >
-                 {({ 
-                errors, 
-                handleBlur, 
-                handleChange, 
-                handleSubmit, 
-                isSubmitting, 
-                touched, 
-                values 
-              }) => (
-                <form onSubmit={handleSubmit}>
-                  <Grid container
-                  mobile={{ overflow: "auto" }}
-                  spacing={2} >
-                  <Grid item xs={12}>
-                        <TextField
-                         error={Boolean(touched.montant && errors.montant)} 
-                          helperText={touched.montant && errors.montant} 
-                          onBlur={handleBlur} 
-                          onChange={handleChange} 
-                          type="number"
-                          value={values.montant} 
-                          fullWidth
-                          style={{marginTop : 23, marginBottom : 23,marginRight:10}}
-                          label="Montant en Ariary"
-                          placeholder="Montant en Ariary" 
-                          name="montant" 
-                          variant="standard"             
-                        />
+                    </Grid>
+
+                  
+                    <Grid
+                      container
+                      spacing={0}
+                      direction="column"
+                      alignItems="center"
+                      justifyContent="center"
+                      >
+                          <Button
+                              variant="contained" 
+                              color="primary" 
+                              disabled={!values.montant}
+                              onClick={()=>{
+                                setBankStep1('none')
+                                setBankStep2('')
+                                setMontantBank(values.montant)
+                              }} 
+                          > 
+                              valider
+                          </Button>
+                    </Grid>
+                  </form>
+                )}
+                </Formik>
+
+              </div>
+              <div style={{display: bankstep2}}>
+                <p>Veuillez faire le dépot manuellement sur le RIB : {rib}</p>
+                <Formik
+                    
+                    enableReinitialize 
+                    initialValues={{
+                        raison:'', 
+                        transaction: ''
+                    }} 
+                    validationSchema={Yup.object().shape({ 
+                      transaction: Yup.string()
+                            .required('require'),
+                            raison: Yup.string()
+                            .required('require'),
+                        
+                    })} 
+                    onSubmit={async (values, { 
+                        resetForm, 
+                        setErrors, 
+                        setStatus, 
+                        setSubmitting 
+                        }) => {
+                        try { 
+                          const myAchat = await achat(conversion(montantBank,'FTC'),conversionUsdt(conversion(montantBank,'FTC')),montantBank, 'bank',etiquette,user.id);
+                          const numTrans = 'RVB'+myAchat.data.id
+                          const myBank = await achatBank(myAchat.data.id, rib, values.transaction,values.raison);
+                          console.log(myBank)
+                          const myTransaction = await addTransaction(montantBank,'Achat',numTrans, myAchat.data.id,user.id)
+                          toast.info("On va étudier votre transaction N° "+numTrans+" et vous devez recevoir un mail en cas de validation");
+                          handleCloseModalBank()
+                            resetForm(); 
+                            setStatus({ success: true }); 
+                            setSubmitting(false);
+                            // window.location.reload(false);
+                            
+                          } catch (err) { 
+                            console.error(err); 
+                            setStatus({ success: false }); 
+                            setErrors({ submit: err.message }); 
+                            setSubmitting(false); 
+                          } 
+                    }} 
+                  >
+                    {({ 
+                    errors, 
+                    handleBlur, 
+                    handleChange, 
+                    handleSubmit, 
+                    isSubmitting, 
+                    touched, 
+                    values 
+                  }) => (
+                    <form onSubmit={handleSubmit}>
+                      <Grid container
+                      mobile={{ overflow: "auto" }}
+                      spacing={2} >
+                      <Grid item xs={12}>
+                            <TextField
+                            error={Boolean(touched.raison && errors.raison)} 
+                              helperText={touched.raison && errors.raison} 
+                              onBlur={handleBlur} 
+                              onChange={handleChange} 
+                              type="text"
+                              value={values.raison} 
+                              fullWidth
+                              style={{marginTop : 23, marginBottom : 23,marginRight:10}}
+                              label="Veuillez tapez votre raison de dépot"
+                              placeholder="Veuillez tapez votre raison de dépot" 
+                              name="raison" 
+                              variant="standard"             
+                            />
+                          </Grid>
+
+                          
+                          <Grid item xs={12}>
+                            <TextField
+                              error={Boolean(touched.transaction && errors.transaction)} 
+                              helperText={touched.transaction && errors.transaction} 
+                              onBlur={handleBlur} 
+                              onChange={handleChange} 
+                              value={values.transaction} 
+                              type="text"
+
+                              fullWidth
+                              style={{marginTop : 23, marginBottom : 23}}
+                              label="Veuillez tapez votte numéro de transaction"
+                              placeholder="Veuillez tapez votte numéro de transaction" 
+                              name="transaction"
+                              required 
+                              variant="standard"             
+                            />
+                          </Grid>
                       </Grid>
 
-                      <Grid item xs={12}>
-                        <TextField
-                          
-                          
-                          value={conversion(values.montant,'FTC')} 
-                          fullWidth
-                          style={{marginTop : 23, marginBottom : 23}}
-                          label="Fcoin"
-                          name="fcoin" 
-                          required 
-                          variant="standard"             
-                        />
+                    
+                      <Grid
+                        container
+                        spacing={0}
+                        direction="column"
+                        alignItems="center"
+                        justifyContent="center"
+                        >
+                            <Button
+                                variant="contained" 
+                                color="primary" 
+                                disabled={!values.raison || !values.transaction} 
+                                type="submit"
+                            > 
+                                valider
+                            </Button>
                       </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          error={Boolean(touched.bank && errors.bank)} 
-                          helperText={touched.bank && errors.bank} 
-                          onBlur={handleBlur} 
-                          onChange={handleChange} 
-                          value={values.bank} 
-                          fullWidth
-                          style={{marginTop : 23, marginBottom : 23}}
-                          label="Bank n°"
-                          name="bank" 
-                          required 
-                          variant="standard"             
-                        />
-                      </Grid>
-                  </Grid>
-
-                  <Grid container >
-                      <Grid item xs={12}>
-                        <TextField
-                          error={Boolean(touched.etiquette && errors.etiquette)} 
-                          helperText={touched.etiquette && errors.etiquette} 
-                          onBlur={handleBlur} 
-                          onChange={handleChange} 
-                          value={values.etiquette} 
-                          fullWidth
-                          style={{marginTop : 23, marginBottom : 23}}
-                          label="Votre etiquette" 
-                          placeholder="Etiquette" 
-                          name="etiquette" 
-                          required 
-                          variant="standard"             
-                        />
-                      </Grid>
-                  </Grid>
-                  <Grid
-                    container
-                    spacing={0}
-                    direction="column"
-                    alignItems="center"
-                    justifyContent="center"
-                    >
-                        <Button
-                            variant="contained" 
-                            color="primary" 
-                            disabled={isSubmitting} 
-                            type="submit"
-                        > 
-                            valider
-                        </Button>
-                  </Grid>
-                </form>
-              )}
-              </Formik>
+                    </form>
+                  )}
+                  </Formik>
+              </div>
             </Typography>      
           </div>
         </Modal>
@@ -910,17 +1001,15 @@ function Acheter() {
           </Grid>
           <Grid item xs={12} lg={6} md={6}>
             <Card>
-
                 <CardHeader color="info">
-                  
                 <p align="center"><b>VIREMENT BANCAIRE</b></p>
                 </CardHeader>
                 <CardBody align="center">
                 {bankdata.map((d, index) => (
                   <Button
                       onClick={() => { 
-                        //handleOpenModalBank(index)
-                        toast.info("En cours de déveleppement")
+                        handleOpenModalBank(index)
+                        // toast.info("En cours de déveleppement")
 
                       }}
                       variant="contained"
@@ -949,7 +1038,7 @@ function Acheter() {
                 </CardFooter>
             </Card>                  
           </Grid>            
-          <Grid item xs={12} lg={6} md={6}>
+          {/* <Grid item xs={12} lg={6} md={6}>
             <Card>
 
               <CardHeader color="info">
@@ -987,7 +1076,7 @@ function Acheter() {
               Euro
               </CardFooter>
             </Card>                
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} lg={6} md={6}>
           <Card>
 

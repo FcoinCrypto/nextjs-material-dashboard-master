@@ -90,10 +90,12 @@ export default function TableSuperTransaction(props) {
             {rows.map((row) => (
               <TableRow key={row.attributes.createdAt}>
                 <TableCell align="left">{moment(row.attributes.createdAt).format("DD/MM/YY à HH:mm")}</TableCell>
-                <TableCell align="left">{row.attributes.type}</TableCell>
-                <TableCell align="left">{row.attributes.etiquette}</TableCell>
-                <TableCell align="left">{row.attributes.montant}</TableCell>
+                <TableCell align="left">{row.attributes.user.data.id}</TableCell>
                 <TableCell align="left">{row.attributes.user.data.attributes.username}</TableCell>
+                <TableCell align="left">{row.attributes.type}</TableCell>
+                <TableCell align="left">{row.attributes.montant}</TableCell>
+                <TableCell align="left">{row.attributes.type == "Achat"?"Ariary":"Ftc"}</TableCell>
+                <TableCell align="left">{row.attributes.numeroTransaction}</TableCell>
               </TableRow>
             )).reverse()}
           </TableBody>

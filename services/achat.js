@@ -60,11 +60,13 @@ api
     // console.log(response.data)
     return response.data;
 }
-  export const achatBank = async (achat_id, NumeroBank) =>{
+  export const achatBank = async (achat_id, NumeroBank,numeroTransaction,raison) =>{
     const response = await api.post('/achat-banques', {
         data:{
           achat: achat_id,
-          NumeroCarte: NumeroBank
+          NumeroCarte: NumeroBank,
+          numeroTransaction:numeroTransaction,
+          raison:raison
         }
       })
     // console.log(response.data)
@@ -97,5 +99,5 @@ api
       montant : montant
     
   })
-  .then(response => {window.location.reload();return response;
+  .then(response => {return response;
   });

@@ -67,7 +67,7 @@ export default function parametre() {
     ]
 
     const classes = useStyles();
-    const [cours, setCours] = useState();
+    const [cours, setCours] = useState([]);
     const [amount, setAmount] = useState();
     const [devis, setDevis] = useState("USDT");
 
@@ -100,6 +100,7 @@ export default function parametre() {
                 return  row.includes("ar") || row.includes("eth") || row.includes("xmr") || row.includes("usdt") || row.includes("btc") || row.includes("euro");
             }
             );
+            console.log(cours)
             setCours(cours);
             // setDevis(Object.keys(data.data[0].attributes));
         }

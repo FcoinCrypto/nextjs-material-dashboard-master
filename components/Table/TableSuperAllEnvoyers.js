@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import PropTypes from "prop-types";
 import moment from 'moment';
+import emailjs from '@emailjs/browser';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -26,6 +27,25 @@ export default function TableSuperAllEnvoyers(props) {
   const  { tableHead, tableData, tableHeaderColor } = props;
   const [searched, setSearched] = useState("");
   const [rows, setRows] = useState(tableData);
+
+
+
+  const sendEmail = (email, to_name,fcoin,destinataire) => {
+    var templateParams = {
+      to_name: to_name,
+      to_email:email,
+      from_name:'',
+      message: `Votre transfert de ${fcoin} ftc vers ${destinataire} a été validé`
+  };
+   
+  emailjs.send('service_883ufak', 'template_iv1qybh', templateParams,'u3RsthIZmk1OZF-jd')
+      .then(function(response) {
+         console.log('SUCCESS!', response.status, response.text);
+         window.location.reload();
+      }, function(error) {
+         console.log('FAILED...', error);
+      });
+  };
 
   const requestSearch = (searchedVal) => {
     const filteredRows = tableData.filter((row) => {
@@ -101,11 +121,13 @@ export default function TableSuperAllEnvoyers(props) {
                   const id_user = row.attributes.user.data.id
                   const id_dest = row.attributes.users_destinataire.data.id
                   const user = await getUser(id_user)
+                  const mail = user.data.email
                   const dest = await getUser(id_dest)
                   const id_wallet_user = user.data.wallet.id
                   const id_wallet_dest = dest.data.wallet.id
                   const user_old_ftc = user.data.wallet.ftc
                   const dest_old_ftc = dest.data.wallet.ftc
+                  await updateStatus(row.id,row.attributes.montantDepart)
                   console.log(user_old_ftc)
                   console.log(dest_old_ftc)
                   const wallet_user = user_old_ftc - row.attributes.montantDepart
@@ -113,12 +135,7 @@ export default function TableSuperAllEnvoyers(props) {
                   
                   await updateWallet(wallet_user,id_wallet_user)
                   await updateWallet(wallet_dest,id_wallet_dest)
-                  // const ariary = row.attributes.montant + old_ariary;
-                 // await updateWalletAriary(ariary,id_wallet)
-                  // await confirmAchat("ar",ariary,row.id)
-                 //const status = await updateStatus(row.id,row.attributes.montantDepart)
-
-                  //console.log(status.data.message)
+                  sendEmail(mail,row.attributes.user.data.attributes.username,row.attributes.montantDepart,row.attributes.destinataire)
                 }}>{row.attributes.status}</Button></TableCell>
               </TableRow>
             )).reverse()}

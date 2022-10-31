@@ -63,6 +63,7 @@ function TableList() {
     if(!dataRecevoirs){
 
       const res = await allRecevoirs();
+      console.log(res);
       setDataRecevoirs(res.data.data);
      
 
@@ -99,7 +100,7 @@ function TableList() {
                 <CardBody>
                   <TableSuperAllRecevoirs
                     tableHeaderColor="primary"
-                    tableHead={["date", "numero transaction", "nom et prenom", "type", "marchand", "montant depart", "devis", "montant arrivee", "devis", "statut"]}
+                    tableHead={["Date", "N° transaction", "Nom et prenom", "Montant depart", "Devise", "Montant arrivee", "Statut"]}
                     tableData={dataRecevoirs}
                   />
                   
