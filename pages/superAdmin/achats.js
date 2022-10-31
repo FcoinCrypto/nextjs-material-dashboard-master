@@ -97,7 +97,7 @@ function Achat() {
               <Card>
                 <CardHeader color="info">
                   
-                  <p className={classes.cardCategoryWhite}>
+                  <p align="center" className={classes.cardCategoryWhite}>
                         Achats
                   </p>
                 </CardHeader>

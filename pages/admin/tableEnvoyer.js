@@ -52,13 +52,11 @@ function TableEnvoyer(data) {
         <Card>
           <CardHeader color="info">
             
-            <p className={classes.cardCategoryWhite}>
+            <p align="center" className={classes.cardCategoryWhite}>
               Transactions
             </p>
           </CardHeader>
           <CardBody>
-           
-           
             
           </CardBody>
         </Card>

@@ -93,7 +93,7 @@ function TableList() {
               <Card>
                 <CardHeader color="info">
                   
-                  <p className={classes.cardCategoryWhite}>
+                  <p align="center"className={classes.cardCategoryWhite}>
                     Reçues
                   </p>
                 </CardHeader>
